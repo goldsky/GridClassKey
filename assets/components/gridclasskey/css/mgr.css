@@ -1,0 +1,40 @@
+.icon-gridcontainer .x-tree-node-icon {
+    background-image: url(../icons/data_grid.png) !important;
+}
+
+.icon-gridclasskey-document-edit {
+    background-image: url(../icons/page_white_edit.png) !important;
+}
+
+.icon-gridclasskey-document-new {
+    background-image: url(../icons/page_white_add.png) !important;
+}
+
+.gridclasskey-deleted .x-grid3-cell-inner {
+    text-decoration: line-through !important;
+}
+
+.x-action-col-cell img {
+  height: 16px;
+  width: 16px;
+  margin-top: 10px;
+  margin-right: 6px;
+}
+
+.gridclasskey-row {
+    color: black;
+}
+
+.gridclasskey-row a {
+    color: inherit;
+}
+
+.gridclasskey-unpublished td {
+    font-style: italic !important;
+}
+
+.gridclasskey-deleted a,
+.gridclasskey-deleted {
+    text-decoration: line-through !important;
+    color: red !important;
+}
