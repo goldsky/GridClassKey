@@ -9,7 +9,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         // update
         if (config.record.id) {
             it.push({
-                id: 'gridclasskey-children-panel'
+                id: 'gridclasskey-grid-children-panel'
                 , title: _('gridclasskey.children')
                 , cls: 'modx-resource-tab'
                 , layout: 'fit'
@@ -108,8 +108,8 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
     getChildren: function(config) {
         var items = [];
         items.push({
-            xtype: 'gridclasskey-grid-children',
-            record: config.record
+            xtype: 'gridclasskey-grid-children'
+            , record: config.record
         });
         return items;
     },
@@ -166,6 +166,21 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 , name: 'gridclasskey-property-grid-css'
                 , fieldLabel: _('gridclasskey.mgr_css')
                 , description: _('gridclasskey.mgr_css_desc')
+                , value: config.record
+                        && config.record.properties
+                        && config.record.properties.gridclasskey
+                        && config.record.properties.gridclasskey['grid-css'] ? config.record.properties.gridclasskey['grid-css'] : ''
+            }, {
+                xtype: 'textfield'
+                , anchor: '100%'
+                , id: 'gridclasskey-property-grid-addnewdocbtn-text'
+                , name: 'gridclasskey-property-grid-addnewdocbtn-text'
+                , fieldLabel: _('gridclasskey.addnewdocbtn_text')
+                , description: _('gridclasskey.addnewdocbtn_text_desc')
+                , value: config.record
+                        && config.record.properties
+                        && config.record.properties.gridclasskey
+                        && config.record.properties.gridclasskey['grid-addnewdocbtn-text'] ? config.record.properties.gridclasskey['grid-addnewdocbtn-text'] : ''
             }
         ];
     },
@@ -179,6 +194,10 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 , fieldLabel: _('gridclasskey.default_template')
                 , description: _('gridclasskey.child_default_template_desc')
                 , bodyStyle: 'margin: 5px 0'
+                , value: config.record
+                        && config.record.properties
+                        && config.record.properties.gridclasskey
+                        && config.record.properties.gridclasskey['childtemplate'] ? config.record.properties.gridclasskey['childtemplate'] : ''
             }
         ];
     },
@@ -214,6 +233,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                         columnWidth: 1
                         , xtype: 'gridclasskey-grid-gridsettings'
                         , description: _('gridclasskey.fields_desc')
+                        , record: config.record
                     }
                 ]
             }
@@ -235,7 +255,37 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         var values = o.form.getValues();
         values['gridclasskey-property-fields'] = JSON.stringify(fields);
         o.form.setValues(values);
+
         return GridClassKey.panel.Container.superclass.beforeSubmit.call(this, o);
+    },
+    success: function(o) {
+        var grid = Ext.getCmp('gridclasskey-grid-gridsettings');
+        var store = grid.getStore();
+        var fields = [];
+        for (var i = 0, l = store.data.items.length; i < l; i++) {
+            fields.push({
+                field: store.data.items[i].data.field,
+                lexicon: store.data.items[i].data.lexicon,
+                width: store.data.items[i].data.width,
+                sortable: store.data.items[i].data.sortable,
+                editor_type: store.data.items[i].data.editor_type
+            });
+        }
+
+        this.config.record.properties.gridclasskey['fields'] = fields;
+
+        var addNewDocText = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn-text').getValue();
+        this.config.record.properties.gridclasskey['grid-addnewdocbtn-text'] = addNewDocText;
+
+        var container = Ext.getCmp('gridclasskey-grid-children-panel');
+        container.removeAll();
+        container.add({
+            xtype: 'gridclasskey-grid-children'
+            , record: this.config.record
+        });
+        container.doLayout();
+
+        return GridClassKey.panel.Container.superclass.success.call(this, o);
     }
 });
 Ext.reg('gridclasskey-panel-container', GridClassKey.panel.Container);

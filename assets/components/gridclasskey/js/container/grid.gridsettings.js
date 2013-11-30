@@ -4,17 +4,22 @@ GridClassKey.grid.GridSettings = function(config) {
     var data = [
         ['id', 'id', 50, true]
     ];
-    if (config.record && config.record.fields) {
-        for (var i = 0, l = config.record.fields.length; i < l; i++) {
-            if (config.record.fields[i].field === 'id') {
+    if (config.record
+            && config.record.properties
+            && config.record.properties.gridclasskey
+            && config.record.properties.gridclasskey.fields
+            ) {
+        for (var i = 0, l = config.record.properties.gridclasskey.fields.length; i < l; i++) {
+            var fieldRecord = config.record.properties.gridclasskey.fields[i];
+            if (fieldRecord.field === 'id') {
                 continue;
             }
             data.push([
-                config.record.fields[i].field,
-                config.record.fields[i].lexicon,
-                config.record.fields[i].width,
-                config.record.fields[i].sortable,
-                config.record.fields[i].editor_type
+                fieldRecord.field,
+                fieldRecord.lexicon,
+                fieldRecord.width,
+                fieldRecord.sortable,
+                fieldRecord.editor_type
             ]);
         }
     }

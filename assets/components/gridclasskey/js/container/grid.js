@@ -1,6 +1,135 @@
 GridClassKey.grid.Children = function(config) {
     config = config || {};
 
+    var defaultFields = ['id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published', 'publishedon_date', 'action_edit', 'preview_url']
+            , fields = []
+            , defaultColumns = [
+                {
+                    header: _('id')
+                    , dataIndex: 'id'
+                    , sortable: true
+                    , width: 50
+                }, {
+                    header: _('pagetitle')
+                    , dataIndex: 'pagetitle'
+                    , sortable: true
+                    , width: 100
+                    , renderer: {fn: this._renderPageTitle, scope: this}
+                    , editor: {
+                        xtype: 'textfield'
+                    }
+                }, {
+                    header: _('gridclasskey.longtitle')
+                    , dataIndex: 'longtitle'
+                    , sortable: true
+                    , width: 100
+                    , editor: {
+                        xtype: 'textfield'
+                    }
+                }, {
+                    header: _('description')
+                    , dataIndex: 'description'
+                    , sortable: false
+                    , editor: {
+                        xtype: 'textarea'
+                    }
+                }
+            ]
+            , columns = [];
+
+    if (config.record.properties.gridclasskey
+            && config.record.properties.gridclasskey.fields
+            && config.record.properties.gridclasskey.fields.length > 0) {
+        for (var i = 0, fieldsLn = config.record.properties.gridclasskey.fields.length; i < fieldsLn; i++) {
+            var fieldRecord = config.record.properties.gridclasskey.fields[i];
+            fields.push(fieldRecord.field);
+
+            if (typeof (fieldRecord) !== 'object') {
+                continue;
+            }
+
+            var rowField = {
+                header: _(fieldRecord.lexicon) || fieldRecord.lexicon
+                , dataIndex: fieldRecord.field
+                , sortable: fieldRecord.sortable
+                , width: fieldRecord.width
+            };
+
+            if (fieldRecord.field !== 'id') {
+                if (fieldRecord.editor_type && fieldRecord.editor_type !== '') {
+                    if (fieldRecord.editor_type === 'text') {
+                        fieldRecord.editor_type = 'textfield';
+                    }
+                    rowField['editor'] = {
+                        xtype: fieldRecord.editor_type
+                    };
+                } else {
+                    rowField['editor'] = {
+                        xtype: 'textfield'
+                    };
+                }
+            }
+            if (fieldRecord.field === 'pagetitle') {
+                rowField['renderer'] = {fn: this._renderPageTitle, scope: this};
+            }
+            columns.push(rowField);
+        }
+
+        // Because Ext overrides the default Array, we can not use concat(), and this ExtJS 3 doesn't have Ext.Array singleton!
+        fields.push('action_edit');
+        fields.push('preview_url');
+    } else {
+        fields = defaultFields;
+        columns = defaultColumns;
+    }
+
+    columns.push({
+        header: _('actions')
+        , xtype: 'actioncolumn'
+        , dataIndex: 'id'
+        , sortable: false
+        , width: 50
+        , items: [
+            {
+                iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
+                , toolTip: _('edit')
+                , altText: _('edit')
+                , handler: function(grid, row, col) {
+                    var rec = this.store.getAt(row);
+                    MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
+                },
+                scope: this
+            }, {
+                iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
+                , toolTip: _('view')
+                , altText: _('view')
+                , handler: function(grid, row, col) {
+                    var rec = this.store.getAt(row);
+                    window.open(rec.get('preview_url'));
+                },
+                scope: this
+            }, {
+                handler: function(grid, row, col) {
+                    var _this = Ext.getCmp('gridclasskey-grid-children');
+                    var rec = _this.store.getAt(row);
+                    _this.removeChild(rec.data);
+                },
+                getClass: function(v, meta, rec) {
+                    if (rec.get('deleted')) {
+                        this.items[2].tooltip = _('resource_undelete');
+                        this.items[2].altText = _('resource_undelete');
+                        return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
+                    } else {
+                        this.items[2].tooltip = _('resource_delete');
+                        this.items[2].altText = _('resource_delete');
+                        return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
+                    }
+                }
+            }
+        ]
+    });
+
+
     Ext.applyIf(config, {
         id: 'gridclasskey-grid-children'
         , url: GridClassKey.connector_url
@@ -8,8 +137,7 @@ GridClassKey.grid.Children = function(config) {
             action: 'children/getList',
             parent: config.record.id
         }
-        , fields: ['id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published'
-                    , 'publishedon_date', 'action_edit', 'preview_url', 'actions', 'action_edit']
+        , fields: fields
         , paging: true
         , remoteSort: true
         , autoExpandColumn: 'description'
@@ -32,85 +160,10 @@ GridClassKey.grid.Children = function(config) {
         }
         , save_action: 'children/updateFromGrid'
         , autosave: true
-        , columns: [
-            {
-                header: _('id')
-                , dataIndex: 'id'
-                , sortable: true
-                , width: 50
-            }, {
-                header: _('pagetitle')
-                , dataIndex: 'pagetitle'
-                , sortable: true
-                , width: 100
-                , renderer: {fn: this._renderPageTitle, scope: this}
-                , editor: {
-                    xtype: 'textfield'
-                }
-            }, {
-                header: _('gridclasskey.longtitle')
-                , dataIndex: 'longtitle'
-                , sortable: true
-                , width: 100
-                , editor: {
-                    xtype: 'textfield'
-                }
-            }, {
-                header: _('description')
-                , dataIndex: 'description'
-                , sortable: false
-                , editor: {
-                    xtype: 'textarea'
-                }
-            }, {
-                header: _('actions')
-                , xtype: 'actioncolumn'
-                , dataIndex: 'id'
-                , sortable: false
-                , width: 50
-                , items: [
-                    {
-                        iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
-                        , toolTip: _('edit')
-                        , altText: _('edit')
-                        , handler: function(grid, row, col) {
-                            var rec = this.store.getAt(row);
-                            MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
-                        },
-                        scope: this
-                    }, {
-                        iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
-                        , toolTip: _('view')
-                        , altText: _('view')
-                        , handler: function(grid, row, col) {
-                            var rec = this.store.getAt(row);
-                            window.open(rec.get('preview_url'));
-                        },
-                        scope: this
-                    }, {
-                        handler: function(grid, row, col) {
-                            var _this = Ext.getCmp('gridclasskey-grid-children');
-                            var rec = _this.store.getAt(row);
-                            _this.removeChild(rec.data);
-                        },
-                        getClass: function(v, meta, rec) {
-                            if (rec.get('deleted')) {
-                                this.items[2].tooltip = _('resource_undelete');
-                                this.items[2].altText = _('resource_undelete');
-                                return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
-                            } else {
-                                this.items[2].tooltip = _('resource_delete');
-                                this.items[2].altText = _('resource_delete');
-                                return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
-                            }
-                        }
-                    }
-                ]
-            }
-        ]
+        , columns: columns
         , tbar: [
             {
-                text: _('gridclasskey.document_new')
+                text: config.record.properties.gridclasskey['grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
                 , iconCls: 'icon-gridclasskey-document-new'
                 , handler: function(itm, e) {
                     Ext.getCmp('modx-resource-tree').loadAction(
@@ -143,7 +196,7 @@ GridClassKey.grid.Children = function(config) {
                 , menu: {
                     items: [
                         {
-                           id: 'gridclasskey-options-filter'
+                            id: 'gridclasskey-options-filter'
                         }, {
                             text: _('gridclasskey.filter_add')
                             , iconCls: 'icon-gridclasskey-filter-add'
