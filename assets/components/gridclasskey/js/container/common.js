@@ -9,10 +9,10 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         // update
         if (config.record.id) {
             it.push({
-                id: 'gridclasskey-children'
+                id: 'gridclasskey-children-panel'
                 , title: _('gridclasskey.children')
                 , cls: 'modx-resource-tab'
-                , layout: 'form'
+                , layout: 'fit'
                 , forceLayout: true
                 , deferredRender: false
                 , labelWidth: 200
@@ -89,9 +89,8 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
             , itemId: 'tabs'
             , items: it
         });
-        if (MODx.config.tvs_below_content == 1) {
-            var tvs = this.getTemplateVariablesPanel(config);
-            its.push(tvs);
+        if (config.show_tvs && MODx.config.tvs_below_content == 1) {
+            its.push(this.getTemplateVariablesPanel(config));
         }
         return its;
     },
@@ -113,6 +112,130 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
             record: config.record
         });
         return items;
+    },
+    getSettingFields: function(config) {
+        config = config || {record: {}};
+
+        var s = [{
+                layout: 'column'
+                , border: false
+                , anchor: '100%'
+                , defaults: {
+                    labelSeparator: ''
+                    , labelAlign: 'top'
+                    , border: false
+                    , layout: 'form'
+                    , msgTarget: 'under'
+                }
+                , items: [
+                    {
+                        columnWidth: .5
+                        , id: 'modx-page-settings-left'
+                        , defaults: {msgTarget: 'under'}
+                        , items: this.getSettingLeftFields(config)
+                    }, {
+                        columnWidth: .5
+                        , id: 'modx-page-settings-right'
+                        , defaults: {msgTarget: 'under'}
+                        , items: this.getSettingRightFields(config)
+                    }, {
+                        columnWidth: .5
+                        , title: _('gridclasskey.settings_grid')
+                        , defaults: {msgTarget: 'under'}
+                        , items: this.getGridSettingsLeftFields(config)
+                    }, {
+                        columnWidth: .5
+                        , title: _('gridclasskey.settings_children')
+                        , defaults: {msgTarget: 'under'}
+                        , items: this.getGridSettingsRightFields(config)
+                    }, {
+                        columnWidth: 1
+                        , title: _('gridclasskey.fields')
+                        , defaults: {msgTarget: 'under'}
+                        , items: this.getGridSettingsBottomFields(config)
+                    }
+                ]
+            }];
+        return s;
+    },
+    getGridSettingsLeftFields: function(config) {
+        return [
+            {
+                xtype: 'textfield'
+                , anchor: '100%'
+                , name: 'gridclasskey-property-grid-css'
+                , fieldLabel: _('gridclasskey.mgr_css')
+                , description: _('gridclasskey.mgr_css_desc')
+            }
+        ];
+    },
+    getGridSettingsRightFields: function(config) {
+        return [
+            {
+                xtype: 'modx-combo-template'
+                , anchor: '100%'
+                , name: 'gridclasskey-property-childtemplate'
+                , hiddenName: 'gridclasskey-property-childtemplate'
+                , fieldLabel: _('gridclasskey.default_template')
+                , description: _('gridclasskey.child_default_template_desc')
+                , bodyStyle: 'margin: 5px 0'
+            }
+        ];
+    },
+    getGridSettingsBottomFields: function(config) {
+        return [
+            {
+                layout: 'column'
+                , border: false
+                , anchor: '100%'
+                , defaults: {
+                    labelSeparator: ''
+                    , labelAlign: 'top'
+                    , border: false
+//                    , layout: 'form'
+                    , msgTarget: 'under'
+                }
+                , items: [
+                    {
+                        columnWidth: .5
+                        , xtype: 'gridclasskey-panel-mainfieldscombo'
+                        , border: false
+                        , bodyStyle: 'margin: 5px 0'
+                    }, {
+                        columnWidth: .5
+                        , xtype: 'gridclasskey-panel-tvfieldscombo'
+                        , border: false
+                        , bodyStyle: 'margin: 5px 0'
+                    }, {
+                        // will be used for the grid below on submission
+                        xtype: 'hidden',
+                        name: 'gridclasskey-property-fields'
+                    }, {
+                        columnWidth: 1
+                        , xtype: 'gridclasskey-grid-gridsettings'
+                        , description: _('gridclasskey.fields_desc')
+                    }
+                ]
+            }
+        ];
+    },
+    beforeSubmit: function(o) {
+        var grid = Ext.getCmp('gridclasskey-grid-gridsettings');
+        var store = grid.getStore();
+        var fields = [];
+        for (var i = 0, l = store.data.items.length; i < l; i++) {
+            fields.push({
+                field: store.data.items[i].data.field,
+                lexicon: store.data.items[i].data.lexicon,
+                width: store.data.items[i].data.width,
+                sortable: store.data.items[i].data.sortable,
+                editor_type: store.data.items[i].data.editor_type
+            });
+        }
+        var values = o.form.getValues();
+        values['gridclasskey-property-fields'] = JSON.stringify(fields);
+        o.form.setValues(values);
+        return GridClassKey.panel.Container.superclass.beforeSubmit.call(this, o);
     }
 });
 Ext.reg('gridclasskey-panel-container', GridClassKey.panel.Container);

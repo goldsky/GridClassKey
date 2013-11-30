@@ -88,6 +88,23 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         return $resourceArray;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return mixed
+     */
+    public function process() {
+        $beforeQuery = $this->beforeQuery();
+        if ($beforeQuery !== true) {
+            return $this->failure($beforeQuery);
+        }
+        $data = $this->getData();
+        if (empty($data['results'])) {
+            return $this->failure($this->modx->lexicon('gridclasskey.empty'));
+        }
+        $list = $this->iterate($data);
+        return $this->outputArray($list,$data['total']);
+    }
+
 }
 
 return 'GridContainerGetListProcessor';

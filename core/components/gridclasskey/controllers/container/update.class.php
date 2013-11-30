@@ -48,6 +48,11 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
         $this->addJavascript($managerUrl . 'assets/modext/sections/resource/update.js');
         $this->addJavascript($gridclasskeyJsUrl . 'gridclasskey.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.tvfields.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.combo.tvfields.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.mainfields.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.combo.mainfields.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.gridsettings.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/common.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/update.js');
@@ -83,6 +88,20 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
 
     public function getLanguageTopics() {
         return array('resource', 'gridclasskey:default');
+    }
+
+    /**
+     * Used to set values on the resource record sent to the template for derivative classes
+     *
+     * @return void
+     */
+    public function prepareResource() {
+        $settings = $this->resource->getProperties('gridclasskey');
+        if (is_array($settings) && !empty($settings)) {
+            foreach ($settings as $k => $v) {
+                $this->resourceArray['setting_' . $k] = $v;
+            }
+        }
     }
 
     public function getPageTitle() {

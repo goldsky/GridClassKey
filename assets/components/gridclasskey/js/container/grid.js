@@ -62,6 +62,50 @@ GridClassKey.grid.Children = function(config) {
                 , editor: {
                     xtype: 'textarea'
                 }
+            }, {
+                header: _('actions')
+                , xtype: 'actioncolumn'
+                , dataIndex: 'id'
+                , sortable: false
+                , width: 50
+                , items: [
+                    {
+                        iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
+                        , toolTip: _('edit')
+                        , altText: _('edit')
+                        , handler: function(grid, row, col) {
+                            var rec = this.store.getAt(row);
+                            MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
+                        },
+                        scope: this
+                    }, {
+                        iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
+                        , toolTip: _('view')
+                        , altText: _('view')
+                        , handler: function(grid, row, col) {
+                            var rec = this.store.getAt(row);
+                            window.open(rec.get('preview_url'));
+                        },
+                        scope: this
+                    }, {
+                        handler: function(grid, row, col) {
+                            var _this = Ext.getCmp('gridclasskey-grid-children');
+                            var rec = _this.store.getAt(row);
+                            _this.removeChild(rec.data);
+                        },
+                        getClass: function(v, meta, rec) {
+                            if (rec.get('deleted')) {
+                                this.items[2].tooltip = _('resource_undelete');
+                                this.items[2].altText = _('resource_undelete');
+                                return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
+                            } else {
+                                this.items[2].tooltip = _('resource_delete');
+                                this.items[2].altText = _('resource_delete');
+                                return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
+                            }
+                        }
+                    }
+                ]
             }
         ]
         , tbar: [
@@ -93,6 +137,34 @@ GridClassKey.grid.Children = function(config) {
                             });
                         }, scope: this}
                 }
+            }, {
+                text: _('gridclasskey.filter')
+                , iconCls: 'icon-gridclasskey-filter'
+                , menu: {
+                    items: [
+                        {
+                           id: 'gridclasskey-options-filter'
+                        }, {
+                            text: _('gridclasskey.filter_add')
+                            , iconCls: 'icon-gridclasskey-filter-add'
+                            , handler: function(btn, e) {
+
+                            }
+                        }
+                    ]
+                }
+            }, {
+                xtype: 'button'
+                , text: _('gridclasskey.filters_clear')
+                , iconCls: 'icon-gridclasskey-filter-delete'
+                , handler: function(btn, e) {
+                    Ext.getCmp('gridclasskey-search-filter').reset();
+                    var s = this.getStore();
+                    s.baseParams.query = '';
+                    this.getBottomToolbar().changePage(1);
+                    this.refresh();
+                }
+                , scope: this
             }
         ]
     });

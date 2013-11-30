@@ -38,3 +38,46 @@
     text-decoration: line-through !important;
     color: red !important;
 }
+
+.icon-gridclasskey-filter {
+    background-image: url(../icons/filter.png) !important;
+}
+
+.icon-gridclasskey-filter-add {
+    background-image: url(../icons/filter_add.png) !important;
+}
+
+.icon-gridclasskey-filter-delete {
+    background-image: url(../icons/filter_delete.png) !important;
+}
+
+.icon-gridclasskey-settings {
+    background-image: url(../icons/setting_tools.png) !important;
+}
+
+#gridclasskey-panel-mainfieldscombo .x-btn,
+#gridclasskey-panel-tvfieldscombo .x-btn {
+    position: absolute !important;
+}
+
+.icon-gridclasskey-actioncolumn-img {
+    width: 16px;
+    height: 16px;
+    margin-top: 6px;
+}
+
+.icon-gridclasskey-edit {
+    background-image: url(../icons/pencil.png) !important;
+}
+
+.icon-gridclasskey-view {
+    background-image: url(../icons/eye.png) !important;
+}
+
+.icon-gridclasskey-delete {
+    background-image: url(../icons/delete.png) !important;
+}
+
+.icon-gridclasskey-recycle {
+    background-image: url(../icons/recycle.png) !important;
+}

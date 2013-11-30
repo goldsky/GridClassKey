@@ -23,7 +23,6 @@
  * @package gridclasskey
  * @subpackage model
  */
-
 require_once MODX_CORE_PATH . 'model/modx/modprocessor.class.php';
 require_once MODX_CORE_PATH . 'model/modx/processors/resource/create.class.php';
 require_once MODX_CORE_PATH . 'model/modx/processors/resource/update.class.php';
@@ -68,6 +67,26 @@ class GridContainerCreateProcessor extends modResourceCreateProcessor {
         $this->object->set('hide_children_in_tree', true);
         $this->object->set('cacheable', true);
         $this->object->set('isfolder', true);
+
+        $properties = $this->getProperties();
+        $settings = $this->object->getProperties('gridclasskey');
+        foreach ($properties as $k => $v) {
+            if (substr($k, 0, 22) == 'gridclasskey-property-') {
+                $key = substr($k, 22);
+                if ($v === 'false') {
+                    $v = 0;
+                } elseif ($v === 'true') {
+                    $v = 1;
+                }
+                if ($key === 'fields') {
+                    $v = json_decode($v, TRUE);
+                }
+                $settings[$key] = $v;
+            }
+        }
+
+        $this->object->setProperties($settings, 'gridclasskey');
+
         return parent::beforeSave();
     }
 
@@ -88,6 +107,26 @@ class GridContainerUpdateProcessor extends modResourceUpdateProcessor {
         $this->object->set('hide_children_in_tree', true);
         $this->object->set('cacheable', true);
         $this->object->set('isfolder', true);
+
+        $properties = $this->getProperties();
+        $settings = $this->object->getProperties('gridclasskey');
+        foreach ($properties as $k => $v) {
+            if (substr($k, 0, 22) == 'gridclasskey-property-') {
+                $key = substr($k, 22);
+                if ($v === 'false') {
+                    $v = 0;
+                } elseif ($v === 'true') {
+                    $v = 1;
+                }
+                if ($key === 'fields') {
+                    $v = json_decode($v, TRUE);
+                }
+                $settings[$key] = $v;
+            }
+        }
+
+        $this->object->setProperties($settings, 'gridclasskey');
+
         return parent::beforeSave();
     }
 
