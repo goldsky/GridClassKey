@@ -32,9 +32,13 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
     /** @var modAction $editAction */
     public $editAction;
+    protected $parentProperties;
+    protected $selectedFields = array();
+    protected $selectedMainFields = array();
+    protected $selectedTVFields = array();
 
     public function initialize() {
-        $this->editAction = $this->modx->getObject('modAction',array(
+        $this->editAction = $this->modx->getObject('modAction', array(
             'namespace' => 'core',
             'controller' => 'resource/update',
         ));
@@ -49,43 +53,60 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
      * @return xPDOQuery
      */
     public function prepareQueryBeforeCount(xPDOQuery $c) {
-        $parent = $this->getProperty('parent');
-        if ($parent) {
-            $c->where(array(
-                'parent' => $parent
-            ));
-        }
         $query = $this->getProperty('query');
         if (!empty($query)) {
-            $c->where(array(
-                'pagetitle:LIKE' => '%' . $query . '%',
-                'OR:longtitle:LIKE' => '%' . $query . '%',
-                'OR:menutitle:LIKE' => '%' . $query . '%',
-                'OR:description:LIKE' => '%' . $query . '%',
+            $c->andCondition(array(
+                'modResource.pagetitle:LIKE' => '%' . $query . '%',
+                'OR:modResource.longtitle:LIKE' => '%' . $query . '%',
+                'OR:modResource.menutitle:LIKE' => '%' . $query . '%',
+                'OR:modResource.description:LIKE' => '%' . $query . '%',
             ));
         }
-        return $c;
-    }
 
-    /**
-     * @param $resource $object
-     * @return array
-     */
-    public function prepareRow(xPDOObject $object) {
-        $resourceArray = parent::prepareRow($object);
+        $parent = $this->getProperty('parent');
+        if ($parent) {
+            $this->parentProperties = $this->modx->getObject('modResource', $parent)->getProperties('gridclasskey');
+            foreach ($this->parentProperties['fields'] as $field) {
+                $this->selectedFields = array_merge($this->selectedFields, (array) $field['name']);
+            }
 
-        if (!empty($resourceArray['publishedon'])) {
-            $publishedon = strtotime($resourceArray['publishedon']);
-            $resourceArray['publishedon_date'] = strftime($this->modx->getOption('articles.mgr_date_format', null, '%b %d'), $publishedon);
-            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('articles.mgr_time_format', null, '%H:%I %p'), $publishedon);
-            $resourceArray['publishedon'] = strftime('%b %d, %Y %H:%I %p', $publishedon);
+            $mainFields = $this->modx->getSelectColumns('modResource');
+            $mainFields = str_replace('`', '', $mainFields);
+            $this->selectedMainFields = @explode(',', $mainFields);
+            array_walk($this->selectedMainFields, create_function('&$v', '$v = trim($v);'));
+
+            $this->selectedMainFields = array_intersect($this->selectedFields, $this->selectedMainFields);
+            $this->selectedMainFields = array_values($this->selectedMainFields);
+            $c->select($this->modx->getSelectColumns('modResource', 'modResource', '', $this->selectedMainFields));
+
+            $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
+            $this->selectedTVFields = array_values($this->selectedTVFields);
+            $c->where(array(
+                'modResource.parent' => $parent
+            ));
+            if (!empty($this->selectedTVFields)) {
+                foreach ($this->selectedTVFields as $k => $tv) {
+                    $c->select(array(
+                        $this->modx->escape($tv) => 'TemplateVarResources_' . $k . '.value',
+                    ));
+                    $tvId = $this->modx->getObject('modTemplateVar', array(
+                        'name' => $tv
+                    ))->get('id');
+                    $c->leftJoin('modTemplateVarResource', 'TemplateVarResources_' . $k, array(
+                        'TemplateVarResources_' . $k . '.contentid = modResource.id',
+                        $tvId .' = TemplateVarResources_' . $k . '.tmplvarid',
+                    ));
+                    if (!empty($query)) {
+                        $c->orCondition(array(
+                            'modResource.parent:=' => $parent,
+                            'AND:TemplateVarResources_' . $k . '.value:LIKE' => '%' . $query . '%',
+                        ));
+                    }
+                }
+            }
         }
-        $resourceArray['action_edit'] = '?a=' . $this->editAction->get('id') . '&id=' . $resourceArray['id'];
 
-        $this->modx->getContext($resourceArray['context_key']);
-        $resourceArray['preview_url'] = $this->modx->makeUrl($resourceArray['id'], $resourceArray['context_key']);
-
-        return $resourceArray;
+        return $c;
     }
 
     /**
@@ -102,7 +123,54 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             return $this->failure($this->modx->lexicon('gridclasskey.empty'));
         }
         $list = $this->iterate($data);
-        return $this->outputArray($list,$data['total']);
+        return $this->outputArray($list, $data['total']);
+    }
+
+    /**
+     * @param $resource $object
+     * @return array
+     */
+    public function prepareRow(xPDOObject $object) {
+        $resourceArray = parent::prepareRow($object);
+
+        if (!empty($resourceArray['publishedon'])) {
+            $publishedon = strtotime($resourceArray['publishedon']);
+            $resourceArray['publishedon_date'] = strftime($this->modx->getOption('articles.mgr_date_format', null, '%b %d'), $publishedon);
+            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('articles.mgr_time_format', null, '%H:%I %p'), $publishedon);
+            $resourceArray['publishedon'] = strftime('%b %d, %Y %H:%I %p', $publishedon);
+        }
+
+        foreach ($resourceArray as $field => $value) {
+            if (!in_array($field, $this->selectedFields)) {
+                unset($resourceArray[$field]);
+                continue;
+            }
+            // avoid null on returns
+            $resourceArray[$field] = $resourceArray[$field] !== null ? $resourceArray[$field] : '';
+        }
+
+        if (!empty($this->parentProperties)) {
+            foreach ($this->parentProperties['fields'] as $field) {
+                if (!empty($field['output_filter'])) {
+                    /**
+                     * @see modOutputFilter::filter()
+                     */
+                    $params = array(
+                        'input' => $resourceArray[$field['name']]
+                    );
+                    $tmp = $this->modx->runSnippet($field['output_filter'], $params);
+                    if (!empty($tmp)) {
+                        $resourceArray[$field['name']] = $tmp;
+                    }
+                }
+            }
+        }
+        $resourceArray['action_edit'] = '?a=' . $this->editAction->get('id') . '&id=' . $resourceArray['id'];
+
+        $this->modx->getContext($resourceArray['context_key']);
+        $resourceArray['preview_url'] = $this->modx->makeUrl($resourceArray['id'], $resourceArray['context_key']);
+
+        return $resourceArray;
     }
 
 }

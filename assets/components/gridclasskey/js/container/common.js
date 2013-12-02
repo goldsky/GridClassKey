@@ -140,7 +140,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                         , items: this.getSettingRightFields(config)
                     }, {
                         columnWidth: .5
-                        , title: _('gridclasskey.settings_grid')
+                        , title: _('gridclasskey.settings_container')
                         , defaults: {msgTarget: 'under'}
                         , items: this.getGridSettingsLeftFields(config)
                     }, {
@@ -166,10 +166,18 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 , name: 'gridclasskey-property-grid-css'
                 , fieldLabel: _('gridclasskey.mgr_css')
                 , description: _('gridclasskey.mgr_css_desc')
-                , value: config.record
-                        && config.record.properties
-                        && config.record.properties.gridclasskey
-                        && config.record.properties.gridclasskey['grid-css'] ? config.record.properties.gridclasskey['grid-css'] : ''
+            }, {
+                xtype: 'textfield'
+                , anchor: '100%'
+                , name: 'gridclasskey-property-grid-top-js'
+                , fieldLabel: _('gridclasskey.mgr_top_js')
+                , description: _('gridclasskey.mgr_top_js_desc')
+            }, {
+                xtype: 'textfield'
+                , anchor: '100%'
+                , name: 'gridclasskey-property-grid-bottom-js'
+                , fieldLabel: _('gridclasskey.mgr_bottom_js')
+                , description: _('gridclasskey.mgr_bottom_js_desc')
             }, {
                 xtype: 'textfield'
                 , anchor: '100%'
@@ -177,10 +185,6 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 , name: 'gridclasskey-property-grid-addnewdocbtn-text'
                 , fieldLabel: _('gridclasskey.addnewdocbtn_text')
                 , description: _('gridclasskey.addnewdocbtn_text_desc')
-                , value: config.record
-                        && config.record.properties
-                        && config.record.properties.gridclasskey
-                        && config.record.properties.gridclasskey['grid-addnewdocbtn-text'] ? config.record.properties.gridclasskey['grid-addnewdocbtn-text'] : ''
             }
         ];
     },
@@ -194,10 +198,6 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 , fieldLabel: _('gridclasskey.default_template')
                 , description: _('gridclasskey.child_default_template_desc')
                 , bodyStyle: 'margin: 5px 0'
-                , value: config.record
-                        && config.record.properties
-                        && config.record.properties.gridclasskey
-                        && config.record.properties.gridclasskey['childtemplate'] ? config.record.properties.gridclasskey['childtemplate'] : ''
             }
         ];
     },
@@ -245,11 +245,12 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         var fields = [];
         for (var i = 0, l = store.data.items.length; i < l; i++) {
             fields.push({
-                field: store.data.items[i].data.field,
+                name: store.data.items[i].data.name,
                 lexicon: store.data.items[i].data.lexicon,
                 width: store.data.items[i].data.width,
                 sortable: store.data.items[i].data.sortable,
-                editor_type: store.data.items[i].data.editor_type
+                editor_type: store.data.items[i].data.editor_type,
+                output_filter: store.data.items[i].data.output_filter
             });
         }
         var values = o.form.getValues();
@@ -264,11 +265,12 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         var fields = [];
         for (var i = 0, l = store.data.items.length; i < l; i++) {
             fields.push({
-                field: store.data.items[i].data.field,
+                name: store.data.items[i].data.name,
                 lexicon: store.data.items[i].data.lexicon,
                 width: store.data.items[i].data.width,
                 sortable: store.data.items[i].data.sortable,
-                editor_type: store.data.items[i].data.editor_type
+                editor_type: store.data.items[i].data.editor_type,
+                output_filter: store.data.items[i].data.output_filter
             });
         }
 

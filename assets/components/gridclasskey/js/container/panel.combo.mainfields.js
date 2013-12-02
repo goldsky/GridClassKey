@@ -28,6 +28,11 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
                         gridSettingsGrid.data.push([comboValue]);
                         gridSettingsGrid.getStore().loadData(gridSettingsGrid.data);
                         gridSettingsGrid.getView().refresh();
+
+                        var btn = Ext.getCmp('modx-abtn-save');
+                        if (btn) {
+                            btn.enable();
+                        }
                     }
                 },
                 scope: this
@@ -37,6 +42,11 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
                 , handler: function() {
                     var fieldsCombo = Ext.getCmp('gridclasskey-combo-mainfields');
                     fieldsCombo.setValue('');
+
+                    var btn = Ext.getCmp('modx-abtn-save');
+                    if (btn) {
+                        btn.enable();
+                    }
                 }
             }
         ]

@@ -1,5 +1,8 @@
 Grid Class Key dev
 =================================================
+- add "output filter" to the value of the grid to replace javascript's renderer function for non JS geek :)
+- fill in the TV's data on grid
+- add renderer property to the grid's settings for optional rendering
 - [#2][#5][#6][#7][#8] apply settings on saving
 - [#1][#2][#5][#8] add settings for the grid
 

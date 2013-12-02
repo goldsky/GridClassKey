@@ -29,6 +29,11 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
                         gridSettingsGrid.data.push([text]);
                         gridSettingsGrid.getStore().loadData(gridSettingsGrid.data);
                         gridSettingsGrid.getView().refresh();
+
+                        var btn = Ext.getCmp('modx-abtn-save');
+                        if (btn) {
+                            btn.enable();
+                        }
                     }
                 }
             }, {
@@ -37,6 +42,11 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
                 , handler: function() {
                     var fieldsCombo = Ext.getCmp('gridclasskey-combo-tvfields');
                     fieldsCombo.setValue('');
+
+                    var btn = Ext.getCmp('modx-abtn-save');
+                    if (btn) {
+                        btn.enable();
+                    }
                 }
             }
         ]

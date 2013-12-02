@@ -11,22 +11,23 @@ GridClassKey.grid.GridSettings = function(config) {
             ) {
         for (var i = 0, l = config.record.properties.gridclasskey.fields.length; i < l; i++) {
             var fieldRecord = config.record.properties.gridclasskey.fields[i];
-            if (fieldRecord.field === 'id') {
+            if (fieldRecord.name === 'id') {
                 continue;
             }
             data.push([
-                fieldRecord.field,
+                fieldRecord.name,
                 fieldRecord.lexicon,
                 fieldRecord.width,
                 fieldRecord.sortable,
-                fieldRecord.editor_type
+                fieldRecord.editor_type,
+                fieldRecord.output_filter
             ]);
         }
     }
 
     Ext.applyIf(config, {
         id: 'gridclasskey-grid-gridsettings'
-        , fields: ['field', 'lexicon', 'width', 'sortable', 'editor_type']
+        , fields: ['name', 'lexicon', 'width', 'sortable', 'editor_type', 'output_filter']
         , viewConfig: {
             forceFit: true
             , enableRowBody: true
@@ -41,15 +42,15 @@ GridClassKey.grid.GridSettings = function(config) {
         , autoHeight: true
         , columns: [
             {
-                header: _('gridclasskey.field')
-                , dataIndex: 'field'
+                header: _('name')
+                , dataIndex: 'name'
                 , sortable: true
             }, {
                 header: _('lexicon') + ' / ' + _('caption')
                 , dataIndex: 'lexicon'
                 , sortable: true
                 , editor: {
-                    type: 'text'
+                    type: 'textfields'
                 }
             }, {
                 header: _('gridclasskey.width')
@@ -58,7 +59,7 @@ GridClassKey.grid.GridSettings = function(config) {
                 , dataIndex: 'width'
                 , width: 50
                 , editor: {
-                    type: 'text'
+                    type: 'textfields'
                 }
             }, {
                 header: _('gridclasskey.sortable')
@@ -76,8 +77,15 @@ GridClassKey.grid.GridSettings = function(config) {
                 , dataIndex: 'editor_type'
                 , width: 100
                 , editor: {
-                    type: 'text'
-                    , placeHolder: _('gridclasskey.editor_type_placeholder')
+                    type: 'textfields'
+                }
+            }, {
+                header: _('gridclasskey.output_filter')
+                , description: _('gridclasskey.output_filter_desc')
+                , dataIndex: 'output_filter'
+                , width: 80
+                , editor: {
+                    type: 'textfields'
                 }
             }, {
                 header: _('gridclasskey.actions')
@@ -88,9 +96,9 @@ GridClassKey.grid.GridSettings = function(config) {
                     {
                         handler: function(grid, row, col) {
                             var _this = Ext.getCmp('gridclasskey-grid-gridsettings'),
-                                rec = _this.store.getAt(row),
-                                dataLn = _this.data.length,
-                                newArr = [], i;
+                                    rec = _this.store.getAt(row),
+                                    dataLn = _this.data.length,
+                                    newArr = [], i;
                             for (i = 0; i < dataLn; i++) {
                                 if (i === row) {
                                     continue;
@@ -100,6 +108,11 @@ GridClassKey.grid.GridSettings = function(config) {
                             _this.data = newArr;
                             _this.getStore().loadData(_this.data);
                             _this.getView().refresh();
+
+                            var btn = Ext.getCmp('modx-abtn-save');
+                            if (btn) {
+                                btn.enable();
+                            }
                         },
                         getClass: function(v, meta, rec) {
                             if (rec.get('field') !== 'id') {
@@ -133,6 +146,11 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
         ];
         settingsGrid.getStore().loadData(settingsGrid.data);
         settingsGrid.getView().refresh();
+
+        var btn = Ext.getCmp('modx-abtn-save');
+        if (btn) {
+            btn.enable();
+        }
     }
 });
 Ext.reg('gridclasskey-grid-gridsettings', GridClassKey.grid.GridSettings);

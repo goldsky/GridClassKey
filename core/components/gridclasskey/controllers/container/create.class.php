@@ -98,7 +98,7 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         $settings = $this->resource->getProperties('gridclasskey');
         if (is_array($settings) && !empty($settings)) {
             foreach ($settings as $k => $v) {
-                $this->resourceArray['setting_' . $k] = $v;
+                $this->resourceArray['gridclasskey-property-' . $k] = $v;
             }
         }
     }

@@ -42,39 +42,43 @@ GridClassKey.grid.Children = function(config) {
             && config.record.properties.gridclasskey.fields.length > 0) {
         for (var i = 0, fieldsLn = config.record.properties.gridclasskey.fields.length; i < fieldsLn; i++) {
             var fieldRecord = config.record.properties.gridclasskey.fields[i];
-            fields.push(fieldRecord.field);
+            fields.push({
+                name: fieldRecord.name
+                , mapping: fieldRecord.name
+            });
 
             if (typeof (fieldRecord) !== 'object') {
                 continue;
             }
 
             var rowField = {
-                header: _(fieldRecord.lexicon) || fieldRecord.lexicon
-                , dataIndex: fieldRecord.field
+                header: _(fieldRecord.lexicon) ? _(fieldRecord.lexicon) : (fieldRecord.lexicon ? fieldRecord.lexicon : fieldRecord.name)
+                , dataIndex: fieldRecord.name
                 , sortable: fieldRecord.sortable
                 , width: fieldRecord.width
             };
 
-            if (fieldRecord.field !== 'id') {
+            if (fieldRecord.name !== 'id') {
                 if (fieldRecord.editor_type && fieldRecord.editor_type !== '') {
                     if (fieldRecord.editor_type === 'text') {
                         fieldRecord.editor_type = 'textfield';
                     }
-                    rowField['editor'] = {
+                    rowField.editor = {
                         xtype: fieldRecord.editor_type
                     };
                 } else {
-                    rowField['editor'] = {
+                    rowField.editor = {
                         xtype: 'textfield'
                     };
                 }
             }
-            if (fieldRecord.field === 'pagetitle') {
-                rowField['renderer'] = {fn: this._renderPageTitle, scope: this};
+            if (fieldRecord.name === 'pagetitle') {
+                rowField.renderer = {fn: this._renderPageTitle, scope: this};
             }
-            columns.push(rowField);
-        }
 
+            columns.push(rowField);
+            
+        }
         // Because Ext overrides the default Array, we can not use concat(), and this ExtJS 3 doesn't have Ext.Array singleton!
         fields.push('action_edit');
         fields.push('preview_url');
@@ -128,7 +132,6 @@ GridClassKey.grid.Children = function(config) {
             }
         ]
     });
-
 
     Ext.applyIf(config, {
         id: 'gridclasskey-grid-children'

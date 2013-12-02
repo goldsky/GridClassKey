@@ -26,6 +26,13 @@ switch ($modx->event->name) {
     case 'OnManagerPageInit':
         $cssFile = $modx->getOption('gridclasskey.assets_url', null, $modx->getOption('assets_url') . 'components/gridclasskey/') . 'css/mgr.css';
         $modx->regClientCSS($cssFile);
+        $docId = intval($_GET['id']);
+        if ($docId) {
+            $properties = $modx->getObject('modResource', $docId)->getProperties('gridclasskey');
+            if ($properties['grid-css']) {
+                $modx->regClientCSS($properties['grid-css']);
+            }
+        }
         break;
     case 'OnDocFormSave':
         if ($mode === 'upd') {

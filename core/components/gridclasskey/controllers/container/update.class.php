@@ -41,6 +41,11 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $connectorUrl = $gridclasskeyAssetsUrl . 'connector.php';
         $gridclasskeyJsUrl = $gridclasskeyAssetsUrl . 'js/';
 
+        $settings = $this->resource->getProperties('gridclasskey');
+        if (!empty($settings['grid-top-js'])) {
+            $this->addJavascript($settings['grid-top-js']);
+        }
+
         $this->addJavascript($managerUrl . 'assets/modext/util/datetime.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/element/modx.panel.tv.renders.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.grid.resource.security.js');
@@ -84,6 +89,10 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         });
         // ]]>
         </script>');
+
+        if (!empty($settings['grid-bottom-js'])) {
+            $this->addLastJavascript($settings['grid-bottom-js']);
+        }
     }
 
     public function getLanguageTopics() {
@@ -99,7 +108,7 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $settings = $this->resource->getProperties('gridclasskey');
         if (is_array($settings) && !empty($settings)) {
             foreach ($settings as $k => $v) {
-                $this->resourceArray['setting_' . $k] = $v;
+                $this->resourceArray['gridclasskey-property-' . $k] = $v;
             }
         }
     }
