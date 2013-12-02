@@ -10,7 +10,11 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         if (config.record.id) {
             it.push({
                 id: 'gridclasskey-grid-children-panel'
-                , title: _('gridclasskey.children')
+                , title: config.record.properties
+                        && config.record.properties.gridclasskey
+                        && config.record.properties.gridclasskey['grid-childrentab-text']
+                        ? config.record.properties.gridclasskey['grid-childrentab-text']
+                        : _('gridclasskey.children')
                 , cls: 'modx-resource-tab'
                 , layout: 'fit'
                 , forceLayout: true
@@ -181,6 +185,13 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
             }, {
                 xtype: 'textfield'
                 , anchor: '100%'
+                , id: 'gridclasskey-property-grid-childrentab-text'
+                , name: 'gridclasskey-property-grid-childrentab-text'
+                , fieldLabel: _('gridclasskey.childrentab_text')
+                , description: _('gridclasskey.childrentab_text_desc')
+            }, {
+                xtype: 'textfield'
+                , anchor: '100%'
                 , id: 'gridclasskey-property-grid-addnewdocbtn-text'
                 , name: 'gridclasskey-property-grid-addnewdocbtn-text'
                 , fieldLabel: _('gridclasskey.addnewdocbtn_text')
@@ -273,8 +284,19 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 output_filter: store.data.items[i].data.output_filter
             });
         }
+        // upgrade differences
+        this.config.record.properties = this.config.record.properties || {};
+        this.config.record.properties.gridclasskey = this.config.record.properties.gridclasskey || {};
 
         this.config.record.properties.gridclasskey['fields'] = fields;
+
+        var childrenTabText = Ext.getCmp('gridclasskey-property-grid-childrentab-text').getValue();
+        this.config.record.properties.gridclasskey['grid-childrentab-text'] = childrenTabText;
+        if (childrenTabText) {
+            Ext.getCmp('gridclasskey-grid-children-panel').setTitle(childrenTabText);
+        } else {
+            Ext.getCmp('gridclasskey-grid-children-panel').setTitle(_('gridclasskey.children'));
+        }
 
         var addNewDocText = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn-text').getValue();
         this.config.record.properties.gridclasskey['grid-addnewdocbtn-text'] = addNewDocText;

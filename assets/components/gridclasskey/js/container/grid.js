@@ -37,7 +37,8 @@ GridClassKey.grid.Children = function(config) {
             ]
             , columns = [];
 
-    if (config.record.properties.gridclasskey
+    if (config.record.properties
+            && config.record.properties.gridclasskey
             && config.record.properties.gridclasskey.fields
             && config.record.properties.gridclasskey.fields.length > 0) {
         for (var i = 0, fieldsLn = config.record.properties.gridclasskey.fields.length; i < fieldsLn; i++) {
@@ -77,7 +78,7 @@ GridClassKey.grid.Children = function(config) {
             }
 
             columns.push(rowField);
-            
+
         }
         // Because Ext overrides the default Array, we can not use concat(), and this ExtJS 3 doesn't have Ext.Array singleton!
         fields.push('action_edit');
@@ -166,7 +167,11 @@ GridClassKey.grid.Children = function(config) {
         , columns: columns
         , tbar: [
             {
-                text: config.record.properties.gridclasskey['grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
+                text: config.record.properties
+                        && config.record.properties.gridclasskey
+                        && config.record.properties.gridclasskey['grid-addnewdocbtn-text']
+                        ? config.record.properties.gridclasskey['grid-addnewdocbtn-text']
+                        : _('gridclasskey.document_new')
                 , iconCls: 'icon-gridclasskey-document-new'
                 , handler: function(itm, e) {
                     Ext.getCmp('modx-resource-tree').loadAction(

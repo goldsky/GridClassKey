@@ -1,5 +1,7 @@
 Grid Class Key dev
 =================================================
+- [#6] Grid's setting to replace the "Children" tab's title
+- fix properties validation from old version
 - add "output filter" to the value of the grid to replace javascript's renderer function for non JS geek :)
 - fill in the TV's data on grid
 - add renderer property to the grid's settings for optional rendering
