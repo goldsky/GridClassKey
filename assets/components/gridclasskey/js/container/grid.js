@@ -59,19 +59,18 @@ GridClassKey.grid.Children = function(config) {
                 , width: fieldRecord.width
             };
 
-            if (fieldRecord.name !== 'id') {
-                if (fieldRecord.editor_type && fieldRecord.editor_type !== '') {
-                    if (fieldRecord.editor_type === 'text') {
-                        fieldRecord.editor_type = 'textfield';
-                    }
-                    rowField.editor = {
-                        xtype: fieldRecord.editor_type
-                    };
-                } else {
-                    rowField.editor = {
-                        xtype: 'textfield'
-                    };
+            if (fieldRecord.name !== 'id'
+                    && fieldRecord.editor_type
+                    && fieldRecord.editor_type !== ''
+                    && fieldRecord.output_filter === ''
+                    || fieldRecord.output_filter === null
+                    ) {
+                if (fieldRecord.editor_type === 'text') {
+                    fieldRecord.editor_type = 'textfield';
                 }
+                rowField.editor = {
+                    xtype: fieldRecord.editor_type
+                };
             }
             if (fieldRecord.name === 'pagetitle') {
                 rowField.renderer = {fn: this._renderPageTitle, scope: this};

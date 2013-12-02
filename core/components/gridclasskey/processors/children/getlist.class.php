@@ -86,21 +86,24 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             ));
             if (!empty($this->selectedTVFields)) {
                 foreach ($this->selectedTVFields as $k => $tv) {
-                    $c->select(array(
-                        $this->modx->escape($tv) => 'TemplateVarResources_' . $k . '.value',
-                    ));
-                    $tvId = $this->modx->getObject('modTemplateVar', array(
+                    $tvObj = $this->modx->getObject('modTemplateVar', array(
                         'name' => $tv
-                    ))->get('id');
-                    $c->leftJoin('modTemplateVarResource', 'TemplateVarResources_' . $k, array(
-                        'TemplateVarResources_' . $k . '.contentid = modResource.id',
-                        $tvId .' = TemplateVarResources_' . $k . '.tmplvarid',
                     ));
-                    if (!empty($query)) {
-                        $c->orCondition(array(
-                            'modResource.parent:=' => $parent,
-                            'AND:TemplateVarResources_' . $k . '.value:LIKE' => '%' . $query . '%',
+                    if ($tvObj) {
+                        $tvId = $tvObj->get('id');
+                        $c->select(array(
+                            $this->modx->escape($tv) => 'TemplateVarResources_' . $k . '.value',
                         ));
+                        $c->leftJoin('modTemplateVarResource', 'TemplateVarResources_' . $k, array(
+                            'TemplateVarResources_' . $k . '.contentid = modResource.id',
+                            $tvId .' = TemplateVarResources_' . $k . '.tmplvarid',
+                        ));
+                        if (!empty($query)) {
+                            $c->orCondition(array(
+                                'modResource.parent:=' => $parent,
+                                'AND:TemplateVarResources_' . $k . '.value:LIKE' => '%' . $query . '%',
+                            ));
+                        }
                     }
                 }
             }
@@ -158,9 +161,10 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                     $params = array(
                         'input' => $resourceArray[$field['name']]
                     );
-                    $tmp = $this->modx->runSnippet($field['output_filter'], $params);
-                    if (!empty($tmp)) {
-                        $resourceArray[$field['name']] = $tmp;
+                    try {
+                        $resourceArray[$field['name']] = $this->modx->runSnippet($field['output_filter'], $params);
+                    } catch (Exception $ex) {
+                        $resourceArray[$field['name']] = $e->getMessage();
                     }
                 }
             }
