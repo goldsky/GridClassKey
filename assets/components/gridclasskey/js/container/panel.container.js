@@ -298,15 +298,23 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         this.config.record.properties.gridclasskey['fields'] = fields;
 
         var childrenTabText = Ext.getCmp('gridclasskey-property-grid-childrentab-text').getValue();
+        var childrenTab = Ext.getCmp('gridclasskey-grid-children-panel');
         if (childrenTabText) {
+            childrenTab.setTitle(childrenTabText);
             this.config.record.properties.gridclasskey['grid-childrentab-text'] = childrenTabText;
-            Ext.getCmp('gridclasskey-grid-children-panel').setTitle(childrenTabText);
+        } else {
+            childrenTab.setTitle(_('gridclasskey.children'));
+            this.config.record.properties.gridclasskey['grid-childrentab-text'] = _('gridclasskey.children');
         }
 
         var addNewDocText = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn-text').getValue();
+        var addNewDocBtn = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn');
         if (addNewDocText) {
+            addNewDocBtn.setText(childrenTabText);
             this.config.record.properties.gridclasskey['grid-addnewdocbtn-text'] = addNewDocText;
-            Ext.getCmp('gridclasskey-property-grid-addnewdocbtn').setTitle(childrenTabText);
+        } else {
+            addNewDocBtn.setText(_('gridclasskey.document_new'));
+            this.config.record.properties.gridclasskey['grid-addnewdocbtn-text'] = _('gridclasskey.document_new');
         }
 
         var container = Ext.getCmp('gridclasskey-grid-children-panel');

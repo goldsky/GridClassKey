@@ -1,4 +1,5 @@
 <?php
+
 // Apache's timeout: 600 secs
 if (function_exists('ini_get') && !ini_get('safe_mode')) {
     if (function_exists('set_time_limit')) {
@@ -14,7 +15,13 @@ if (function_exists('ini_get') && !ini_get('safe_mode')) {
 if (!isset($scriptProperties['action-parent']) || empty($scriptProperties['action-parent'])) {
     return $this->failure(__LINE__ . ': ' . $modx->lexicon('gridclasskey.empty_return_err'));
 }
-
+if (empty($scriptProperties['action-hidemenu']) &&
+        empty($scriptProperties['action-publish']) &&
+        empty($scriptProperties['action-delete']) &&
+        empty($scriptProperties['action-change-template'])
+) {
+    return $this->failure($modx->lexicon('gridclasskey.empty_action_err'));
+}
 $ids = NULL;
 if ($scriptProperties['action-range'] === 'selected') {
     if (empty($scriptProperties['action-range'])) {
