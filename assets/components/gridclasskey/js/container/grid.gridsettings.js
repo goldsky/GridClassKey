@@ -19,6 +19,7 @@ GridClassKey.grid.GridSettings = function(config) {
                 fieldRecord.lexicon,
                 fieldRecord.width,
                 fieldRecord.sortable,
+                fieldRecord.hidden,
                 fieldRecord.editor_type,
                 fieldRecord.output_filter
             ]);
@@ -27,7 +28,7 @@ GridClassKey.grid.GridSettings = function(config) {
 
     Ext.applyIf(config, {
         id: 'gridclasskey-grid-gridsettings'
-        , fields: ['name', 'lexicon', 'width', 'sortable', 'editor_type', 'output_filter']
+        , fields: ['name', 'lexicon', 'width', 'sortable', 'hidden', 'editor_type', 'output_filter']
         , viewConfig: {
             forceFit: true
             , enableRowBody: true
@@ -36,6 +37,7 @@ GridClassKey.grid.GridSettings = function(config) {
             , showPreview: true
             , emptyText: config.emptyText || _('gridclasskey.empty')
         }
+        , enableDragDrop: true
         , data: data
         , deferredRender: true
         , preventRender: true
@@ -65,6 +67,17 @@ GridClassKey.grid.GridSettings = function(config) {
                 header: _('gridclasskey.sortable')
                 , xtype: 'booleancolumn'
                 , dataIndex: 'sortable'
+                , width: 50
+                , trueText: _('yes')
+                , falseText: _('no')
+                , editor: {
+                    xtype: 'modx-combo-boolean'
+                    , width: 50
+                }
+            }, {
+                header: _('gridclasskey.hidden')
+                , xtype: 'booleancolumn'
+                , dataIndex: 'hidden'
                 , width: 50
                 , trueText: _('yes')
                 , falseText: _('no')
@@ -139,10 +152,10 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     revertDefaultData: function(btn, e) {
         var settingsGrid = Ext.getCmp('gridclasskey-grid-gridsettings');
         settingsGrid.data = [
-            ['id', 'id', 50, true],
-            ['pagetitle', 'pagetitle', 100, true, 'text'],
-            ['longtitle', 'gridclasskey.longtitle', 100, true, 'text'],
-            ['description', 'description', null, false, 'textarea']
+            ['id', 'id', 50, true, false],
+            ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
+            ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
+            ['description', 'description', null, false, false, 'textarea']
         ];
         settingsGrid.getStore().loadData(settingsGrid.data);
         settingsGrid.getView().refresh();

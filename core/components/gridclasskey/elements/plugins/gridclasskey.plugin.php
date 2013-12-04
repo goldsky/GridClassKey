@@ -46,8 +46,11 @@ switch ($modx->event->name) {
                     $classKey === 'modSymLink' ||
                     $classKey === 'modWebLink'
                     ) {
-                $resource->set('hide_children_in_tree', 0);
-                $resource->save();
+                $properties = $resource->getProperties('gridclasskey');
+                if ($properties) {
+                    $resource->set('hide_children_in_tree', 0);
+                    $resource->save();
+                }
             }
         }
         break;

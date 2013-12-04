@@ -53,14 +53,16 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
         $this->addJavascript($managerUrl . 'assets/modext/sections/resource/update.js');
         $this->addJavascript($gridclasskeyJsUrl . 'gridclasskey.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.template.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.tvfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.combo.tvfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.mainfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.combo.mainfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.gridsettings.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'container/common.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'container/update.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.children.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.container.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/page.updatecontainer.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/window.actions.js');
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[

@@ -1,7 +1,34 @@
 GridClassKey.grid.Children = function(config) {
     config = config || {};
 
-    var defaultFields = ['id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published', 'publishedon_date', 'action_edit', 'preview_url']
+    var defaultFields = [{
+            'name': 'id',
+            'mapping': 'id'
+        }, {
+            'name': 'pagetitle',
+            'mapping': 'pagetitle'
+        }, {
+            'name': 'longtitle',
+            'mapping': 'longtitle'
+        }, {
+            'name': 'description',
+            'mapping': 'description'
+        }, {
+            'name': 'deleted',
+            'mapping': 'deleted'
+        }, {
+            'name': 'published',
+            'mapping': 'published'
+        }, {
+            'name': 'publishedon_date',
+            'mapping': 'publishedon_date'
+        }, {
+            'name': 'action_edit',
+            'mapping': 'action_edit'
+        }, {
+            'name': 'preview_url',
+            'mapping': 'preview_url'
+        }]
             , fields = []
             , defaultColumns = [
                 {
@@ -35,7 +62,8 @@ GridClassKey.grid.Children = function(config) {
                     }
                 }
             ]
-            , columns = [];
+            , checkBoxSelMod = new Ext.grid.CheckboxSelectionModel({checkOnly: true})
+            , columns = [checkBoxSelMod];
 
     if (config.record.properties
             && config.record.properties.gridclasskey
@@ -56,6 +84,7 @@ GridClassKey.grid.Children = function(config) {
                 header: _(fieldRecord.lexicon) ? _(fieldRecord.lexicon) : (fieldRecord.lexicon ? fieldRecord.lexicon : fieldRecord.name)
                 , dataIndex: fieldRecord.name
                 , sortable: fieldRecord.sortable
+                , hidden: fieldRecord.hidden
                 , width: fieldRecord.width
             };
 
@@ -80,13 +109,20 @@ GridClassKey.grid.Children = function(config) {
 
         }
         // Because Ext overrides the default Array, we can not use concat(), and this ExtJS 3 doesn't have Ext.Array singleton!
-        fields.push('action_edit');
-        fields.push('preview_url');
+        fields.push({
+            name: 'action_edit'
+            , mapping: 'action_edit'
+        });
+        fields.push({
+            name: 'preview_url'
+            , mapping: 'preview_url'
+        });
     } else {
         fields = defaultFields;
-        columns = defaultColumns;
+        columns.push(defaultColumns);
     }
 
+    // add the Actions column for the last column
     columns.push({
         header: _('actions')
         , xtype: 'actioncolumn'
@@ -163,20 +199,34 @@ GridClassKey.grid.Children = function(config) {
         }
         , save_action: 'children/updateFromGrid'
         , autosave: true
+        , sm : checkBoxSelMod
         , columns: columns
         , tbar: [
             {
-                text: config.record.properties
-                        && config.record.properties.gridclasskey
-                        && config.record.properties.gridclasskey['grid-addnewdocbtn-text']
-                        ? config.record.properties.gridclasskey['grid-addnewdocbtn-text']
-                        : _('gridclasskey.document_new')
+                text: _('actions')
+                , iconCls: 'icon-gridclasskey-check_boxes'
+                , handler: function(btn, e) {
+                    var actionsWindow = new GridClassKey.window.Actions({
+                        record: {
+                            parent: config.record.id
+                        }
+                    });
+                    return actionsWindow.show();
+                }
+            }, {
+                text : config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
+                , id: 'gridclasskey-property-grid-addnewdocbtn'
                 , iconCls: 'icon-gridclasskey-document-new'
                 , handler: function(itm, e) {
                     Ext.getCmp('modx-resource-tree').loadAction(
                             'a=' + MODx.action['resource/create']
                             + '&parent=' + config.record.id
                             + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
+                            + (config.record.properties
+                                    && config.record.properties.gridclasskey
+                                    && config.record.properties.gridclasskey['child-template']
+                                    ? '&template=' + config.record.properties.gridclasskey['child-template']
+                                    : '')
                             );
                 }
             }, '->', {

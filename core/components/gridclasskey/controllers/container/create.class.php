@@ -51,13 +51,14 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
         $this->addJavascript($managerUrl . 'assets/modext/sections/resource/create.js');
         $this->addJavascript($gridclasskeyJsUrl . 'gridclasskey.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.template.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.tvfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.combo.tvfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/combo.mainfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.combo.mainfields.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.gridsettings.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'container/common.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'container/create.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.container.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/page.createcontainer.js');
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[

@@ -1,5 +1,6 @@
 Grid Class Key dev
 =================================================
+- add batch actions to the children's grid
 - disable editor when output filter is applied to the cell
 - [#6] Grid's setting to replace the "Children" tab's title
 - fix properties validation from old version

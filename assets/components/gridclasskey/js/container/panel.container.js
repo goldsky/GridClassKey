@@ -1,5 +1,6 @@
 GridClassKey.panel.Container = function(config) {
     config = config || {};
+
     GridClassKey.panel.Container.superclass.constructor.call(this, config);
 };
 
@@ -10,11 +11,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         if (config.record.id) {
             it.push({
                 id: 'gridclasskey-grid-children-panel'
-                , title: config.record.properties
-                        && config.record.properties.gridclasskey
-                        && config.record.properties.gridclasskey['grid-childrentab-text']
-                        ? config.record.properties.gridclasskey['grid-childrentab-text']
-                        : _('gridclasskey.children')
+                , title: config.record['gridclasskey-property-grid-childrentab-text'] || _('gridclasskey.children')
                 , cls: 'modx-resource-tab'
                 , layout: 'fit'
                 , forceLayout: true
@@ -202,13 +199,22 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
     getGridSettingsRightFields: function(config) {
         return [
             {
-                xtype: 'modx-combo-template'
+                xtype: 'gridclasskey-combo-template'
                 , anchor: '100%'
-                , name: 'gridclasskey-property-childtemplate'
-                , hiddenName: 'gridclasskey-property-childtemplate'
+                , name: 'gridclasskey-property-child-template'
+                , hiddenName: 'gridclasskey-property-child-template'
                 , fieldLabel: _('gridclasskey.default_template')
                 , description: _('gridclasskey.child_default_template_desc')
                 , bodyStyle: 'margin: 5px 0'
+            }, {
+                xtype: 'checkbox' // 'xcheckbox' fails to get the value for some reason
+                , hideLabel: true
+                , boxLabel: _('resource_hide_from_menus')
+                , id: 'gridclasskey-property-child-hidemenu'
+                , name: 'gridclasskey-property-child-hidemenu'
+                , description: _('resource_hide_from_menus_help')
+                , inputValue: 1
+                , checked: parseInt(config.record['gridclasskey-property-child-hidemenu']) || 0
             }
         ];
     },
@@ -238,8 +244,9 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                         , bodyStyle: 'margin: 5px 0'
                     }, {
                         // will be used for the grid below on submission
-                        xtype: 'hidden',
-                        name: 'gridclasskey-property-fields'
+                        xtype: 'hidden'
+                        , id: 'gridclasskey-property-fields'
+                        , name: 'gridclasskey-property-fields'
                     }, {
                         columnWidth: 1
                         , xtype: 'gridclasskey-grid-gridsettings'
@@ -260,15 +267,14 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 lexicon: store.data.items[i].data.lexicon,
                 width: store.data.items[i].data.width,
                 sortable: store.data.items[i].data.sortable,
+                hidden: store.data.items[i].data.hidden,
                 editor_type: store.data.items[i].data.editor_type,
                 output_filter: store.data.items[i].data.output_filter
             });
         }
-        var values = o.form.getValues();
-        values['gridclasskey-property-fields'] = JSON.stringify(fields);
-        o.form.setValues(values);
+        Ext.getCmp('gridclasskey-property-fields').setValue(JSON.stringify(fields));
 
-        return GridClassKey.panel.Container.superclass.beforeSubmit.call(this, o);
+        return GridClassKey.panel.Container.superclass.beforeSubmit.apply(this, arguments);
     },
     success: function(o) {
         var grid = Ext.getCmp('gridclasskey-grid-gridsettings');
@@ -280,6 +286,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 lexicon: store.data.items[i].data.lexicon,
                 width: store.data.items[i].data.width,
                 sortable: store.data.items[i].data.sortable,
+                hidden: store.data.items[i].data.hidden,
                 editor_type: store.data.items[i].data.editor_type,
                 output_filter: store.data.items[i].data.output_filter
             });
@@ -291,15 +298,16 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         this.config.record.properties.gridclasskey['fields'] = fields;
 
         var childrenTabText = Ext.getCmp('gridclasskey-property-grid-childrentab-text').getValue();
-        this.config.record.properties.gridclasskey['grid-childrentab-text'] = childrenTabText;
         if (childrenTabText) {
+            this.config.record.properties.gridclasskey['grid-childrentab-text'] = childrenTabText;
             Ext.getCmp('gridclasskey-grid-children-panel').setTitle(childrenTabText);
-        } else {
-            Ext.getCmp('gridclasskey-grid-children-panel').setTitle(_('gridclasskey.children'));
         }
 
         var addNewDocText = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn-text').getValue();
-        this.config.record.properties.gridclasskey['grid-addnewdocbtn-text'] = addNewDocText;
+        if (addNewDocText) {
+            this.config.record.properties.gridclasskey['grid-addnewdocbtn-text'] = addNewDocText;
+            Ext.getCmp('gridclasskey-property-grid-addnewdocbtn').setTitle(childrenTabText);
+        }
 
         var container = Ext.getCmp('gridclasskey-grid-children-panel');
         container.removeAll();
