@@ -1,47 +1,28 @@
 GridClassKey.panel.MainFieldsCombo = function(config) {
     config = config || {};
 
-    Ext.applyIf(config, {
-        id: 'gridclasskey-panel-mainfieldscombo'
-        , layout: 'hbox'
-        , layoutConfig: {
-            align: 'middle'
-            , pack: 'start'
-        }
-        , defaults: {
-            margins: '0 5 0 0'
-        }
-        , items: [
-            {
-                html: '<div class="x-form-item-label">' + _('gridclasskey.settings_add_main_field') + ': </div>'
-                , border: false
-            }, {
-                xtype: 'gridclasskey-combo-mainfields'
-            }, {
-                xtype: 'button'
-                , text: _('add')
-                , handler: function() {
-                    var gridSettingsGrid = Ext.getCmp('gridclasskey-grid-gridsettings');
-                    var fieldsCombo = Ext.getCmp('gridclasskey-combo-mainfields');
-                    var comboValue = fieldsCombo.getValue();
-                    if (comboValue) {
-                        gridSettingsGrid.data.push([comboValue]);
-                        gridSettingsGrid.getStore().loadData(gridSettingsGrid.data);
-                        gridSettingsGrid.getView().refresh();
-
-                        var btn = Ext.getCmp('modx-abtn-save');
-                        if (btn) {
-                            btn.enable();
-                        }
-                    }
-                },
-                scope: this
-            }, {
-                xtype: 'button'
-                , text: _('gridclasskey.clear')
-                , handler: function() {
-                    var fieldsCombo = Ext.getCmp('gridclasskey-combo-mainfields');
-                    fieldsCombo.setValue('');
+    var items = [];
+    if (!config.fieldLabel) {
+        items.push({
+            html: '<div class="x-form-item-label">' + _('gridclasskey.settings_add_main_field') + ': </div>'
+            , border: false
+        });
+    }
+    items.push({
+        xtype: 'gridclasskey-combo-mainfields'
+        , id: config.id + '-combo' || ''
+    }, {
+        xtype: 'button'
+        , text: _('add')
+        , handler: function() {
+            if (config.applyToGrid) {
+                var targetGrid = Ext.getCmp(config.applyToGrid);
+                var fieldsCombo = Ext.getCmp(config.id + '-combo');
+                var comboValue = fieldsCombo.getValue();
+                if (comboValue) {
+                    targetGrid.data.push([comboValue]);
+                    targetGrid.getStore().loadData(targetGrid.data);
+                    targetGrid.getView().refresh();
 
                     var btn = Ext.getCmp('modx-abtn-save');
                     if (btn) {
@@ -49,7 +30,33 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
                     }
                 }
             }
-        ]
+        }
+        , scope: this
+    }, {
+        xtype: 'button'
+        , text: _('gridclasskey.clear')
+        , handler: function() {
+            var fieldsCombo = Ext.getCmp(config.id + '-combo');
+            fieldsCombo.setValue('');
+
+            var btn = Ext.getCmp('modx-abtn-save');
+            if (btn) {
+                btn.enable();
+            }
+        }
+        , scope: this
+    });
+
+    Ext.applyIf(config, {
+        layout: 'hbox'
+        , layoutConfig: {
+            align: 'middle'
+            , pack: 'start'
+        }
+        , defaults: {
+            margins: '0 5 0 0'
+        }
+        , items: items
     });
 
     GridClassKey.panel.MainFieldsCombo.superclass.constructor.call(this, config);

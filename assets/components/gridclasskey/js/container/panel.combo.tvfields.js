@@ -1,47 +1,30 @@
 GridClassKey.panel.TVFieldsCombo = function(config) {
     config = config || {};
 
-    Ext.applyIf(config, {
-        id: 'gridclasskey-panel-tvfieldscombo'
-        , layout: 'hbox'
-        , layoutConfig: {
-            align: 'middle'
-            , pack: 'start'
-        }
-        , defaults: {
-            margins: '0 5 0 0'
-        }
-        , items: [
-            {
-                html: '<div class="x-form-item-label">' + _('gridclasskey.settings_add_tv_field') + ': </div>'
-                , border: false
-            }, {
-                xtype: 'gridclasskey-combo-tvfields'
-            }, {
-                xtype: 'button'
-                , text: _('add')
-                , handler: function() {
-                    var gridSettingsGrid = Ext.getCmp('gridclasskey-grid-gridsettings');
-                    var fieldsCombo = Ext.getCmp('gridclasskey-combo-tvfields');
-                    var comboValue = fieldsCombo.getValue();
-                    var text = fieldsCombo.lastSelectionText;
-                    if (comboValue) {
-                        gridSettingsGrid.data.push([text]);
-                        gridSettingsGrid.getStore().loadData(gridSettingsGrid.data);
-                        gridSettingsGrid.getView().refresh();
+    var items = [];
+    if (!config.fieldLabel) {
+        items.push({
+            html: '<div class="x-form-item-label">' + _('gridclasskey.settings_add_tv_field') + ': </div>'
+            , border: false
+        });
+    }
 
-                        var btn = Ext.getCmp('modx-abtn-save');
-                        if (btn) {
-                            btn.enable();
-                        }
-                    }
-                }
-            }, {
-                xtype: 'button'
-                , text: _('gridclasskey.clear')
-                , handler: function() {
-                    var fieldsCombo = Ext.getCmp('gridclasskey-combo-tvfields');
-                    fieldsCombo.setValue('');
+    items.push({
+        xtype: 'gridclasskey-combo-tvfields'
+        , id: config.id + '-combo' || ''
+    }, {
+        xtype: 'button'
+        , text: _('add')
+        , handler: function() {
+            if (config.applyToGrid) {
+                var targetGrid = Ext.getCmp(config.applyToGrid);
+                var fieldsCombo = Ext.getCmp(config.id + '-combo');
+                var comboValue = fieldsCombo.getValue();
+                var text = fieldsCombo.lastSelectionText;
+                if (comboValue) {
+                    targetGrid.data.push([text]);
+                    targetGrid.getStore().loadData(targetGrid.data);
+                    targetGrid.getView().refresh();
 
                     var btn = Ext.getCmp('modx-abtn-save');
                     if (btn) {
@@ -49,7 +32,33 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
                     }
                 }
             }
-        ]
+        }
+        , scope: this
+    }, {
+        xtype: 'button'
+        , text: _('gridclasskey.clear')
+        , handler: function() {
+            var fieldsCombo = Ext.getCmp(config.id + '-combo');
+            fieldsCombo.setValue('');
+
+            var btn = Ext.getCmp('modx-abtn-save');
+            if (btn) {
+                btn.enable();
+            }
+        }
+        , scope: this
+    });
+
+    Ext.applyIf(config, {
+        layout: 'hbox'
+        , layoutConfig: {
+            align: 'middle'
+            , pack: 'start'
+        }
+        , defaults: {
+            margins: '0 5 0 0'
+        }
+        , items: items
     });
 
     GridClassKey.panel.TVFieldsCombo.superclass.constructor.call(this, config);

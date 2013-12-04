@@ -26,13 +26,6 @@ switch ($modx->event->name) {
     case 'OnManagerPageInit':
         $cssFile = $modx->getOption('gridclasskey.assets_url', null, $modx->getOption('assets_url') . 'components/gridclasskey/') . 'css/mgr.css';
         $modx->regClientCSS($cssFile);
-        $docId = intval($_GET['id']);
-        if ($docId) {
-            $properties = $modx->getObject('modResource', $docId)->getProperties('gridclasskey');
-            if ($properties['grid-css']) {
-                $modx->regClientCSS($properties['grid-css']);
-            }
-        }
         break;
     case 'OnDocFormSave':
         if ($mode === 'upd') {
@@ -45,7 +38,7 @@ switch ($modx->event->name) {
                     $classKey === 'modStaticResource' ||
                     $classKey === 'modSymLink' ||
                     $classKey === 'modWebLink'
-                    ) {
+            ) {
                 $properties = $resource->getProperties('gridclasskey');
                 if ($properties) {
                     $resource->set('hide_children_in_tree', 0);
@@ -54,7 +47,59 @@ switch ($modx->event->name) {
             }
         }
         break;
+    case 'OnDocFormPrerender':
+        $actionId = intval($_GET['a']);
+        if ($actionId !== 30 && $actionId !== 55) {
+            return false;
+        }
+        $docId = isset($_GET['id']) ? intval($_GET['id']) : '';
+        $parentId = isset($_GET['parent']) ? intval($_GET['parent']) : '';
+        if (empty($docId) && empty($parentId)) {
+            return false;
+        }
+        if (!empty($docId)) {
+            $resource = $modx->getObject('modResource', $docId);
+            $classKey = $resource->get('class_key');
+            if ($classKey === 'GridContainer') {
+                $properties = $resource->getProperties('gridclasskey');
+                if ($properties['grid-css']) {
+                    $modx->regClientCSS($properties['grid-css']);
+                }
+            }
+        }
+        if (!empty($docId) && empty($parentId)) {
+            $parentId = $resource->get('parent');
+        }
 
+        $parentResource = $modx->getObject('modResource', $parentId);
+        if ($parentResource) {
+            $parentClassKey = $parentResource->get('class_key');
+            if ($parentClassKey === 'GridContainer') {
+                $modx->lexicon->load('gridclasskey:default');
+                $text = $modx->lexicon('gridclasskey.back_to_container');
+                $modx->regClientStartupHTMLBlock('<script type="text/javascript">
+Ext.onReady(function() {
+    var actionButtons = Ext.getCmp("modx-action-buttons");
+    if (actionButtons) {
+        var backToParentBtn = {
+            xtype: "button"
+            , text: "' . $text . '"
+            , margins: "0 5 0 0"
+            , handler: function() {
+                Ext.getCmp("modx-resource-tree").loadAction(
+                        "a=" + MODx.action["resource/update"]
+                        + "&id=" + ' . $parentId . '
+                        );
+            }
+        };
+        actionButtons.insert(0, backToParentBtn);
+        actionButtons.doLayout();
+    }
+});
+        </script>');
+            }
+        }
+    break;
     default:
         break;
 }

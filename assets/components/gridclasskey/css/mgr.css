@@ -39,6 +39,17 @@
     color: red !important;
 }
 
+.gridclasskey-hidden a,
+.gridclasskey-hidden {
+    color: #888 !important;
+}
+
+.gridclasskey-deleted .gridclasskey-hidden  a,
+.gridclasskey-deleted .gridclasskey-hidden  {
+    text-decoration: line-through !important;
+    color: #888 !important;
+}
+
 .icon-gridclasskey-filter {
     background-image: url(../icons/filter.png) !important;
 }
@@ -55,6 +66,8 @@
     background-image: url(../icons/setting_tools.png) !important;
 }
 
+#gridclasskey-panel-mainfieldscombo-filter .x-btn,
+#gridclasskey-panel-tvfieldscombo-filter .x-btn,
 #gridclasskey-panel-mainfieldscombo .x-btn,
 #gridclasskey-panel-tvfieldscombo .x-btn {
     position: absolute !important;

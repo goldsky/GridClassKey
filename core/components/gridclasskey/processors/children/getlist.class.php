@@ -42,7 +42,10 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             'namespace' => 'core',
             'controller' => 'resource/update',
         ));
-
+        $parent = $this->getProperty('parent');
+        if (empty($parent)) {
+            return $this->failure($this->modx->lexicon('gridclasskey.parent_missing_err'));
+        }
         return parent::initialize();
     }
 
@@ -63,53 +66,95 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             ));
         }
 
+        $mainFields = $this->modx->getSelectColumns('modResource');
+        $mainFields = str_replace('`', '', $mainFields);
+        $mainFields = @explode(',', $mainFields);
+        array_walk($mainFields, create_function('&$v', '$v = trim($v);'));
+
+        $tvLoopIndex = 0;
         $parent = $this->getProperty('parent');
-        if ($parent) {
-            $this->parentProperties = $this->modx->getObject('modResource', $parent)->getProperties('gridclasskey');
+
+        $this->parentProperties = $this->modx->getObject('modResource', $parent)->getProperties('gridclasskey');
+        if ($this->parentProperties) {
             foreach ($this->parentProperties['fields'] as $field) {
                 $this->selectedFields = array_merge($this->selectedFields, (array) $field['name']);
             }
 
-            $mainFields = $this->modx->getSelectColumns('modResource');
-            $mainFields = str_replace('`', '', $mainFields);
-            $this->selectedMainFields = @explode(',', $mainFields);
-            array_walk($this->selectedMainFields, create_function('&$v', '$v = trim($v);'));
-
-            $this->selectedMainFields = array_intersect($this->selectedFields, $this->selectedMainFields);
+            $this->selectedMainFields = array_intersect($this->selectedFields, $mainFields);
             $this->selectedMainFields = array_values($this->selectedMainFields);
             $c->select($this->modx->getSelectColumns('modResource', 'modResource', '', $this->selectedMainFields));
 
             $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
             $this->selectedTVFields = array_values($this->selectedTVFields);
-            $c->where(array(
-                'modResource.parent' => $parent
+        }
+        if (!empty($this->selectedTVFields)) {
+            foreach ($this->selectedTVFields as $k => $tv) {
+                $this->_joinTV($c, $tvLoopIndex, $tv, $query);
+                $tvLoopIndex++;
+            }
+        }
+
+        // advanced search
+        $template = $this->getProperty('template');
+        if (!empty($template)) {
+            $c->andCondition(array(
+                'modResource.template' => $template
             ));
-            if (!empty($this->selectedTVFields)) {
-                foreach ($this->selectedTVFields as $k => $tv) {
-                    $tvObj = $this->modx->getObject('modTemplateVar', array(
-                        'name' => $tv
+        }
+        $fields = $this->getProperty('fields');
+        if (!empty($fields)) {
+            $fieldsArray = json_decode($fields, 1);
+            foreach ($fieldsArray as $k => $field) {
+                if (in_array($field['name'], $mainFields)) {
+                    $c->andCondition(array(
+                        'modResource.' . $field['name'] . ':LIKE' => "%{$field['value']}%"
                     ));
-                    if ($tvObj) {
-                        $tvId = $tvObj->get('id');
-                        $c->select(array(
-                            $this->modx->escape($tv) => 'TemplateVarResources_' . $k . '.value',
-                        ));
-                        $c->leftJoin('modTemplateVarResource', 'TemplateVarResources_' . $k, array(
-                            'TemplateVarResources_' . $k . '.contentid = modResource.id',
-                            $tvId .' = TemplateVarResources_' . $k . '.tmplvarid',
-                        ));
-                        if (!empty($query)) {
-                            $c->orCondition(array(
-                                'modResource.parent:=' => $parent,
-                                'AND:TemplateVarResources_' . $k . '.value:LIKE' => '%' . $query . '%',
-                            ));
-                        }
-                    }
+                    unset($fieldsArray[$k]);
+                }
+            }
+            if (!empty($fieldsArray)) {
+                foreach ($fieldsArray as $k => $tv) {
+                    $this->_joinTV($c, $tvLoopIndex, $tv['name'], $tv['value']);
+                    $tvLoopIndex++;
                 }
             }
         }
 
+        $c->where(array(
+            'modResource.parent' => $parent
+        ));
+
         return $c;
+    }
+
+    private function _joinTV($c, $index, $tvName, $query = '') {
+        $tvObj = $this->modx->getObject('modTemplateVar', array(
+            'name' => $tvName
+        ));
+
+        if ($tvObj) {
+            $tvId = $tvObj->get('id');
+            $c->select(array(
+                $this->modx->escape($tvName) => 'TemplateVarResources_' . $index . '.value',
+            ));
+            $c->leftJoin('modTemplateVarResource', 'TemplateVarResources_' . $index, array(
+                'TemplateVarResources_' . $index . '.contentid = modResource.id',
+                $tvId . ' = TemplateVarResources_' . $index . '.tmplvarid',
+            ));
+            if (!empty($query)) {
+                $parent = $this->getProperty('parent');
+                if (!empty($parent)) {
+                    $c->orCondition(array(
+                        'modResource.parent:=' => $parent,
+                        'AND:TemplateVarResources_' . $index . '.value:LIKE' => '%' . $query . '%',
+                    ));
+                } else {
+                    $c->orCondition(array(
+                        'TemplateVarResources_' . $index . '.value:LIKE' => '%' . $query . '%',
+                    ));
+                }
+            }
+        }
     }
 
     /**
@@ -136,20 +181,25 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     public function prepareRow(xPDOObject $object) {
         $resourceArray = parent::prepareRow($object);
 
-        if (!empty($resourceArray['publishedon'])) {
-            $publishedon = strtotime($resourceArray['publishedon']);
-            $resourceArray['publishedon_date'] = strftime($this->modx->getOption('articles.mgr_date_format', null, '%b %d'), $publishedon);
-            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('articles.mgr_time_format', null, '%H:%I %p'), $publishedon);
-            $resourceArray['publishedon'] = strftime('%b %d, %Y %H:%I %p', $publishedon);
-        }
-
         foreach ($resourceArray as $field => $value) {
-            if (!in_array($field, $this->selectedFields)) {
+            if (!in_array($field, $this->selectedFields) &&
+                    $field !== 'published' &&
+                    $field !== 'deleted' &&
+                    $field !== 'hidemenu' &&
+                    $field !== 'isfolder'
+            ) {
                 unset($resourceArray[$field]);
                 continue;
             }
             // avoid null on returns
             $resourceArray[$field] = $resourceArray[$field] !== null ? $resourceArray[$field] : '';
+        }
+
+        if (isset($resourceArray['publishedon'])) {
+            $publishedon = strtotime($resourceArray['publishedon']);
+            $resourceArray['publishedon_date'] = strftime($this->modx->getOption('articles.mgr_date_format', null, '%b %d'), $publishedon);
+            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('articles.mgr_time_format', null, '%H:%I %p'), $publishedon);
+            $resourceArray['publishedon'] = strftime('%b %d, %Y %H:%I %p', $publishedon);
         }
 
         if (!empty($this->parentProperties)) {
@@ -173,6 +223,13 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         $this->modx->getContext($resourceArray['context_key']);
         $resourceArray['preview_url'] = $this->modx->makeUrl($resourceArray['id'], $resourceArray['context_key']);
+
+        $c = $this->modx->newQuery('modResource');
+        $c->where(array(
+            'parent' => $resourceArray['id']
+        ));
+        $c->limit(1);
+        $resourceArray['has_children'] = (bool) $this->modx->getCount('modResource', $c);
 
         return $resourceArray;
     }

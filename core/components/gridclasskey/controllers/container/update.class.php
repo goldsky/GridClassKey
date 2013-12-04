@@ -63,6 +63,8 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/panel.container.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/page.updatecontainer.js');
         $this->addLastJavascript($gridclasskeyJsUrl . 'container/window.actions.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/grid.advancedsearch.js');
+        $this->addLastJavascript($gridclasskeyJsUrl . 'container/window.advancedsearch.js');
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[

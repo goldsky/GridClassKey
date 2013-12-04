@@ -4,6 +4,7 @@ GridClassKey.grid.GridSettings = function(config) {
     var data = [
         ['id', 'id', 50, true]
     ];
+
     if (config.record
             && config.record.properties
             && config.record.properties.gridclasskey
@@ -128,7 +129,7 @@ GridClassKey.grid.GridSettings = function(config) {
                             }
                         },
                         getClass: function(v, meta, rec) {
-                            if (rec.get('field') !== 'id') {
+                            if (rec.get('name') !== 'id') {
                                 this.items[0].tooltip = _('delete');
                                 this.items[0].altText = _('delete');
                                 return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
@@ -142,23 +143,23 @@ GridClassKey.grid.GridSettings = function(config) {
             '->', {
                 text: _('gridclasskey.back_to_default')
                 , handler: this.revertDefaultData
+                , scope: this
             }
         ]
     });
+
     GridClassKey.grid.GridSettings.superclass.constructor.call(this, config);
-    this.doLayout();
 };
 Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     revertDefaultData: function(btn, e) {
-        var settingsGrid = Ext.getCmp('gridclasskey-grid-gridsettings');
-        settingsGrid.data = [
+        this.data = [
             ['id', 'id', 50, true, false],
             ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
             ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
             ['description', 'description', null, false, false, 'textarea']
         ];
-        settingsGrid.getStore().loadData(settingsGrid.data);
-        settingsGrid.getView().refresh();
+        this.getStore().loadData(this.data);
+        this.getView().refresh();
 
         var btn = Ext.getCmp('modx-abtn-save');
         if (btn) {

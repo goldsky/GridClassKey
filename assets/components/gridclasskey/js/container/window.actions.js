@@ -113,6 +113,7 @@ GridClassKey.window.Actions = function(config) {
                 , fieldLabel: _('gridclasskey.change_template')
                 , anchor: '100%'
                 , name: 'action-change-template'
+                , hiddenName: 'action-change-template'
                 , allowBlank: true
                 , enableKeyEvents: true
             }
@@ -160,8 +161,7 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
                     this.fireEvent('cancel', this.config);
                 }
             }, this);
-        }
-        else {
+        } else {
             this.submit();
         }
     }

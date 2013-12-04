@@ -2,14 +2,14 @@ GridClassKey.combo.TVFields = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
-        id: 'gridclasskey-combo-tvfields'
-        , url: GridClassKey.connector_url
+        url: GridClassKey.connector_url
         , baseParams: {
             action: 'fields/getTVFieldsList'
         }
         , pageSize: 10
         , lazyRender: true
         , fields: ['id', 'name']
+        , width: 190
         /**
          * Don't give name, exclude this combo out of the saving
          */
@@ -17,7 +17,6 @@ GridClassKey.combo.TVFields = function(config) {
 //        , hiddenName: 'tvfield'
         , displayField: 'name'
         , valueField: 'id'
-        , width: 190
     });
     GridClassKey.combo.TVFields.superclass.constructor.call(this, config);
 };

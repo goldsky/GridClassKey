@@ -1,12 +1,13 @@
 GridClassKey.combo.MainFields = function(config) {
     config = config || {};
+
     Ext.applyIf(config, {
-        id: 'gridclasskey-combo-mainfields'
-        , url: GridClassKey.connector_url
+        url: GridClassKey.connector_url
         , baseParams: {
             action: 'fields/getMainFieldsList'
         }
         , fields: ['name']
+        , width: 190
         /**
          * Don't give name, exclude this combo out of the saving
          */

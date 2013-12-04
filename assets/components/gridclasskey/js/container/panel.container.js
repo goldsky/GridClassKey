@@ -228,18 +228,21 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                     labelSeparator: ''
                     , labelAlign: 'top'
                     , border: false
-//                    , layout: 'form'
                     , msgTarget: 'under'
                 }
                 , items: [
                     {
                         columnWidth: .5
+                        , id: 'gridclasskey-panel-mainfieldscombo'
                         , xtype: 'gridclasskey-panel-mainfieldscombo'
+                        , applyToGrid: 'gridclasskey-grid-gridsettings'
                         , border: false
                         , bodyStyle: 'margin: 5px 0'
                     }, {
                         columnWidth: .5
+                        , id: 'gridclasskey-panel-tvfieldscombo'
                         , xtype: 'gridclasskey-panel-tvfieldscombo'
+                        , applyToGrid: 'gridclasskey-grid-gridsettings'
                         , border: false
                         , bodyStyle: 'margin: 5px 0'
                     }, {
