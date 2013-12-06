@@ -194,7 +194,7 @@ GridClassKey.grid.Children = function(config) {
         ]
     });
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         id: 'gridclasskey-grid-children'
         , url: GridClassKey.connector_url
         , baseParams: {

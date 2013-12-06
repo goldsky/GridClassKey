@@ -1,5 +1,7 @@
-Grid Class Key dev
+Grid Class Key 1.0.0-beta-2 (December 06, 2013)
 =================================================
+- use modx's core output filter
+- use "apply" to all the JS configs
 - add advanced search for detailed filtering
 - [#3] add resource duplication
 - [#8] add "Back to Container" button

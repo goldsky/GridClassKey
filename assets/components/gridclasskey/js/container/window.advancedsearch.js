@@ -4,7 +4,7 @@ GridClassKey.window.AdvancedSearch = function(config) {
     if (check) {
         check.destroy();
     }
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         id: 'gridclasskey-window-advancedsearch'
         , url: GridClassKey.connector_url
         , title: _('gridclasskey.advanced_search')

@@ -205,17 +205,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         if (!empty($this->parentProperties)) {
             foreach ($this->parentProperties['fields'] as $field) {
                 if (!empty($field['output_filter'])) {
-                    /**
-                     * @see modOutputFilter::filter()
-                     */
-                    $params = array(
-                        'input' => $resourceArray[$field['name']]
-                    );
-                    try {
-                        $resourceArray[$field['name']] = $this->modx->runSnippet($field['output_filter'], $params);
-                    } catch (Exception $ex) {
-                        $resourceArray[$field['name']] = $e->getMessage();
-                    }
+                    $resourceArray[$field['name']] = $this->_outputFilter($resourceArray[$field['name']], $field['output_filter']);
                 }
             }
         }
@@ -234,6 +224,21 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         return $resourceArray;
     }
 
+    /**
+     * @see core/model/modx/filters/modoutputfilter.class.php
+     * @see modOutputFilter::filter()
+     */
+    private function _outputFilter($string, $outputFilter) {
+        $chunk = $this->modx->newObject('modChunk');
+        // just to create a name for the modChunk object.
+        $outputFilter = ltrim($outputFilter, ':');
+        $name = rand(5, 15) . ':' . $outputFilter;
+        $chunk->set('name', $name);
+        $chunk->setCacheable(false);
+        $chunk->setContent($string);
+        $chunk->_processed = false;
+        return $chunk->process();
+    }
 }
 
 return 'GridContainerGetListProcessor';

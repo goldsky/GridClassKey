@@ -1,7 +1,7 @@
 GridClassKey.combo.TVFields = function(config) {
     config = config || {};
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         url: GridClassKey.connector_url
         , baseParams: {
             action: 'fields/getTVFieldsList'

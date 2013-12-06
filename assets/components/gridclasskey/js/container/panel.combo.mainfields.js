@@ -23,7 +23,7 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
                     targetGrid.data.push([comboValue]);
                     targetGrid.getStore().loadData(targetGrid.data);
                     targetGrid.getView().refresh();
-
+                    Ext.getCmp('modx-panel-resource').markDirty();
                     var btn = Ext.getCmp('modx-abtn-save');
                     if (btn) {
                         btn.enable();
@@ -47,7 +47,7 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
         , scope: this
     });
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         layout: 'hbox'
         , layoutConfig: {
             align: 'middle'

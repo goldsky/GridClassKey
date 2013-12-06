@@ -1,7 +1,7 @@
 GridClassKey.window.Actions = function(config) {
     config = config || {};
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         id: 'gridclasskey-window-actions'
         , url: GridClassKey.connector_url
         , title: _('actions')

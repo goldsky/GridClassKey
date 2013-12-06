@@ -1,7 +1,7 @@
 GridClassKey.grid.AdvancedSearch = function(config) {
     config = config || {};
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         id: 'gridclasskey-grid-advancedsearch'
         , fields: ['name', 'value']
         , viewConfig: {

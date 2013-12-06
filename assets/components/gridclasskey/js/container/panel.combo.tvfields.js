@@ -8,7 +8,6 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
             , border: false
         });
     }
-
     items.push({
         xtype: 'gridclasskey-combo-tvfields'
         , id: config.id + '-combo' || ''
@@ -20,12 +19,11 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
                 var targetGrid = Ext.getCmp(config.applyToGrid);
                 var fieldsCombo = Ext.getCmp(config.id + '-combo');
                 var comboValue = fieldsCombo.getValue();
-                var text = fieldsCombo.lastSelectionText;
                 if (comboValue) {
-                    targetGrid.data.push([text]);
+                    targetGrid.data.push([comboValue]);
                     targetGrid.getStore().loadData(targetGrid.data);
                     targetGrid.getView().refresh();
-
+                    Ext.getCmp('modx-panel-resource').markDirty();
                     var btn = Ext.getCmp('modx-abtn-save');
                     if (btn) {
                         btn.enable();
@@ -49,7 +47,7 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
         , scope: this
     });
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         layout: 'hbox'
         , layoutConfig: {
             align: 'middle'

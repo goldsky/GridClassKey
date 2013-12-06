@@ -27,7 +27,7 @@ GridClassKey.grid.GridSettings = function(config) {
         }
     }
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         id: 'gridclasskey-grid-gridsettings'
         , fields: ['name', 'lexicon', 'width', 'sortable', 'hidden', 'editor_type', 'output_filter']
         , viewConfig: {
@@ -146,6 +146,18 @@ GridClassKey.grid.GridSettings = function(config) {
                 , scope: this
             }
         ]
+        , listeners: {
+            'celldblclick': {
+                fn: function(grid, rowIndex, columnIndex, e) {
+                    Ext.getCmp('modx-panel-resource').markDirty();
+                    var btn = Ext.getCmp('modx-abtn-save');
+                    if (btn) {
+                        btn.enable();
+                    }
+                }
+                , scope: this
+            }
+        }
     });
 
     GridClassKey.grid.GridSettings.superclass.constructor.call(this, config);

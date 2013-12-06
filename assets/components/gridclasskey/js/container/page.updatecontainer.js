@@ -1,7 +1,7 @@
 GridClassKey.page.UpdateContainer = function(config) {
     config = config || {record: {}};
     config.record = config.record || {};
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         panelXType: 'gridclasskey-panel-container'
         , actions: {
             'new': MODx.action ? MODx.action['resource/create'] : 'resource/create'

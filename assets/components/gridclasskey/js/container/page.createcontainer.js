@@ -1,7 +1,7 @@
 GridClassKey.page.CreateContainer = function(config) {
     config = config || {record: {}};
     config.record = config.record || {};
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         panelXType: 'gridclasskey-panel-container'
     });
     config.canDuplicate = true;
