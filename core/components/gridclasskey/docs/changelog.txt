@@ -1,4 +1,8 @@
-Grid Class Key 1.0.0-beta-2 (December 06, 2013)
+Grid Class Key 1.0.0-beta.3 (December 10, 2013)
+=================================================
+- [#12] TV's text gets wrong value, should be the "lastSelectionText"
+
+Grid Class Key 1.0.0-beta.2 (December 06, 2013)
 =================================================
 - use modx's core output filter
 - use "apply" to all the JS configs

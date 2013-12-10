@@ -19,8 +19,9 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
                 var targetGrid = Ext.getCmp(config.applyToGrid);
                 var fieldsCombo = Ext.getCmp(config.id + '-combo');
                 var comboValue = fieldsCombo.getValue();
+                var text = fieldsCombo.lastSelectionText;
                 if (comboValue) {
-                    targetGrid.data.push([comboValue]);
+                    targetGrid.data.push([text]);
                     targetGrid.getStore().loadData(targetGrid.data);
                     targetGrid.getView().refresh();
                     Ext.getCmp('modx-panel-resource').markDirty();
