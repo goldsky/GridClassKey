@@ -1,3 +1,8 @@
+Grid Class Key dev
+=================================================
+- [#15] fix broken javascript after creating container
+- [#22] custom icon for Container, thx to @eladnova
+
 Grid Class Key 1.0.0-beta.3 (December 10, 2013)
 =================================================
 - [#12] TV's text gets wrong value, should be the "lastSelectionText"
