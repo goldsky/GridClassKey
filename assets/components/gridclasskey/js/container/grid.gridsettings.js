@@ -35,7 +35,7 @@ GridClassKey.grid.GridSettings = function(config) {
             ['id', 'id', 50, true, false],
             ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
             ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-            ['description', 'description', null, false, false, 'textarea']
+            ['description', 'description', 200, false, false, 'textarea']
         ];
     }
 
@@ -180,7 +180,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
             ['id', 'id', 50, true, false],
             ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
             ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-            ['description', 'description', null, false, false, 'textarea']
+            ['description', 'description', 200, false, false, 'textarea']
         ];
         this.getStore().loadData(this.data);
         this.getView().refresh();

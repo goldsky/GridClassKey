@@ -1,5 +1,6 @@
 Grid Class Key dev
 =================================================
+- [#20] fix column width configuration to work by typecasting it to number
 - use field's name for sorting values
 - [#28] fix class conflict in resource update and create controllers when using custom manager theme
 - tabify the settings

@@ -251,7 +251,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                                         , fieldLabel: _('gridclasskey.sort_dir')
                                         , store: new Ext.data.ArrayStore({
                                             fields: ['dir']
-                                            , data: [['ASC'], ['DESC']]
+                                            , data: [['asc'], ['desc']]
                                         })
                                         , displayField: 'dir'
                                         , valueField: 'dir'

@@ -60,6 +60,7 @@ GridClassKey.grid.Children = function(config) {
                     header: _('description')
                     , dataIndex: 'description'
                     , sortable: false
+                    , width: 200
                     , editor: {
                         xtype: 'textarea'
                     }
@@ -72,15 +73,15 @@ GridClassKey.grid.Children = function(config) {
             && config.record.properties.gridclasskey
             && config.record.properties.gridclasskey.fields
             && config.record.properties.gridclasskey.fields.length > 0) {
-        for (var i = 0, fieldsLn = config.record.properties.gridclasskey.fields.length; i < fieldsLn; i++) {
-            var fieldRecord = config.record.properties.gridclasskey.fields[i];
+
+        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord){
             fields.push({
                 name: fieldRecord.name
                 , mapping: fieldRecord.name
             });
 
             if (typeof (fieldRecord) !== 'object') {
-                continue;
+                return;
             }
 
             var rowField = {
@@ -88,7 +89,7 @@ GridClassKey.grid.Children = function(config) {
                 , dataIndex: fieldRecord.name
                 , sortable: fieldRecord.sortable
                 , hidden: fieldRecord.hidden
-                , width: fieldRecord.width
+                , width: fieldRecord.width - 0 // typecasting
             };
 
             if (fieldRecord.name !== 'id'
@@ -109,8 +110,8 @@ GridClassKey.grid.Children = function(config) {
             }
 
             columns.push(rowField);
+        });
 
-        }
         // Because Ext overrides the default Array, we can not use concat(), and this ExtJS 3 doesn't have Ext.Array singleton!
         if (fields.indexOf({name: 'published', mapping: 'published'}) === -1) {
             fields.push({
@@ -206,7 +207,6 @@ GridClassKey.grid.Children = function(config) {
         , fields: fields
         , paging: true
         , remoteSort: true
-        , autoExpandColumn: 'description'
         , viewConfig: {
             forceFit: true
             , enableRowBody: true
