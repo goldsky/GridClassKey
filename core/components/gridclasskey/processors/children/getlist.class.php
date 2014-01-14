@@ -79,14 +79,16 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             foreach ($this->parentProperties['fields'] as $field) {
                 $this->selectedFields = array_merge($this->selectedFields, (array) $field['name']);
             }
-
-            $this->selectedMainFields = array_intersect($this->selectedFields, $mainFields);
-            $this->selectedMainFields = array_values($this->selectedMainFields);
-            $c->select($this->modx->getSelectColumns('modResource', 'modResource', '', $this->selectedMainFields));
-
-            $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
-            $this->selectedTVFields = array_values($this->selectedTVFields);
+        } else {
+            $this->selectedFields = array('id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published', 'hidemenu');
         }
+
+        $this->selectedMainFields = array_intersect($this->selectedFields, $mainFields);
+        $this->selectedMainFields = array_values($this->selectedMainFields);
+        $c->select($this->modx->getSelectColumns('modResource', 'modResource', '', $this->selectedMainFields));
+
+        $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
+        $this->selectedTVFields = array_values($this->selectedTVFields);
         if (!empty($this->selectedTVFields)) {
             foreach ($this->selectedTVFields as $k => $tv) {
                 $this->_joinTV($c, $tvLoopIndex, $tv, $query);
@@ -180,8 +182,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         if (isset($resourceArray['publishedon'])) {
             $publishedon = strtotime($resourceArray['publishedon']);
-            $resourceArray['publishedon_date'] = strftime($this->modx->getOption('articles.mgr_date_format', null, '%b %d'), $publishedon);
-            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('articles.mgr_time_format', null, '%H:%I %p'), $publishedon);
+            $resourceArray['publishedon_date'] = strftime($this->modx->getOption('gridclasskey.mgr_date_format', null, '%b %d'), $publishedon);
+            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('gridclasskey.mgr_time_format', null, '%H:%I %p'), $publishedon);
             $resourceArray['publishedon'] = strftime('%b %d, %Y %H:%I %p', $publishedon);
         }
 
@@ -222,6 +224,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $chunk->_processed = false;
         return $chunk->process();
     }
+
 }
 
 return 'GridContainerGetListProcessor';

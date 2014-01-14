@@ -1,20 +1,25 @@
 GridClassKey.grid.GridSettings = function(config) {
     config = config || {};
 
-    var data = [
-        ['id', 'id', 50, true]
-    ];
+    var data = [];
 
     if (config.record
             && config.record.properties
             && config.record.properties.gridclasskey
             && config.record.properties.gridclasskey.fields
             ) {
-        for (var i = 0, l = config.record.properties.gridclasskey.fields.length; i < l; i++) {
-            var fieldRecord = config.record.properties.gridclasskey.fields[i];
-            if (fieldRecord.name === 'id') {
-                continue;
+
+        var hasID = false;
+        Ext.each(config.record.properties.gridclasskey.fields, function(item, idx){
+            if (item.name === 'id') {
+                hasID = true;
+                return false;
             }
+        });
+        if (!hasID) {
+            data.push(['id', 'id', 50, true]);
+        }
+        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord, idx){
             data.push([
                 fieldRecord.name,
                 fieldRecord.lexicon,
@@ -24,7 +29,14 @@ GridClassKey.grid.GridSettings = function(config) {
                 fieldRecord.editor_type,
                 fieldRecord.output_filter
             ]);
-        }
+        });
+    } else {
+        data = [
+            ['id', 'id', 50, true, false],
+            ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
+            ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
+            ['description', 'description', null, false, false, 'textarea']
+        ];
     }
 
     Ext.apply(config, {

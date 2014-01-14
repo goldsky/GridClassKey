@@ -1,5 +1,8 @@
 Grid Class Key dev
 =================================================
+- [#50] fix class conflict in resource update and create controllers when using custom manager theme
+- tabify the settings
+- fix default fields for the first time
 - [#25] fix False and Empty returns to empty out the grid
 - [#13] fix container's Resource Overview
 - [#15] fix broken javascript after creating container

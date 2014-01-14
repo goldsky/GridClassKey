@@ -144,7 +144,9 @@ GridClassKey.grid.Children = function(config) {
         });
     } else {
         fields = defaultFields;
-        columns.push(defaultColumns);
+        Ext.each(defaultColumns, function(item, idx){
+            columns.push(item);
+        });
     }
 
     // add the Actions column for the last column
@@ -418,7 +420,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             resource: this.menu.record.id
             , is_folder: this.menu.record.isfolder
         };
-        console.log('this.menu.record', this.menu.record);
+
         var w = MODx.load({
             xtype: 'modx-window-resource-duplicate'
             , resource: this.menu.record.id

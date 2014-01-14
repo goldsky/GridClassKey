@@ -7,7 +7,7 @@ GridClassKey.combo.MainFields = function(config) {
             action: 'fields/getMainFieldsList'
         }
         , fields: ['name']
-        , width: 190
+        , width: config.comboWidth || 190
         /**
          * Don't give name, exclude this combo out of the saving
          */

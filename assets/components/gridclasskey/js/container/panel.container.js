@@ -140,85 +140,43 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                         , defaults: {msgTarget: 'under'}
                         , items: this.getSettingRightFields(config)
                     }, {
-                        columnWidth: .5
-                        , title: _('gridclasskey.settings_container')
-                        , defaults: {msgTarget: 'under'}
-                        , items: this.getGridSettingsLeftFields(config)
-                    }, {
-                        columnWidth: .5
-                        , title: _('gridclasskey.settings_children')
-                        , defaults: {msgTarget: 'under'}
-                        , items: this.getGridSettingsRightFields(config)
-                    }, {
                         columnWidth: 1
-                        , title: _('gridclasskey.fields')
-                        , defaults: {msgTarget: 'under'}
-                        , items: this.getGridSettingsBottomFields(config)
+                        , items: [
+                            {
+                                xtype: 'modx-tabs'
+                                , forceLayout: true
+                                , deferredRender: false
+                                , collapsible: false
+                                , animCollapse: false
+                                , items: [
+                                    {
+                                        title: _('gridclasskey.fields')
+                                        , defaults: {msgTarget: 'under'}
+                                        , layout: 'anchor'
+                                        , items: this.getGridSettingsFields(config)
+                                        , bodyStyle: 'padding: 15px'
+                                    }, {
+                                        title: _('gridclasskey.settings_container')
+                                        , defaults: {msgTarget: 'under'}
+                                        , layout: 'form'
+                                        , items: this.getGridSettingsContainer(config)
+                                        , bodyStyle: 'padding: 15px'
+                                    }, {
+                                        title: _('gridclasskey.settings_children')
+                                        , defaults: {msgTarget: 'under'}
+                                        , layout: 'form'
+                                        , items: this.getGridSettingsChildren(config)
+                                        , bodyStyle: 'padding: 15px'
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }];
         return s;
     },
-    getGridSettingsLeftFields: function(config) {
-        return [
-            {
-                xtype: 'textfield'
-                , anchor: '100%'
-                , name: 'gridclasskey-property-grid-css'
-                , fieldLabel: _('gridclasskey.mgr_css')
-                , description: _('gridclasskey.mgr_css_desc')
-            }, {
-                xtype: 'textfield'
-                , anchor: '100%'
-                , name: 'gridclasskey-property-grid-top-js'
-                , fieldLabel: _('gridclasskey.mgr_top_js')
-                , description: _('gridclasskey.mgr_top_js_desc')
-            }, {
-                xtype: 'textfield'
-                , anchor: '100%'
-                , name: 'gridclasskey-property-grid-bottom-js'
-                , fieldLabel: _('gridclasskey.mgr_bottom_js')
-                , description: _('gridclasskey.mgr_bottom_js_desc')
-            }, {
-                xtype: 'textfield'
-                , anchor: '100%'
-                , id: 'gridclasskey-property-grid-childrentab-text'
-                , name: 'gridclasskey-property-grid-childrentab-text'
-                , fieldLabel: _('gridclasskey.childrentab_text')
-                , description: _('gridclasskey.childrentab_text_desc')
-            }, {
-                xtype: 'textfield'
-                , anchor: '100%'
-                , id: 'gridclasskey-property-grid-addnewdocbtn-text'
-                , name: 'gridclasskey-property-grid-addnewdocbtn-text'
-                , fieldLabel: _('gridclasskey.addnewdocbtn_text')
-                , description: _('gridclasskey.addnewdocbtn_text_desc')
-            }
-        ];
-    },
-    getGridSettingsRightFields: function(config) {
-        return [
-            {
-                xtype: 'gridclasskey-combo-template'
-                , anchor: '100%'
-                , name: 'gridclasskey-property-child-template'
-                , hiddenName: 'gridclasskey-property-child-template'
-                , fieldLabel: _('gridclasskey.default_template')
-                , description: _('gridclasskey.child_default_template_desc')
-                , bodyStyle: 'margin: 5px 0'
-            }, {
-                xtype: 'checkbox' // 'xcheckbox' fails to get the value for some reason
-                , hideLabel: true
-                , boxLabel: _('resource_hide_from_menus')
-                , id: 'gridclasskey-property-child-hidemenu'
-                , name: 'gridclasskey-property-child-hidemenu'
-                , description: _('resource_hide_from_menus_help')
-                , inputValue: 1
-                , checked: parseInt(config.record['gridclasskey-property-child-hidemenu']) || 0
-            }
-        ];
-    },
-    getGridSettingsBottomFields: function(config) {
+    getGridSettingsFields: function(config) {
         return [
             {
                 layout: 'column'
@@ -235,6 +193,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                         columnWidth: .5
                         , id: 'gridclasskey-panel-mainfieldscombo'
                         , xtype: 'gridclasskey-panel-mainfieldscombo'
+                        , comboWidth: 180
                         , applyToGrid: 'gridclasskey-grid-gridsettings'
                         , border: false
                         , bodyStyle: 'margin: 5px 0'
@@ -255,6 +214,153 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                         , xtype: 'gridclasskey-grid-gridsettings'
                         , description: _('gridclasskey.fields_desc')
                         , record: config.record
+                    }, {
+                        columnWidth: .5
+                        , border: false
+                        , bodyStyle: 'margin: 5px 0'
+                        , layout: 'column'
+                        , defaults: {
+                            labelSeparator: ''
+                            , labelAlign: 'top'
+                            , border: false
+                            , layout: 'form'
+                            , msgTarget: 'under'
+                        }
+                        , items: [
+                            {
+                                columnWidth: .5
+                                , items: [
+                                    {
+                                        xtype: 'modx-combo-boolean'
+                                        , name: 'gridclasskey-property-grid-sortby'
+                                        , fieldLabel: _('sort_by')
+                                        , store: new Ext.data.ArrayStore({
+                                            fields: ['d', 'v']
+                                            , data: [[_('id'), 'id'], [_('pagetitle'), 'pagetitle'], [_('resource_menuindex'), 'menuindex']]
+                                        })
+                                        , displayField: 'd'
+                                        , valueField: 'v'
+                                    }
+                                ]
+                            }, {
+                                columnWidth: .5
+                                , items: [
+                                    {
+                                        xtype: 'modx-combo-boolean'
+                                        , name: 'gridclasskey-property-grid-sortdir'
+                                        , fieldLabel: _('gridclasskey.sort_dir')
+                                        , store: new Ext.data.ArrayStore({
+                                            fields: ['d', 'v']
+                                            , data: [[_('sort_asc'), 'ASC'], [_('sort_desc'), 'DESC']]
+                                        })
+                                        , displayField: 'd'
+                                        , valueField: 'v'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    },
+    getGridSettingsContainer: function(config) {
+        return [
+            {
+                layout: 'column'
+                , border: false
+                , anchor: '100%'
+                , defaults: {
+                    labelSeparator: ''
+                    , labelAlign: 'top'
+                    , border: false
+                    , layout: 'form'
+                    , msgTarget: 'under'
+                }
+                , items: [
+                    {
+                        columnWidth: .5
+                        , items: [
+                            {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , name: 'gridclasskey-property-grid-css'
+                                , fieldLabel: _('gridclasskey.mgr_css')
+                                , description: _('gridclasskey.mgr_css_desc')
+                            }, {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , name: 'gridclasskey-property-grid-top-js'
+                                , fieldLabel: _('gridclasskey.mgr_top_js')
+                                , description: _('gridclasskey.mgr_top_js_desc')
+                            }, {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , name: 'gridclasskey-property-grid-bottom-js'
+                                , fieldLabel: _('gridclasskey.mgr_bottom_js')
+                                , description: _('gridclasskey.mgr_bottom_js_desc')
+                            }
+                        ]
+                    }, {
+                        columnWidth: .5
+                        , items: [
+                            {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , id: 'gridclasskey-property-grid-childrentab-text'
+                                , name: 'gridclasskey-property-grid-childrentab-text'
+                                , fieldLabel: _('gridclasskey.childrentab_text')
+                                , description: _('gridclasskey.childrentab_text_desc')
+                            }, {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , id: 'gridclasskey-property-grid-addnewdocbtn-text'
+                                , name: 'gridclasskey-property-grid-addnewdocbtn-text'
+                                , fieldLabel: _('gridclasskey.addnewdocbtn_text')
+                                , description: _('gridclasskey.addnewdocbtn_text_desc')
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    },
+    getGridSettingsChildren: function(config) {
+        return [
+            {
+                layout: 'column'
+                , border: false
+                , anchor: '100%'
+                , defaults: {
+                    labelSeparator: ''
+                    , labelAlign: 'top'
+                    , border: false
+                    , layout: 'form'
+                    , msgTarget: 'under'
+                }
+                , items: [
+                    {
+                        columnWidth: .5
+                        , items: [
+                            {
+                                xtype: 'gridclasskey-combo-template'
+                                , anchor: '100%'
+                                , name: 'gridclasskey-property-child-template'
+                                , hiddenName: 'gridclasskey-property-child-template'
+                                , fieldLabel: _('gridclasskey.default_template')
+                                , description: _('gridclasskey.child_default_template_desc')
+                                , bodyStyle: 'margin: 5px 0'
+                            }, {
+                                xtype: 'checkbox' // 'xcheckbox' fails to get the value for some reason
+                                , hideLabel: true
+                                , boxLabel: _('resource_hide_from_menus')
+                                , id: 'gridclasskey-property-child-hidemenu'
+                                , name: 'gridclasskey-property-child-hidemenu'
+                                , description: _('resource_hide_from_menus_help')
+                                , inputValue: 1
+                                , checked: parseInt(config.record['gridclasskey-property-child-hidemenu']) || 0
+                            }
+                        ]
                     }
                 ]
             }
@@ -301,7 +407,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         this.config.record.properties.gridclasskey['fields'] = fields;
 
         var childrenTab = Ext.getCmp('gridclasskey-grid-children-panel');
-        if (typeof(childrenTab) !== 'undefined') {
+        if (typeof (childrenTab) !== 'undefined') {
             var childrenTabText = Ext.getCmp('gridclasskey-property-grid-childrentab-text').getValue();
             if (childrenTabText) {
                 childrenTab.setTitle(childrenTabText);
@@ -313,7 +419,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         }
 
         var addNewDocBtn = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn');
-        if (typeof(addNewDocBtn) !== 'undefined') {
+        if (typeof (addNewDocBtn) !== 'undefined') {
             var addNewDocText = Ext.getCmp('gridclasskey-property-grid-addnewdocbtn-text').getValue();
             if (addNewDocText) {
                 addNewDocBtn.setText(childrenTabText);
@@ -325,7 +431,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         }
 
         var container = Ext.getCmp('gridclasskey-grid-children-panel');
-        if (typeof(container) !== 'undefined') {
+        if (typeof (container) !== 'undefined') {
             container.removeAll();
             container.add({
                 xtype: 'gridclasskey-grid-children',

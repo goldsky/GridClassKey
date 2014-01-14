@@ -80,4 +80,6 @@ $_lang['gridclasskey.back_to_container'] = 'Back to Container';
 $_lang['gridclasskey.template_variable'] = 'Template Variable';
 $_lang['gridclasskey.advanced_search'] = 'Advanced Search';
 $_lang['gridclasskey.search'] = 'Search';
+$_lang['gridclasskey.clear'] = 'Clear';
 $_lang['gridclasskey.parent_missing_err'] = 'Missing parent\'s ID';
+$_lang['gridclasskey.sort_dir'] = 'Sort Direction';

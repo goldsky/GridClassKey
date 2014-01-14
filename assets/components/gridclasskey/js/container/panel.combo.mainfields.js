@@ -11,6 +11,7 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
     items.push({
         xtype: 'gridclasskey-combo-mainfields'
         , id: config.id + '-combo' || ''
+        , comboWidth: config.comboWidth || ''
     }, {
         xtype: 'button'
         , text: _('add')

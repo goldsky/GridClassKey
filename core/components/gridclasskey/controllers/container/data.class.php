@@ -1,5 +1,7 @@
 <?php
-require_once MODX_MANAGER_PATH . 'controllers/default/resource/data.class.php';
+if(!class_exists('ResourceDataManagerController')) {
+    require_once MODX_MANAGER_PATH . 'controllers/default/resource/data.class.php';
+}
 /**
  * Loads the resource data page
  *
