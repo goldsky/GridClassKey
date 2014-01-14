@@ -46,6 +46,12 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         if (empty($parent)) {
             return $this->failure($this->modx->lexicon('gridclasskey.parent_missing_err'));
         }
+
+        $this->parentProperties = $this->modx->getObject('modResource', $parent)->getProperties('gridclasskey');
+        if ($this->parentProperties && $this->parentProperties['grid-sortby']) {
+            $this->setProperty('sort', $this->parentProperties['grid-sortby']);
+            $this->setProperty('dir', in_array(strtolower($this->parentProperties['grid-sortdir']), array('asc', 'desc')) ? strtolower($this->parentProperties['grid-sortdir']) : 'desc');
+        }
         return parent::initialize();
     }
 
@@ -71,10 +77,6 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $mainFields = @explode(',', $mainFields);
         array_walk($mainFields, create_function('&$v', '$v = trim($v);'));
 
-        $tvLoopIndex = 0;
-        $parent = $this->getProperty('parent');
-
-        $this->parentProperties = $this->modx->getObject('modResource', $parent)->getProperties('gridclasskey');
         if ($this->parentProperties) {
             foreach ($this->parentProperties['fields'] as $field) {
                 $this->selectedFields = array_merge($this->selectedFields, (array) $field['name']);
@@ -89,6 +91,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
         $this->selectedTVFields = array_values($this->selectedTVFields);
+        $tvLoopIndex = 0;
         if (!empty($this->selectedTVFields)) {
             foreach ($this->selectedTVFields as $k => $tv) {
                 $this->_joinTV($c, $tvLoopIndex, $tv, $query);
@@ -122,6 +125,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             }
         }
 
+        $parent = $this->getProperty('parent');
         $c->where(array(
             'modResource.parent' => $parent
         ));
