@@ -1,5 +1,6 @@
 Grid Class Key dev
 =================================================
+- [#13] fix container's Resource Overview
 - [#15] fix broken javascript after creating container
 - [#22] custom icon for Container, thx to @eladnova
 
