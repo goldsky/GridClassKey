@@ -235,11 +235,11 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                                         , name: 'gridclasskey-property-grid-sortby'
                                         , fieldLabel: _('sort_by')
                                         , store: new Ext.data.ArrayStore({
-                                            fields: ['d', 'v']
-                                            , data: [[_('id'), 'id'], [_('pagetitle'), 'pagetitle'], [_('resource_menuindex'), 'menuindex']]
+                                            fields: ['sort']
+                                            , data: [['id'], ['pagetitle'], ['menuindex']]
                                         })
-                                        , displayField: 'd'
-                                        , valueField: 'v'
+                                        , displayField: 'sort'
+                                        , valueField: 'sort'
                                     }
                                 ]
                             }, {
@@ -250,11 +250,11 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                                         , name: 'gridclasskey-property-grid-sortdir'
                                         , fieldLabel: _('gridclasskey.sort_dir')
                                         , store: new Ext.data.ArrayStore({
-                                            fields: ['d', 'v']
-                                            , data: [[_('sort_asc'), 'ASC'], [_('sort_desc'), 'DESC']]
+                                            fields: ['dir']
+                                            , data: [['ASC'], ['DESC']]
                                         })
-                                        , displayField: 'd'
-                                        , valueField: 'v'
+                                        , displayField: 'dir'
+                                        , valueField: 'dir'
                                     }
                                 ]
                             }
