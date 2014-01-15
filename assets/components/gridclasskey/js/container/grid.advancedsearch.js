@@ -3,7 +3,7 @@ GridClassKey.grid.AdvancedSearch = function(config) {
 
     Ext.apply(config, {
         id: 'gridclasskey-grid-advancedsearch'
-        , fields: ['name', 'value']
+        , fields: ['sort', 'name', 'value']
         , viewConfig: {
             forceFit: true
             , enableRowBody: true

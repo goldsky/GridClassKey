@@ -21,7 +21,7 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
                 var fieldsCombo = Ext.getCmp(config.id + '-combo');
                 var comboValue = fieldsCombo.getValue();
                 if (comboValue) {
-                    targetGrid.data.push([comboValue]);
+                    targetGrid.data.push([targetGrid.data.length + 1, comboValue]);
                     targetGrid.getStore().loadData(targetGrid.data);
                     targetGrid.getView().refresh();
                     Ext.getCmp('modx-panel-resource').markDirty();

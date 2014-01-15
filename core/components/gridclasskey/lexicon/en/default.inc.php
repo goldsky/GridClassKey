@@ -83,3 +83,4 @@ $_lang['gridclasskey.search'] = 'Search';
 $_lang['gridclasskey.clear'] = 'Clear';
 $_lang['gridclasskey.parent_missing_err'] = 'Missing parent\'s ID';
 $_lang['gridclasskey.sort_dir'] = 'Sort Direction';
+$_lang['gridclasskey.sort'] = 'Sort';

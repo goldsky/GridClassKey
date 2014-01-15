@@ -10,7 +10,7 @@ GridClassKey.grid.GridSettings = function(config) {
             ) {
 
         var hasID = false;
-        Ext.each(config.record.properties.gridclasskey.fields, function(item, idx){
+        Ext.each(config.record.properties.gridclasskey.fields, function(item, idx) {
             if (item.name === 'id') {
                 hasID = true;
                 return false;
@@ -19,8 +19,9 @@ GridClassKey.grid.GridSettings = function(config) {
         if (!hasID) {
             data.push(['id', 'id', 50, true]);
         }
-        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord, idx){
+        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord, idx) {
             data.push([
+                idx+1,
                 fieldRecord.name,
                 fieldRecord.lexicon,
                 fieldRecord.width,
@@ -32,16 +33,17 @@ GridClassKey.grid.GridSettings = function(config) {
         });
     } else {
         data = [
-            ['id', 'id', 50, true, false],
-            ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
-            ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-            ['description', 'description', 200, false, false, 'textarea']
+            [1, 'id', 'id', 50, true, false],
+            [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
+            [3, 'longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
+            [4, 'description', 'description', 200, false, false, 'textarea']
         ];
     }
 
     Ext.apply(config, {
         id: 'gridclasskey-grid-gridsettings'
-        , fields: ['name', 'lexicon', 'width', 'sortable', 'hidden', 'editor_type', 'output_filter']
+        , fields: ['sort', 'name', 'lexicon', 'width', 'sortable', 'hidden', 'editor_type', 'output_filter']
+        , sortInfo: {field: 'sort', direction: 'asc'}
         , viewConfig: {
             forceFit: true
             , enableRowBody: true
@@ -51,19 +53,28 @@ GridClassKey.grid.GridSettings = function(config) {
             , emptyText: config.emptyText || _('gridclasskey.empty')
         }
         , enableDragDrop: true
+        , enableColumnMove: false
+        , sm: new Ext.grid.RowSelectionModel({
+            singleSelect: true
+        })
         , data: data
         , deferredRender: true
         , preventRender: true
         , autoHeight: true
+        , autoExpandColumn: 'lexicon'
         , columns: [
             {
+                header: _('gridclasskey.sort')
+                , dataIndex: 'sort'
+                , sortable: true
+                , width: 50
+                , editable: false
+            }, {
                 header: _('name')
                 , dataIndex: 'name'
-                , sortable: true
             }, {
                 header: _('lexicon') + ' / ' + _('caption')
                 , dataIndex: 'lexicon'
-                , sortable: true
                 , editor: {
                     type: 'textfields'
                 }
@@ -86,6 +97,7 @@ GridClassKey.grid.GridSettings = function(config) {
                 , editor: {
                     xtype: 'modx-combo-boolean'
                     , width: 50
+                    , listWidth: 100
                 }
             }, {
                 header: _('gridclasskey.hidden')
@@ -97,6 +109,7 @@ GridClassKey.grid.GridSettings = function(config) {
                 , editor: {
                     xtype: 'modx-combo-boolean'
                     , width: 50
+                    , listWidth: 100
                 }
             }, {
                 header: _('gridclasskey.editor_type')
@@ -109,7 +122,7 @@ GridClassKey.grid.GridSettings = function(config) {
                 header: _('gridclasskey.output_filter')
                 , description: _('gridclasskey.output_filter_desc')
                 , dataIndex: 'output_filter'
-                , width: 80
+                , width: 100
                 , editor: {
                     type: 'textfields'
                 }
@@ -117,7 +130,9 @@ GridClassKey.grid.GridSettings = function(config) {
                 header: _('gridclasskey.actions')
                 , xtype: 'actioncolumn'
                 , dataIndex: 'id'
+                , editable: false
                 , width: 50
+                , fixed: true
                 , items: [
                     {
                         handler: function(grid, row, col) {
@@ -169,6 +184,7 @@ GridClassKey.grid.GridSettings = function(config) {
                 }
                 , scope: this
             }
+            , render: this.initializelDragDropZone
         }
     });
 
@@ -177,10 +193,10 @@ GridClassKey.grid.GridSettings = function(config) {
 Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     revertDefaultData: function(btn, e) {
         this.data = [
-            ['id', 'id', 50, true, false],
-            ['pagetitle', 'pagetitle', 100, true, false, 'textfield'],
-            ['longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-            ['description', 'description', 200, false, false, 'textarea']
+            [1, 'id', 'id', 50, true, false],
+            [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
+            [3, 'longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
+            [4, 'description', 'description', 200, false, false, 'textarea']
         ];
         this.getStore().loadData(this.data);
         this.getView().refresh();
@@ -189,6 +205,68 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
         if (btn) {
             btn.enable();
         }
+    },
+    initializelDragDropZone: function(gridPanel) {
+        this.dragZone = new Ext.dd.DragZone(gridPanel.getEl(), {
+            getDragData: function(e) {
+                var rowEl = e.getTarget(gridPanel.getView().rowSelector, 10);
+                var sourceEl = Ext.select('div.x-grid3-col-1', true, rowEl).elements[0].dom;
+                if (rowEl && sourceEl) {
+                    var d = sourceEl.cloneNode(true);
+                    d.id = Ext.id();
+                    return {
+                        ddel: d,
+                        sourceEl: sourceEl,
+                        repairXY: Ext.fly(sourceEl).getXY(),
+                        sourceStore: gridPanel.store,
+                        draggedRecord: rowEl
+                    };
+                }
+            },
+            getRepairXY: function() {
+                return this.dragData.repairXY;
+            }
+        });
+
+        this.dropZone = new Ext.dd.DropZone(gridPanel.getView().scroller, {
+            getTargetFromEvent: function(e) {
+                return e.getTarget(gridPanel.getView().rowSelector);
+            },
+            onNodeOver: function(target, dd, e, data) {
+                return Ext.dd.DropZone.prototype.dropAllowed;
+            },
+            onNodeDrop: function(target, dd, e, data) {
+                var targetRowIndex = gridPanel.getView().findRowIndex(target);
+                var draggedRowIndex = gridPanel.getView().findRowIndex(data.draggedRecord);
+                var isSteppingUp = (targetRowIndex < draggedRowIndex);
+                var newData = gridPanel.data; // initial fills
+                var draggedData = gridPanel.data[draggedRowIndex];
+                if (isSteppingUp) {
+                    for (var i = draggedRowIndex; i > targetRowIndex; i--) {
+                        var item = gridPanel.data[i - 1];
+                        item[0] = i + 1;
+                        newData[i] = item;
+                    }
+                } else {
+                    for (var i = draggedRowIndex; i < targetRowIndex; i++) {
+                        var item = gridPanel.data[i + 1];
+                        item[0] = i + 1;
+                        newData[i] = item;
+                    }
+                }
+                draggedData[0] = targetRowIndex + 1;
+                newData[targetRowIndex] = draggedData;
+
+                gridPanel.getStore().loadData(newData);
+                gridPanel.getView().refresh();
+                Ext.getCmp('modx-panel-resource').markDirty();
+                var btn = Ext.getCmp('modx-abtn-save');
+                if (btn) {
+                    btn.enable();
+                }
+                return true;
+            }
+        });
     }
 });
 Ext.reg('gridclasskey-grid-gridsettings', GridClassKey.grid.GridSettings);
