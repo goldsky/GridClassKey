@@ -6,10 +6,10 @@ GridClassKey.window.AdvancedSearch = function(config) {
     }
     Ext.apply(config, {
         id: 'gridclasskey-window-advancedsearch'
-        , url: GridClassKey.connector_url
+        , url: GridClassKey.config.connectorUrl
         , title: _('gridclasskey.advanced_search')
         , baseParams: {
-            action: 'children/getlist'
+            action: 'mgr/classkey/children/getlist'
             , parent: config.parent
         }
         , labelAlign: 'left'

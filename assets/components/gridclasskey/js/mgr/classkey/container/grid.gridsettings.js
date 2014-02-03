@@ -1,45 +1,6 @@
 GridClassKey.grid.GridSettings = function(config) {
     config = config || {};
 
-    var data = [];
-
-    if (config.record
-            && config.record.properties
-            && config.record.properties.gridclasskey
-            && config.record.properties.gridclasskey.fields
-            ) {
-
-        var hasID = false;
-        Ext.each(config.record.properties.gridclasskey.fields, function(item, idx) {
-            if (item.name === 'id') {
-                hasID = true;
-                return false;
-            }
-        });
-        if (!hasID) {
-            data.push(['id', 'id', 50, true]);
-        }
-        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord, idx) {
-            data.push([
-                idx+1,
-                fieldRecord.name,
-                fieldRecord.lexicon,
-                fieldRecord.width,
-                fieldRecord.sortable,
-                fieldRecord.hidden,
-                fieldRecord.editor_type,
-                fieldRecord.output_filter
-            ]);
-        });
-    } else {
-        data = [
-            [1, 'id', 'id', 50, true, false],
-            [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
-            [3, 'longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-            [4, 'description', 'description', 200, false, false, 'textarea']
-        ];
-    }
-
     Ext.apply(config, {
         id: 'gridclasskey-grid-gridsettings'
         , fields: ['sort', 'name', 'lexicon', 'width', 'sortable', 'hidden', 'editor_type', 'output_filter']
@@ -57,7 +18,7 @@ GridClassKey.grid.GridSettings = function(config) {
         , sm: new Ext.grid.RowSelectionModel({
             singleSelect: true
         })
-        , data: data
+        , data: []
         , deferredRender: true
         , preventRender: true
         , autoHeight: true
@@ -184,14 +145,65 @@ GridClassKey.grid.GridSettings = function(config) {
                 }
                 , scope: this
             }
-            , render: this.initializelDragDropZone
+            , render: this.initializeDragDropZone
+            , afterrender: {
+                fn: function() {
+                    var fields = config.record
+                            && config.record.properties
+                            && config.record.properties.gridclasskey
+                            && config.record.properties.gridclasskey.fields
+                            ? config.record.properties.gridclasskey.fields
+                            : {};
+
+                    this.loadData(fields);
+                }
+                , scope: this
+            }
         }
     });
 
     GridClassKey.grid.GridSettings.superclass.constructor.call(this, config);
+
 };
 Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
-    revertDefaultData: function(btn, e) {
+    loadData: function(fields) {
+        var data = [];
+        if (fields) {
+            var hasID = false;
+            Ext.each(fields, function(item, idx) {
+                if (item.name === 'id') {
+                    hasID = true;
+                    return false;
+                }
+            });
+            if (!hasID) {
+                data.push(['id', 'id', 50, true]);
+            }
+            Ext.each(fields, function(fieldRecord, idx) {
+                data.push([
+                    idx + 1,
+                    fieldRecord.name,
+                    fieldRecord.lexicon,
+                    fieldRecord.width,
+                    fieldRecord.sortable,
+                    fieldRecord.hidden,
+                    fieldRecord.editor_type,
+                    fieldRecord.output_filter
+                ]);
+            });
+        } else {
+            data = [
+                [1, 'id', 'id', 50, true, false],
+                [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
+                [3, 'longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
+                [4, 'description', 'description', 200, false, false, 'textarea']
+            ];
+        }
+        this.data = data;
+        this.getStore().loadData(this.data);
+        this.getView().refresh();
+    }
+    , revertDefaultData: function(btn, e) {
         this.data = [
             [1, 'id', 'id', 50, true, false],
             [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
@@ -205,8 +217,8 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
         if (btn) {
             btn.enable();
         }
-    },
-    initializelDragDropZone: function(gridPanel) {
+    }
+    , initializeDragDropZone: function(gridPanel) {
         this.dragZone = new Ext.dd.DragZone(gridPanel.getEl(), {
             getDragData: function(e) {
                 var rowEl = e.getTarget(gridPanel.getView().rowSelector, 10);
@@ -259,7 +271,10 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
 
                 gridPanel.getStore().loadData(newData);
                 gridPanel.getView().refresh();
-                Ext.getCmp('modx-panel-resource').markDirty();
+                var modxPanelResource = Ext.getCmp('modx-panel-resource');
+                if (modxPanelResource) {
+                    modxPanelResource.markDirty();
+                }
                 var btn = Ext.getCmp('modx-abtn-save');
                 if (btn) {
                     btn.enable();

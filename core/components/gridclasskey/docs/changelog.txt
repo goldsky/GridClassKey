@@ -1,5 +1,9 @@
 Grid Class Key dev
 =================================================
+- [#18] add drag and drop menuindex sorting
+- add CMP to overcome loading error of the container if settings break the page
+- re-manage folders and files
+- fix sorting when the TV has dash
 - add columns order in Field's setting by dragging and dropping the row
 - [#20] fix column width configuration to work by typecasting it to number
 - use field's name for sorting values

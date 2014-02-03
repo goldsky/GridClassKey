@@ -24,6 +24,7 @@
  * @subpackage lexicon
  */
 $_lang['gridclasskey'] = 'Grid Container';
+$_lang['gridclasskey.management_desc'] = 'Managing the Grid Containers';
 $_lang['gridclasskey.container_create_here'] = 'Create a Grid Container Here';
 $_lang['gridclasskey.container_new'] = 'New Grid Container';
 $_lang['gridclasskey.container_update'] = 'Update Grid Container';
@@ -84,3 +85,4 @@ $_lang['gridclasskey.clear'] = 'Clear';
 $_lang['gridclasskey.parent_missing_err'] = 'Missing parent\'s ID';
 $_lang['gridclasskey.sort_dir'] = 'Sort Direction';
 $_lang['gridclasskey.sort'] = 'Sort';
+$_lang['gridclasskey.update_settings'] = 'Update Settings';

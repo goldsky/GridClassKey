@@ -48,9 +48,14 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         }
 
         $this->parentProperties = $this->modx->getObject('modResource', $parent)->getProperties('gridclasskey');
-        if ($this->parentProperties && $this->parentProperties['grid-sortby']) {
-            $this->setProperty('sort', $this->parentProperties['grid-sortby']);
-            $this->setProperty('dir', in_array(strtolower($this->parentProperties['grid-sortdir']), array('asc', 'desc')) ? strtolower($this->parentProperties['grid-sortdir']) : 'desc');
+        $sort = $this->getProperty('sort');
+        if (!empty($sort)) {
+            $this->setProperty('sort', $this->modx->escape($sort));
+        } else {
+            if ($this->parentProperties && $this->parentProperties['grid-sortby']) {
+                $this->setProperty('sort', $this->modx->escape($this->parentProperties['grid-sortby']));
+                $this->setProperty('dir', in_array(strtolower($this->parentProperties['grid-sortdir']), array('asc', 'desc')) ? strtolower($this->parentProperties['grid-sortdir']) : 'desc');
+            }
         }
         return parent::initialize();
     }
@@ -201,7 +206,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $resourceArray['action_edit'] = '?a=' . $this->editAction->get('id') . '&id=' . $resourceArray['id'];
 
         $this->modx->getContext($resourceArray['context_key']);
-        $resourceArray['preview_url'] = $this->modx->makeUrl($resourceArray['id'], $resourceArray['context_key']);
+        $resourceArray['preview_url'] = $this->modx->makeUrl($resourceArray['id'], $resourceArray['context_key'], null, 'full');
 
         $c = $this->modx->newQuery('modResource');
         $c->where(array(
@@ -227,6 +232,25 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $chunk->setContent($string);
         $chunk->_processed = false;
         return $chunk->process();
+    }
+
+    /**
+     * Return arrays of objects (with count) converted to JSON.
+     *
+     * The JSON result includes two main elements, total and results. This format is used for list
+     * results.
+     *
+     * @access public
+     * @param array $array An array of data objects.
+     * @param mixed $count The total number of objects. Used for pagination.
+     * @return string The JSON output.
+     */
+    public function outputArray(array $array, $count = false) {
+        if ($count === false) {
+            $count = count($array);
+        }
+
+        return '{"total":"' . $count . '","results":' . $this->modx->toJSON($array) . ',"sortby":"' . $this->parentProperties['grid-sortby'] . '","sortdir":"' . $this->parentProperties['grid-sortdir'] . '"}';
     }
 
 }

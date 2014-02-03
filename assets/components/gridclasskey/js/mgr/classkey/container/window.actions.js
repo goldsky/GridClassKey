@@ -3,10 +3,10 @@ GridClassKey.window.Actions = function(config) {
 
     Ext.apply(config, {
         id: 'gridclasskey-window-actions'
-        , url: GridClassKey.connector_url
+        , url: GridClassKey.config.connectorUrl
         , title: _('actions')
         , baseParams: {
-            action: 'children/batchactions'
+            action: 'mgr/classkey/children/batchactions'
         }
         , closeAction: 'close'
         , labelAlign: 'left'

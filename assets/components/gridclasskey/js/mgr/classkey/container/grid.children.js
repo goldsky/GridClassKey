@@ -66,7 +66,9 @@ GridClassKey.grid.Children = function(config) {
                     }
                 }
             ]
-            , checkBoxSelMod = new Ext.grid.CheckboxSelectionModel({checkOnly: true})
+            , checkBoxSelMod = new Ext.grid.CheckboxSelectionModel({
+                checkOnly: false
+            })
             , columns = [checkBoxSelMod];
 
     if (config.record.properties
@@ -74,7 +76,8 @@ GridClassKey.grid.Children = function(config) {
             && config.record.properties.gridclasskey.fields
             && config.record.properties.gridclasskey.fields.length > 0) {
 
-        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord){
+        var _this = this;
+        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord) {
             fields.push({
                 name: fieldRecord.name
                 , mapping: fieldRecord.name
@@ -89,9 +92,11 @@ GridClassKey.grid.Children = function(config) {
                 , dataIndex: fieldRecord.name
                 , sortable: fieldRecord.sortable
                 , hidden: fieldRecord.hidden
-                , width: fieldRecord.width - 0 // typecasting
             };
-
+            var width = fieldRecord.width - 0; // typecasting
+            if (width > 0) {
+                rowField.width = width;
+            }
             if (fieldRecord.name !== 'id'
                     && fieldRecord.editor_type
                     && fieldRecord.editor_type !== ''
@@ -106,7 +111,7 @@ GridClassKey.grid.Children = function(config) {
                 };
             }
             if (fieldRecord.name === 'pagetitle') {
-                rowField.renderer = {fn: this._renderPageTitle, scope: this};
+                rowField.renderer = {fn: _this._renderPageTitle, scope: _this};
             }
 
             columns.push(rowField);
@@ -145,7 +150,7 @@ GridClassKey.grid.Children = function(config) {
         });
     } else {
         fields = defaultFields;
-        Ext.each(defaultColumns, function(item, idx){
+        Ext.each(defaultColumns, function(item, idx) {
             columns.push(item);
         });
     }
@@ -156,7 +161,9 @@ GridClassKey.grid.Children = function(config) {
         , xtype: 'actioncolumn'
         , dataIndex: 'id'
         , sortable: false
-        , width: 50
+        , editable: false
+        , fixed: true
+        , width: 80
         , items: [
             {
                 iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
@@ -180,7 +187,7 @@ GridClassKey.grid.Children = function(config) {
                 handler: function(grid, row, col) {
                     var _this = Ext.getCmp('gridclasskey-grid-children');
                     var rec = _this.store.getAt(row);
-                    _this.removeChild(rec.data);
+                    _this.removeResource(rec.data);
                 },
                 getClass: function(v, meta, rec) {
                     if (rec.get('deleted')) {
@@ -199,14 +206,21 @@ GridClassKey.grid.Children = function(config) {
 
     Ext.apply(config, {
         id: 'gridclasskey-grid-children'
-        , url: GridClassKey.connector_url
+        , url: GridClassKey.config.connectorUrl
         , baseParams: {
-            action: 'children/getList'
+            action: 'mgr/classkey/children/getList'
             , parent: config.record.id
         }
         , fields: fields
         , paging: true
         , remoteSort: true
+        , enableColumnMove: false
+                /**
+                 * @todo need to track this value when the store is reloaded
+                 */
+//        , enableDragDrop: config.record['gridclasskey-property-grid-sortby'] === 'menuindex' ? true : false
+        , enableDragDrop: true
+        , ddGroup: 'gridclasskey-grid-children-dd'
         , viewConfig: {
             forceFit: true
             , enableRowBody: true
@@ -227,7 +241,7 @@ GridClassKey.grid.Children = function(config) {
                 return clsName;
             }
         }
-        , save_action: 'children/updateFromGrid'
+        , save_action: 'mgr/classkey/children/updateFromGrid'
         , autosave: true
         , sm: checkBoxSelMod
         , columns: columns
@@ -313,17 +327,30 @@ GridClassKey.grid.Children = function(config) {
                 , scope: this
             }
         ]
+        , listeners: {
+            render: this.attachDragDropZone
+        }
     });
-    GridClassKey.grid.Children.superclass.constructor.call(this, config)
+
+    GridClassKey.grid.Children.superclass.constructor.call(this, config);
     this._makeTemplates();
 
 };
+
 Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
     search: function(tf, nv, ov) {
         var s = this.getStore();
         s.baseParams.query = tf.getValue();
         this.getBottomToolbar().changePage(1);
         this.refresh();
+    }
+    , _makeTemplates: function() {
+        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" title="' + _('edit') + ' {pagetitle}" class="gridclasskey-pagetitle">{pagetitle}</a></tpl>', {
+            compiled: true
+        });
+    }
+    , _renderPageTitle: function(v, md, rec) {
+        return this.tplPageTitle.apply(rec.data);
     }
     , getMenu: function() {
         var deleteTitle = this.menu.record.deleted ? _('resource_undelete') : _('resource_delete');
@@ -332,7 +359,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             {
                 text: _('edit')
                 , handler: function(btn, e) {
-                    this.updateChild(this.menu.record);
+                    this.updateResource(this.menu.record);
                 }
             }, {
                 text: _('view')
@@ -343,9 +370,9 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 text: publishTitle
                 , handler: function(btn, e) {
                     if (this.menu.record.published === true) {
-                        this.unpublishChild(this.menu.record);
+                        this.unpublishResource(this.menu.record);
                     } else {
-                        this.publishChild(this.menu.record);
+                        this.publishResource(this.menu.record);
                     }
                 }
             }, {
@@ -354,16 +381,16 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }, '-', {
                 text: deleteTitle
                 , handler: function(btn, e) {
-                    this.removeChild(this.menu.record);
+                    this.removeResource(this.menu.record);
                 }
             }
         ];
         return menu;
     }
-    , updateChild: function(record) {
+    , updateResource: function(record) {
         MODx.loadPage(MODx.action['resource/update'], 'id=' + record.id);
     }
-    , removeChild: function(record) {
+    , removeResource: function(record) {
         var title = record.deleted ? _('resource_undelete') : _('resource_delete');
         var text = record.deleted ? _('resource_undelete_confirm') : _('resource_delete_confirm');
         var action = record.deleted ? 'undelete' : 'delete';
@@ -383,15 +410,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , _makeTemplates: function() {
-        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" title="' + _('edit') + ' {pagetitle}">{pagetitle}</a></tpl>', {
-            compiled: true
-        });
-    }
-    , _renderPageTitle: function(v, md, rec) {
-        return this.tplPageTitle.apply(rec.data);
-    }
-    , publishChild: function(btn, e) {
+    , publishResource: function(btn, e) {
         MODx.Ajax.request({
             url: MODx.config.connectors_url + 'resource/index.php'
             , params: {
@@ -403,7 +422,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , unpublishChild: function(btn, e) {
+    , unpublishResource: function(btn, e) {
         MODx.Ajax.request({
             url: MODx.config.connectors_url + 'resource/index.php'
             , params: {
@@ -432,6 +451,97 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
         w.config.hasChildren = this.menu.record.has_children;
         w.setValues(r);
         w.show(e.target);
+    }
+    , attachDragDropZone: function(gridPanel) {
+        var _this = this;
+
+        this.getStore().on('load', function(store) {
+            var jsonData = store.reader.jsonData;
+            if (jsonData.sortby === 'menuindex') {
+                _this.enableDragDrop = true;
+            } else {
+                _this.enableDragDrop = false;
+            }
+            // override sorting if clicking the header
+            var sortInfo = store.getSortState();
+            if (typeof (sortInfo) !== 'undefined') {
+                if (sortInfo.field === 'menuindex') {
+                    _this.enableDragDrop = true;
+                } else {
+                    _this.enableDragDrop = false;
+                }
+            }
+
+            if (_this.enableDragDrop) {
+                new Ext.dd.DropTarget(gridPanel.container, {
+                    ddGroup: 'gridclasskey-grid-children-dd'
+                    , copy: false
+                    , notifyDrop: function(dd, e, data) {
+                        var ds = gridPanel.store;
+                        var sm = gridPanel.getSelectionModel();
+                        var rows = sm.getSelections();
+                        var dragData = dd.getDragData(e);
+                        if (dragData) {
+                            var cindex = dragData.rowIndex;
+                            if (typeof (cindex) !== "undefined") {
+                                var target = ds.getAt(cindex);
+                                var dragIds = [];
+                                for (var i = 0; i < rows.length; i++) {
+                                    ds.remove(ds.getById(rows[i].id));
+                                    dragIds.push(rows[i].id);
+                                }
+                                ds.insert(cindex, data.selections);
+                                sm.clearSelections();
+                                _this.sortMenuIndex(target.id, dragIds);
+                                return true;
+                            }
+                        }
+                    }
+                });
+            } else {
+                new Ext.dd.DropTarget(gridPanel.container, {
+                    ddGroup: 'gridclasskey-grid-children-dd'
+                    , copy: false
+                    , notifyOver : function(dd, e, data){
+                        return this.dropNotAllowed;
+                    }
+                    , notifyEnter : function(dd, e, data){
+                        return this.dropNotAllowed;
+                    }
+                    , notifyDrop: function(dd, e, data) {
+                        return false;
+                    }
+                });
+            }
+
+        });
+
+    }
+    , sortMenuIndex: function(targetId, movingIds) {
+        var sortdir, store = this.getStore();
+        var sortInfo = store.getSortState();
+        if (sortInfo) {
+            sortdir = sortInfo.direction;
+        } else {
+            var jsonData = store.reader.jsonData;
+            sortdir = jsonData.sortdir;
+        }
+        MODx.Ajax.request({
+            url: GridClassKey.config.connectorUrl
+            , params: {
+                action: 'mgr/classkey/children/sortmenuindex'
+                , parent: this.config.record.id
+                , targetId: targetId
+                , movingIds: movingIds.join()
+                , sortdir: sortdir
+            }
+            , listeners: {
+                'success': {fn: this.refresh, scope: this}
+            }
+        });
+    }
+    , detachDragDropZone: function(gridPanel) {
+
     }
 });
 Ext.reg('gridclasskey-grid-children', GridClassKey.grid.Children);

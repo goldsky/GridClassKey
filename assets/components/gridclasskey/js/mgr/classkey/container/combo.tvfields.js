@@ -2,9 +2,9 @@ GridClassKey.combo.TVFields = function(config) {
     config = config || {};
 
     Ext.apply(config, {
-        url: GridClassKey.connector_url
+        url: GridClassKey.config.connectorUrl
         , baseParams: {
-            action: 'fields/getTVFieldsList'
+            action: 'mgr/classkey/fields/getTVFieldsList'
         }
         , pageSize: 10
         , lazyRender: true

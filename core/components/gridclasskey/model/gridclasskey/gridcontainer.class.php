@@ -39,7 +39,7 @@ class GridContainer extends modResource {
     public static function getControllerPath(xPDO &$modx) {
         return $modx->getOption('gridclasskey.core_path'
                         , null
-                        , $modx->getOption('core_path') . 'components/gridclasskey/') . 'controllers/container/';
+                        , $modx->getOption('core_path') . 'components/gridclasskey/') . 'controllers/classkey/container/';
     }
 
     public function getContextMenuText() {
