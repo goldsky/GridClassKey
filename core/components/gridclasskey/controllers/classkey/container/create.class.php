@@ -89,6 +89,8 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         });
         // ]]>
         </script>');
+        /* load RTE */
+        $this->loadRichTextEditor();
     }
 
     public function getLanguageTopics() {

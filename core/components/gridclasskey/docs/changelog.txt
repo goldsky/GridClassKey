@@ -1,5 +1,6 @@
 Grid Class Key dev
 =================================================
+- [#11] load Rich Text Editor
 - [#18] add drag and drop menuindex sorting
 - add CMP to overcome loading error of the container if settings break the page
 - re-manage folders and files

@@ -98,7 +98,8 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         });
         // ]]>
         </script>');
-
+        /* load RTE */
+        $this->loadRichTextEditor();
         if (!empty($settings['grid-bottom-js'])) {
             $this->addLastJavascript($settings['grid-bottom-js']);
         }
