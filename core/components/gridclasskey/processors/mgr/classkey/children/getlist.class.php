@@ -3,7 +3,7 @@
 /**
  * Grid Class Key
  *
- * Copyright 2013 by goldsky <goldsky@virtudraft.com>
+ * Copyright 2013 - 2014 by goldsky <goldsky@virtudraft.com>
  *
  * This file is part of Grid Class Key, a custom class key for MODX
  * Revolution's Manager to hide child resources inside container's grid.

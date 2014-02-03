@@ -168,7 +168,7 @@ GridClassKey.grid.GridSettings = function(config) {
 Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     loadData: function(fields) {
         var data = [];
-        if (fields) {
+        if (fields.length) {
             var hasID = false;
             Ext.each(fields, function(item, idx) {
                 if (item.name === 'id') {
@@ -177,7 +177,15 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 }
             });
             if (!hasID) {
-                data.push(['id', 'id', 50, true]);
+                fieldRecord.push({
+                    'name': 'id',
+                    'lexicon': 'id',
+                    'width': 50,
+                    'sortable': true,
+                    'hidden': false,
+                    'editor_type': '',
+                    'output_filter': '',
+                });
             }
             Ext.each(fields, function(fieldRecord, idx) {
                 data.push([
