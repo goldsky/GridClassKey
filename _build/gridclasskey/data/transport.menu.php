@@ -25,23 +25,28 @@
  * @package gridclasskey
  * @subpackage build
  */
-$settings['gridclasskey.core_path'] = $modx->newObject('modSystemSetting');
-$settings['gridclasskey.core_path']->fromArray(array(
-    'key' => 'gridclasskey.core_path',
-    'value' => '{core_path}components/gridclasskey/',
-    'xtype' => 'textfield',
+
+$action = $modx->newObject('modAction');
+$action->fromArray(array(
+    'id' => 1,
     'namespace' => 'gridclasskey',
-    'area' => 'URL',
+    'parent' => 0,
+    'controller' => 'index',
+    'haslayout' => true,
+    'lang_topics' => 'gridclasskey:default',
+    'assets' => '',
         ), '', true, true);
 
-$settings['gridclasskey.assets_url'] = $modx->newObject('modSystemSetting');
-$settings['gridclasskey.assets_url']->fromArray(array(
-    'key' => 'gridclasskey.assets_url',
-    'value' => '{assets_url}components/gridclasskey/',
-    'xtype' => 'textfield',
-    'namespace' => 'gridclasskey',
-    'area' => 'URL',
+$menu = $modx->newObject('modMenu');
+$menu->fromArray(array(
+    'text' => 'gridclasskey',
+    'parent' => 'components',
+    'description' => 'gridclasskey.management_desc',
+    'icon' => 'images/icons/plugin.gif',
+    'menuindex' => 0,
+    'params' => '',
+    'handler' => '',
         ), '', true, true);
+$menu->addOne($action);
 
-
-return $settings;
+return $menu;

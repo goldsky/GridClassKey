@@ -3,7 +3,7 @@
 /**
  * Grid Class Key
  *
- * Copyright 2013 by goldsky <goldsky@virtudraft.com>
+ * Copyright 2013 - 2014 by goldsky <goldsky@virtudraft.com>
  *
  * This file is part of Grid Class Key, a custom class key for MODX
  * Revolution's Manager to hide child resources inside container's grid.
@@ -72,6 +72,32 @@ $modx->loadClass('transport.modPackageBuilder', '', false, true);
 $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME_LOWER, PKG_VERSION, PKG_RELEASE);
 $builder->registerNamespace(PKG_NAME_LOWER, false, true, '{core_path}components/' . PKG_NAME_LOWER . '/');
+
+/**
+ * MENU & ACTION
+ */
+$modx->log(modX::LOG_LEVEL_INFO, 'Packaging in menu...');
+flush();
+$menu = include $sources['data'] . 'transport.menu.php';
+if (empty($menu)) {
+    $modx->log(modX::LOG_LEVEL_ERROR, 'Could not package in menu.');
+} else {
+    $menuVehicle = $builder->createVehicle($menu, array(
+        xPDOTransport::PRESERVE_KEYS => true,
+        xPDOTransport::UPDATE_OBJECT => true,
+        xPDOTransport::UNIQUE_KEY => 'text',
+        xPDOTransport::RELATED_OBJECTS => true,
+        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array(
+            'Action' => array(
+                xPDOTransport::PRESERVE_KEYS => false,
+                xPDOTransport::UPDATE_OBJECT => true,
+                xPDOTransport::UNIQUE_KEY => array('namespace', 'controller'),
+    ))));
+    $builder->putVehicle($menuVehicle);
+    unset($menuVehicle, $menu);
+    $modx->log(modX::LOG_LEVEL_INFO, 'Menu done.');
+    flush();
+}
 
 /**
  * CATEGORY
