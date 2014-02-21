@@ -32,7 +32,7 @@ switch ($modx->event->name) {
             $classKey = $resource->get('class_key');
             $isHideChildren = $resource->get('hide_children_in_tree');
             if ($classKey !== 'GridContainer' &&
-                    $isHideChildren !== 1 &&
+                    $isHideChildren === 1 &&
                     $classKey === 'modResource' ||
                     $classKey === 'modDocument' ||
                     $classKey === 'modStaticResource' ||
