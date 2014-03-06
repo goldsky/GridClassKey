@@ -1,3 +1,8 @@
+Grid Class Key
+=================================================
+- fix the filtering on the grid
+- fix conditional statement in plugin on "OnDocFormPrerender" event
+
 Grid Class Key 1.0.0-rc-1 (February 3, 2014)
 =================================================
 - [#11] load Rich Text Editor

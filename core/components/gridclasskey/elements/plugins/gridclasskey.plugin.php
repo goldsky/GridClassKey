@@ -32,12 +32,13 @@ switch ($modx->event->name) {
             $classKey = $resource->get('class_key');
             $isHideChildren = $resource->get('hide_children_in_tree');
             if ($classKey !== 'GridContainer' &&
-                    $isHideChildren === 1 &&
+                    $isHideChildren == 1 &&
                     $classKey === 'modResource' ||
                     $classKey === 'modDocument' ||
                     $classKey === 'modStaticResource' ||
                     $classKey === 'modSymLink' ||
-                    $classKey === 'modWebLink'
+                    $classKey === 'modWebLink' ||
+                    $classKey === 'mgResource' // moreGallery
             ) {
                 $properties = $resource->getProperties('gridclasskey');
                 if ($properties) {
@@ -49,7 +50,7 @@ switch ($modx->event->name) {
         break;
     case 'OnDocFormPrerender':
         $actionId = intval($_GET['a']);
-        if ($actionId !== 30 && $actionId !== 55) {
+        if ($actionId !== 30 || $actionId !== 55) {
             return false;
         }
         $docId = isset($_GET['id']) ? intval($_GET['id']) : '';

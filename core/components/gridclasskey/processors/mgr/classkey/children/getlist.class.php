@@ -36,6 +36,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     protected $selectedFields = array();
     protected $selectedMainFields = array();
     protected $selectedTVFields = array();
+    protected $andCondition = array();
+    protected $orCondition = array();
 
     public function initialize() {
         $this->editAction = $this->modx->getObject('modAction', array(
@@ -69,11 +71,11 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     public function prepareQueryBeforeCount(xPDOQuery $c) {
         $query = $this->getProperty('query');
         if (!empty($query)) {
-            $c->andCondition(array(
-                'modResource.pagetitle:LIKE' => '%' . $query . '%',
-                'OR:modResource.longtitle:LIKE' => '%' . $query . '%',
-                'OR:modResource.menutitle:LIKE' => '%' . $query . '%',
-                'OR:modResource.description:LIKE' => '%' . $query . '%',
+            $this->orCondition = array_merge($this->orCondition, array(
+                "modResource.pagetitle LIKE '%{$query}%'",
+                "modResource.longtitle LIKE '%{$query}%'",
+                "modResource.menutitle LIKE '%{$query}%'",
+                "modResource.description LIKE '%{$query}%'",
             ));
         }
 
@@ -107,8 +109,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         // advanced search
         $template = $this->getProperty('template');
         if (!empty($template)) {
-            $c->andCondition(array(
-                'modResource.template' => $template
+            $this->andCondition = array_merge($this->andCondition, array(
+                'modResource.template' => $template,
             ));
         }
         $fields = $this->getProperty('fields');
@@ -116,7 +118,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             $fieldsArray = json_decode($fields, 1);
             foreach ($fieldsArray as $k => $field) {
                 if (in_array($field['name'], $mainFields)) {
-                    $c->andCondition(array(
+                    $this->andCondition = array_merge($this->andCondition, array(
                         'modResource.' . $field['name'] . ':LIKE' => "%{$field['value']}%"
                     ));
                     unset($fieldsArray[$k]);
@@ -130,6 +132,14 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             }
         }
 
+        if (!empty($this->andCondition)) {
+            $c->andCondition($this->andCondition);
+        }
+
+        if (!empty($this->orCondition)) {
+            $c->orCondition($this->orCondition);
+        }
+
         $parent = $this->getProperty('parent');
         $c->where(array(
             'modResource.parent' => $parent
@@ -138,7 +148,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         return $c;
     }
 
-    private function _joinTV($c, $index, $tvName, $query = '') {
+    private function _joinTV(&$c, $index, $tvName, $query = '') {
         $tvObj = $this->modx->getObject('modTemplateVar', array(
             'name' => $tvName
         ));
@@ -153,17 +163,9 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                 $tvId . ' = TemplateVarResources_' . $index . '.tmplvarid',
             ));
             if (!empty($query)) {
-                $parent = $this->getProperty('parent');
-                if (!empty($parent)) {
-                    $c->orCondition(array(
-                        'modResource.parent:=' => $parent,
-                        'AND:TemplateVarResources_' . $index . '.value:LIKE' => '%' . $query . '%',
-                    ));
-                } else {
-                    $c->orCondition(array(
-                        'TemplateVarResources_' . $index . '.value:LIKE' => '%' . $query . '%',
-                    ));
-                }
+                $this->orCondition = array_merge($this->orCondition, array(
+                    'TemplateVarResources_' . $index . '.value:LIKE' => '%' . $query . '%',
+                ));
             }
         }
     }
