@@ -1,5 +1,6 @@
 Grid Class Key
 =================================================
+- add OR & AND condition option on Advanced Search window
 - fix the filtering on the grid
 - fix conditional statement in plugin on "OnDocFormPrerender" event
 

@@ -38,6 +38,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     protected $selectedTVFields = array();
     protected $andCondition = array();
     protected $orCondition = array();
+    protected $condition = '';
 
     public function initialize() {
         $this->editAction = $this->modx->getObject('modAction', array(
@@ -59,6 +60,10 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                 $this->setProperty('dir', in_array(strtolower($this->parentProperties['grid-sortdir']), array('asc', 'desc')) ? strtolower($this->parentProperties['grid-sortdir']) : 'desc');
             }
         }
+
+        $condition = $this->getProperty('condition', 'or');
+        $this->condition = $condition === 'or' ? 'orCondition' : 'andCondition';
+
         return parent::initialize();
     }
 
@@ -69,15 +74,10 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
      * @return xPDOQuery
      */
     public function prepareQueryBeforeCount(xPDOQuery $c) {
-        $query = $this->getProperty('query');
-        if (!empty($query)) {
-            $this->orCondition = array_merge($this->orCondition, array(
-                "modResource.pagetitle LIKE '%{$query}%'",
-                "modResource.longtitle LIKE '%{$query}%'",
-                "modResource.menutitle LIKE '%{$query}%'",
-                "modResource.description LIKE '%{$query}%'",
-            ));
-        }
+        $parent = $this->getProperty('parent');
+        $c->where(array(
+            'modResource.parent' => $parent
+        ));
 
         $mainFields = $this->modx->getSelectColumns('modResource');
         $mainFields = str_replace('`', '', $mainFields);
@@ -96,6 +96,16 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $this->selectedMainFields = array_values($this->selectedMainFields);
         $c->select($this->modx->getSelectColumns('modResource', 'modResource', '', $this->selectedMainFields));
 
+        $query = $this->getProperty('query');
+        if (!empty($query)) {
+            $this->{$this->condition} = array_merge($this->{$this->condition}, array(
+                "modResource.pagetitle LIKE '%{$query}%'",
+                "modResource.longtitle LIKE '%{$query}%'",
+                "modResource.menutitle LIKE '%{$query}%'",
+                "modResource.description LIKE '%{$query}%'",
+            ));
+        }
+
         $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
         $this->selectedTVFields = array_values($this->selectedTVFields);
         $tvLoopIndex = 0;
@@ -109,7 +119,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         // advanced search
         $template = $this->getProperty('template');
         if (!empty($template)) {
-            $this->andCondition = array_merge($this->andCondition, array(
+            $this->{$this->condition} = array_merge($this->{$this->condition}, array(
                 'modResource.template' => $template,
             ));
         }
@@ -118,7 +128,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             $fieldsArray = json_decode($fields, 1);
             foreach ($fieldsArray as $k => $field) {
                 if (in_array($field['name'], $mainFields)) {
-                    $this->andCondition = array_merge($this->andCondition, array(
+                    $this->{$this->condition} = array_merge($this->{$this->condition}, array(
                         'modResource.' . $field['name'] . ':LIKE' => "%{$field['value']}%"
                     ));
                     unset($fieldsArray[$k]);
@@ -137,13 +147,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         }
 
         if (!empty($this->orCondition)) {
-            $c->orCondition($this->orCondition);
+            $c->orCondition(array($this->orCondition));
         }
-
-        $parent = $this->getProperty('parent');
-        $c->where(array(
-            'modResource.parent' => $parent
-        ));
 
         return $c;
     }
@@ -163,7 +168,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                 $tvId . ' = TemplateVarResources_' . $index . '.tmplvarid',
             ));
             if (!empty($query)) {
-                $this->orCondition = array_merge($this->orCondition, array(
+                $this->{$this->condition} = array_merge($this->{$this->condition}, array(
                     'TemplateVarResources_' . $index . '.value:LIKE' => '%' . $query . '%',
                 ));
             }

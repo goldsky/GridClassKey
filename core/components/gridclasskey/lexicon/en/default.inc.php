@@ -86,3 +86,7 @@ $_lang['gridclasskey.parent_missing_err'] = 'Missing parent\'s ID';
 $_lang['gridclasskey.sort_dir'] = 'Sort Direction';
 $_lang['gridclasskey.sort'] = 'Sort';
 $_lang['gridclasskey.update_settings'] = 'Update Settings';
+$_lang['gridclasskey.range'] = 'Range';
+$_lang['gridclasskey.filter_condition'] = 'Filter\'s condition';
+$_lang['gridclasskey.or_desc'] = 'Meet at least one filter';
+$_lang['gridclasskey.and_desc'] = 'Meet all filters';

@@ -67,6 +67,15 @@ GridClassKey.window.AdvancedSearch = function(config) {
             }, {
                 columnWidth: 1
                 , xtype: 'gridclasskey-grid-advancedsearch'
+            }, {
+                xtype: 'radiogroup'
+                , fieldLabel: _('gridclasskey.filter_condition')
+                , anchor: '100%'
+                , columns: 1
+                , items: [
+                    {boxLabel: _('gridclasskey.or_desc'), name: 'gridclasskey-filter-condition', inputValue: 'or', checked: true},
+                    {boxLabel: _('gridclasskey.and_desc'), name: 'gridclasskey-filter-condition', inputValue: 'and'}
+                ]
             }
         ]
         , buttons: [
@@ -112,6 +121,7 @@ Ext.extend(GridClassKey.window.AdvancedSearch, MODx.Window, {
 
         if (values['gridclasskey-search-field-filter'] === ''
                 && values['gridclasskey-template-filter'] === ''
+                && values['gridclasskey-filter-condition'] === ''
                 && l === 0
                 ) {
             return false;
@@ -123,6 +133,9 @@ Ext.extend(GridClassKey.window.AdvancedSearch, MODx.Window, {
         }
         if (values['gridclasskey-template-filter']) {
             s.baseParams.template = values['gridclasskey-template-filter'];
+        }
+        if (values['gridclasskey-filter-condition']) {
+            s.baseParams.condition = values['gridclasskey-filter-condition'];
         }
 
         var fields = [];
