@@ -90,3 +90,4 @@ $_lang['gridclasskey.range'] = 'Range';
 $_lang['gridclasskey.filter_condition'] = 'Filter\'s condition';
 $_lang['gridclasskey.or_desc'] = 'Meet at least one filter';
 $_lang['gridclasskey.and_desc'] = 'Meet all filters';
+$_lang['gridclasskey.fixed'] = 'Fixed';

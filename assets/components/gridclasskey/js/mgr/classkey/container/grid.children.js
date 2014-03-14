@@ -92,10 +92,13 @@ GridClassKey.grid.Children = function(config) {
                 , dataIndex: fieldRecord.name
                 , sortable: fieldRecord.sortable
                 , hidden: fieldRecord.hidden
+                , fixed: fieldRecord.fixed
             };
             var width = fieldRecord.width - 0; // typecasting
             if (width > 0) {
                 rowField.width = width;
+            } else {
+                rowField.width = 50;
             }
             if (fieldRecord.name !== 'id'
                     && fieldRecord.editor_type

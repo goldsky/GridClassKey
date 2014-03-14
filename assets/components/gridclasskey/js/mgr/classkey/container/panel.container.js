@@ -152,7 +152,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
             }];
         return s;
     },
-    beforeSubmit: function(o) {
+    getGridSettingValues: function(){
         var grid = Ext.getCmp('gridclasskey-grid-gridsettings');
         var store = grid.getStore();
         var fields = [];
@@ -161,35 +161,28 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                 name: store.data.items[i].data.name,
                 lexicon: store.data.items[i].data.lexicon,
                 width: store.data.items[i].data.width,
+                fixed: store.data.items[i].data.fixed,
                 sortable: store.data.items[i].data.sortable,
                 hidden: store.data.items[i].data.hidden,
                 editor_type: store.data.items[i].data.editor_type,
                 output_filter: store.data.items[i].data.output_filter
             });
         }
+
+        return fields;
+    },
+    beforeSubmit: function(o) {
+        var fields = this.getGridSettingValues();
         Ext.getCmp('gridclasskey-property-fields').setValue(JSON.stringify(fields));
 
         return GridClassKey.panel.Container.superclass.beforeSubmit.apply(this, arguments);
     },
     success: function(o) {
-        var grid = Ext.getCmp('gridclasskey-grid-gridsettings');
-        var store = grid.getStore();
-        var fields = [];
-        for (var i = 0, l = store.data.items.length; i < l; i++) {
-            fields.push({
-                name: store.data.items[i].data.name,
-                lexicon: store.data.items[i].data.lexicon,
-                width: store.data.items[i].data.width,
-                sortable: store.data.items[i].data.sortable,
-                hidden: store.data.items[i].data.hidden,
-                editor_type: store.data.items[i].data.editor_type,
-                output_filter: store.data.items[i].data.output_filter
-            });
-        }
         // upgrade differences
         this.config.record.properties = this.config.record.properties || {};
         this.config.record.properties.gridclasskey = this.config.record.properties.gridclasskey || {};
 
+        var fields = this.getGridSettingValues();
         this.config.record.properties.gridclasskey['fields'] = fields;
 
         var childrenTab = Ext.getCmp('gridclasskey-grid-children-panel');

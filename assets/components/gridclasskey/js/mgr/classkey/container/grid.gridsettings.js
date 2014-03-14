@@ -3,7 +3,7 @@ GridClassKey.grid.GridSettings = function(config) {
 
     Ext.apply(config, {
         id: 'gridclasskey-grid-gridsettings'
-        , fields: ['sort', 'name', 'lexicon', 'width', 'sortable', 'hidden', 'editor_type', 'output_filter']
+        , fields: ['sort', 'name', 'lexicon', 'width', 'fixed', 'sortable', 'hidden', 'editor_type', 'output_filter']
         , sortInfo: {field: 'sort', direction: 'asc'}
         , viewConfig: {
             forceFit: true
@@ -47,6 +47,19 @@ GridClassKey.grid.GridSettings = function(config) {
                 , width: 50
                 , editor: {
                     type: 'textfields'
+                }
+            }, {
+                header: _('gridclasskey.fixed')
+                , xtype: 'booleancolumn'
+                , dataIndex: 'fixed'
+                , sortable: false
+                , width: 50
+                , trueText: _('yes')
+                , falseText: _('no')
+                , editor: {
+                    xtype: 'modx-combo-boolean'
+                    , width: 50
+                    , listWidth: 100
                 }
             }, {
                 header: _('gridclasskey.sortable')
@@ -177,14 +190,15 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 }
             });
             if (!hasID) {
-                fieldRecord.push({
+                data.push({
                     'name': 'id',
                     'lexicon': 'id',
                     'width': 50,
+                    'fixed': true,
                     'sortable': true,
                     'hidden': false,
                     'editor_type': '',
-                    'output_filter': '',
+                    'output_filter': ''
                 });
             }
             Ext.each(fields, function(fieldRecord, idx) {
@@ -193,6 +207,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                     fieldRecord.name,
                     fieldRecord.lexicon,
                     fieldRecord.width,
+                    fieldRecord.fixed,
                     fieldRecord.sortable,
                     fieldRecord.hidden,
                     fieldRecord.editor_type,
@@ -200,24 +215,23 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 ]);
             });
         } else {
-            data = [
-                [1, 'id', 'id', 50, true, false],
-                [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
-                [3, 'longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-                [4, 'description', 'description', 200, false, false, 'textarea']
-            ];
+            data = this.getDefaultData();
         }
         this.data = data;
         this.getStore().loadData(this.data);
         this.getView().refresh();
     }
-    , revertDefaultData: function(btn, e) {
-        this.data = [
-            [1, 'id', 'id', 50, true, false],
-            [2, 'pagetitle', 'pagetitle', 100, true, false, 'textfield'],
-            [3, 'longtitle', 'gridclasskey.longtitle', 100, true, false, 'textfield'],
-            [4, 'description', 'description', 200, false, false, 'textarea']
+    , getDefaultData: function() {
+        var data = [
+            [1, 'id', 'id', 50, true, true, false],
+            [2, 'pagetitle', 'pagetitle', 100, true, true, false, 'textfield'],
+            [3, 'longtitle', 'gridclasskey.longtitle', 100, true, true, false, 'textfield'],
+            [4, 'description', 'description', 200, false, false, false, 'textarea']
         ];
+        return data;
+    }
+    , revertDefaultData: function(btn, e) {
+        this.data = this.getDefaultData();
         this.getStore().loadData(this.data);
         this.getView().refresh();
 
