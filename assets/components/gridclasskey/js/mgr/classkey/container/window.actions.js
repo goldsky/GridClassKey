@@ -24,7 +24,7 @@ GridClassKey.window.Actions = function(config) {
                 , name: 'action-selected-range'
             }, {
                 xtype: 'radiogroup'
-                , fieldLabel: 'Range'
+                , fieldLabel: _('gridclasskey.range')
                 , columns: 3
                 , margins: '0 0 10 0'
                 , items: [

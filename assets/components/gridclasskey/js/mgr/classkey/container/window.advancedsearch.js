@@ -22,7 +22,6 @@ GridClassKey.window.AdvancedSearch = function(config) {
                 , name: 'gridclasskey-search-field-filter'
                 , fieldLabel: _('gridclasskey.search')
                 , anchor: '100%'
-                , value: config.query || ''
                 , listeners: {
                     'render': {
                         fn: function(cmp) {
@@ -83,6 +82,7 @@ GridClassKey.window.AdvancedSearch = function(config) {
                 text: _('cancel')
                 , scope: this
                 , handler: function() {
+                    this.fp.getForm().reset();
                     config.closeAction !== 'close' ? this.hide() : this.close();
                 }
             }, {
@@ -128,6 +128,7 @@ Ext.extend(GridClassKey.window.AdvancedSearch, MODx.Window, {
         }
         var childrenGrid = Ext.getCmp('gridclasskey-grid-children');
         var s = childrenGrid.getStore();
+        s.baseParams.advancedSearch = true;
         if (values['gridclasskey-search-field-filter']) {
             s.baseParams.query = values['gridclasskey-search-field-filter'];
         }

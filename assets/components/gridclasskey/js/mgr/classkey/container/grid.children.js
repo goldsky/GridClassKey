@@ -300,14 +300,16 @@ GridClassKey.grid.Children = function(config) {
                 , handler: function(btn, e) {
                     var searchField = Ext.getCmp('gridclasskey-search-field');
                     searchField.setDisabled(true);
+                    searchField.reset();
                     var advSearchWin = MODx.load({
                         xtype: 'gridclasskey-window-advancedsearch'
                         , parent: config.record.id
-                        , query: searchField.getValue()
                     });
-                    searchField.reset();
+                    this.getStore().baseParams.query = '';
+                    advSearchWin.fp.getForm().reset();
                     advSearchWin.show();
                 }
+                , scope: this
             }, {
                 xtype: 'button'
                 , text: _('gridclasskey.clear')
@@ -319,6 +321,7 @@ GridClassKey.grid.Children = function(config) {
 
                     var s = this.getStore();
                     s.baseParams.query = '';
+                    s.baseParams.advancedSearch = false;
                     s.baseParams.template = '';
                     s.baseParams.fields = '';
                     this.getBottomToolbar().changePage(1);
