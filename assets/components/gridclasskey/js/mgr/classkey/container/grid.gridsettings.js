@@ -224,8 +224,8 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     , getDefaultData: function() {
         var data = [
             [1, 'id', 'id', 50, true, true, false],
-            [2, 'pagetitle', 'pagetitle', 100, true, true, false, 'textfield'],
-            [3, 'longtitle', 'gridclasskey.longtitle', 100, true, true, false, 'textfield'],
+            [2, 'pagetitle', 'pagetitle', 200, true, true, false, 'textfield'],
+            [3, 'longtitle', 'gridclasskey.longtitle', 200, false, true, false, 'textfield'],
             [4, 'description', 'description', 200, false, false, false, 'textarea']
         ];
         return data;
