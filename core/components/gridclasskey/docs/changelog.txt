@@ -1,10 +1,11 @@
-Grid Class Key
+GridClassKey
 =================================================
+- remove spaces on the package's name <http://forums.modx.com/thread/88734/package-version-check#dis-post-489531>
 - add OR & AND condition option on Advanced Search window
 - fix the filtering on the grid
 - fix conditional statement in plugin on "OnDocFormPrerender" event
 
-Grid Class Key 1.0.0-rc-1 (February 3, 2014)
+GridClassKey 1.0.0-rc-1 (February 3, 2014)
 =================================================
 - [#11] load Rich Text Editor
 - [#18] add drag and drop menuindex sorting
@@ -22,11 +23,11 @@ Grid Class Key 1.0.0-rc-1 (February 3, 2014)
 - [#15] fix broken javascript after creating container
 - [#22] custom icon for Container, thx to @eladnova
 
-Grid Class Key 1.0.0-beta.3 (December 10, 2013)
+GridClassKey 1.0.0-beta.3 (December 10, 2013)
 =================================================
 - [#12] TV's text gets wrong value, should be the "lastSelectionText"
 
-Grid Class Key 1.0.0-beta.2 (December 06, 2013)
+GridClassKey 1.0.0-beta.2 (December 06, 2013)
 =================================================
 - use modx's core output filter
 - use "apply" to all the JS configs
@@ -43,6 +44,6 @@ Grid Class Key 1.0.0-beta.2 (December 06, 2013)
 - [#2][#5][#6][#7][#8] apply settings on saving
 - [#1][#2][#5][#8] add settings for the grid
 
-Grid Class Key 1.0.0-beta-1 (November 22, 2013)
+GridClassKey 1.0.0-beta-1 (November 22, 2013)
 =================================================
 - initial release

@@ -1,5 +1,5 @@
 -----------------------
-Package: Grid Class Key
+Package: GridClassKey
 -----------------------
 Author: goldsky <goldsky@virtudraft.com>
         http://twitter.com/_goldsky
