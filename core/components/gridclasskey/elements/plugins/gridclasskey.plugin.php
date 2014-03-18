@@ -117,7 +117,8 @@ switch ($modx->event->name) {
             $parentClassKey = $parentResource->get('class_key');
             if ($parentClassKey === 'GridContainer') {
                 $modx->lexicon->load('gridclasskey:default');
-                $text = $modx->lexicon('gridclasskey.back_to_container');
+                $parentProperties = $parentResource->getProperties('gridclasskey');
+                $text = !empty($parentProperties['child-backbutton-text']) ? $parentProperties['child-backbutton-text'] : $modx->lexicon('gridclasskey.back_to_container');
                 $modx->regClientStartupHTMLBlock('<script type="text/javascript">
 Ext.onReady(function() {
     var actionButtons = Ext.getCmp("modx-action-buttons");

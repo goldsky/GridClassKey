@@ -335,6 +335,23 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                         columnWidth: .5
                         , items: [
                             {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , name: 'gridclasskey-property-child-backbutton-text'
+                                , fieldLabel: _('gridclasskey.backbutton_text')
+                                , description: _('gridclasskey.backbutton_text_desc')
+                                , listeners: {
+                                    change: {
+                                        fn: function(cmp, newValue, oldValue) {
+                                            var btn = Ext.getCmp('modx-abtn-save');
+                                            if (btn) {
+                                                btn.enable();
+                                            }
+                                        }
+                                        , scope: this
+                                    }
+                                }
+                            }, {
                                 layout: 'column'
                                 , border: false
                                 , anchor: '100%'

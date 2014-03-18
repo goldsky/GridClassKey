@@ -1,5 +1,6 @@
 GridClassKey
 =================================================
+- [#41] option to replace the text of "Back to Container" button
 - apply default children's settings into plugin
 - add fixed column option on grid's setting
 - added russian & italian lexicons
