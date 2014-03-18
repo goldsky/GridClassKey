@@ -91,3 +91,4 @@ $_lang['gridclasskey.filter_condition'] = 'Filter\'s condition';
 $_lang['gridclasskey.or_desc'] = 'Meet at least one filter';
 $_lang['gridclasskey.and_desc'] = 'Meet all filters';
 $_lang['gridclasskey.fixed'] = 'Fixed';
+$_lang['gridclasskey.children_settings_desc'] = 'Settings for new child resources, not existing ones.';

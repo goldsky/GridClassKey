@@ -1,5 +1,6 @@
 GridClassKey
 =================================================
+- apply default children's settings into plugin
 - add fixed column option on grid's setting
 - added russian & italian lexicons
 - remove spaces on the package's name <http://forums.modx.com/thread/88734/package-version-check#dis-post-489531>
