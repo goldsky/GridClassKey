@@ -52,9 +52,45 @@ switch ($modx->event->name) {
             }
         }
         break;
+    case 'OnDocFormRender':
+        if (empty($scriptProperties['mode']) || $scriptProperties['mode'] !== 'new') {
+            return;
+        }
+        $parentResource = $modx->getObject('modResource', intval($_GET['parent']));
+        if (!$parentResource) {
+            return;
+        }
+        $parent = $parentResource->toArray();
+        if ($parent['class_key'] === 'GridContainer') {
+            $parentProperties = $parentResource->getProperties('gridclasskey');
+            if (!$parentProperties) {
+                return;
+            }
+            /**
+             * @see manager\controllers\default\resource\create\ResourceCreateManagerController::process()
+             */
+            foreach ($parentProperties as $k => $v) {
+                if (substr($k, 0, 6) == 'child-') {
+                    $key = substr($k, 6);
+                    if ($key === 'template') {
+                        $modx->controller->setProperty($key, $v);
+                    } elseif ($key === 'content_type') {
+                        $modx->_userConfig['default_' . $key] = $v;
+                    } elseif ($key === 'class_key') {
+                        $modx->controller->resourceClass = $v;
+                    } elseif ($key === 'content_dispo' || $key === 'isfolder' || $key === 'syncsite') {
+                        // no place to override
+                    } else {
+                        $modx->_userConfig[$key . '_default'] = $v;
+                    }
+                }
+            }
+        }
+
+        break;
     case 'OnDocFormPrerender':
         $actionId = intval($_GET['a']);
-        if ($actionId !== 30 || $actionId !== 55) {
+        if ($actionId !== 30 && $actionId !== 55) {
             return false;
         }
         $docId = isset($_GET['id']) ? intval($_GET['id']) : '';
@@ -104,6 +140,7 @@ Ext.onReady(function() {
         </script>');
             }
         }
+
     break;
     default:
         break;
