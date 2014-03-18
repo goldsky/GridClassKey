@@ -1,4 +1,4 @@
-GridClassKey
+GridClassKey 1.0.0-rc2 (March 18, 2014)
 =================================================
 - [#41] option to replace the text of "Back to Container" button
 - apply default children's settings into plugin
