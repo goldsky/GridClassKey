@@ -30,6 +30,7 @@ GridClassKey.panel.Settings = function(config) {
         ]
     });
     GridClassKey.panel.Settings.superclass.constructor.call(this, config);
+
 };
 
 Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
@@ -100,7 +101,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                         , valueField: 'sort'
                                         , listeners: {
                                             change: {
-                                                fn: function( cmp, newValue, oldValue ){
+                                                fn: function(cmp, newValue, oldValue) {
                                                     var btn = Ext.getCmp('modx-abtn-save');
                                                     if (btn) {
                                                         btn.enable();
@@ -126,7 +127,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                         , valueField: 'dir'
                                         , listeners: {
                                             change: {
-                                                fn: function( cmp, newValue, oldValue ){
+                                                fn: function(cmp, newValue, oldValue) {
                                                     var btn = Ext.getCmp('modx-abtn-save');
                                                     if (btn) {
                                                         btn.enable();
@@ -170,7 +171,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , description: _('gridclasskey.mgr_css_desc')
                                 , listeners: {
                                     change: {
-                                        fn: function( cmp, newValue, oldValue ){
+                                        fn: function(cmp, newValue, oldValue) {
                                             var btn = Ext.getCmp('modx-abtn-save');
                                             if (btn) {
                                                 btn.enable();
@@ -187,7 +188,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , description: _('gridclasskey.mgr_top_js_desc')
                                 , listeners: {
                                     change: {
-                                        fn: function( cmp, newValue, oldValue ){
+                                        fn: function(cmp, newValue, oldValue) {
                                             var btn = Ext.getCmp('modx-abtn-save');
                                             if (btn) {
                                                 btn.enable();
@@ -204,7 +205,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , description: _('gridclasskey.mgr_bottom_js_desc')
                                 , listeners: {
                                     change: {
-                                        fn: function( cmp, newValue, oldValue ){
+                                        fn: function(cmp, newValue, oldValue) {
                                             var btn = Ext.getCmp('modx-abtn-save');
                                             if (btn) {
                                                 btn.enable();
@@ -227,7 +228,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , description: _('gridclasskey.childrentab_text_desc')
                                 , listeners: {
                                     change: {
-                                        fn: function( cmp, newValue, oldValue ){
+                                        fn: function(cmp, newValue, oldValue) {
                                             var btn = Ext.getCmp('modx-abtn-save');
                                             if (btn) {
                                                 btn.enable();
@@ -245,7 +246,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , description: _('gridclasskey.addnewdocbtn_text_desc')
                                 , listeners: {
                                     change: {
-                                        fn: function( cmp, newValue, oldValue ){
+                                        fn: function(cmp, newValue, oldValue) {
                                             var btn = Ext.getCmp('modx-abtn-save');
                                             if (btn) {
                                                 btn.enable();
@@ -264,6 +265,9 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
     getGridSettingsChildren: function(config) {
         return [
             {
+                html: '<p>' + _('gridclasskey.children_settings_desc') + '</p>'
+                , bodyCssClass: 'panel-desc'
+            }, {
                 layout: 'column'
                 , border: false
                 , anchor: '100%'
@@ -278,6 +282,19 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                 , items: [
                     {
                         columnWidth: .5
+                        , defaults: {
+                            listeners: {
+                                change: {
+                                    fn: function(cmp, newValue, oldValue) {
+                                        var btn = Ext.getCmp('modx-abtn-save');
+                                        if (btn) {
+                                            btn.enable();
+                                        }
+                                    }
+                                    , scope: this
+                                }
+                            }
+                        }
                         , items: [
                             {
                                 xtype: 'gridclasskey-combo-template'
@@ -287,37 +304,158 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , fieldLabel: _('gridclasskey.default_template')
                                 , description: _('gridclasskey.child_default_template_desc')
                                 , bodyStyle: 'margin: 5px 0'
-                                , listeners: {
-                                    change: {
-                                        fn: function( cmp, newValue, oldValue ){
-                                            var btn = Ext.getCmp('modx-abtn-save');
-                                            if (btn) {
-                                                btn.enable();
-                                            }
-                                        }
-                                        , scope: this
-                                    }
-                                }
                             }, {
-                                xtype: 'checkbox' // 'xcheckbox' fails to get the value for some reason
-                                , hideLabel: true
-                                , boxLabel: _('resource_hide_from_menus')
-                                , id: 'gridclasskey-property-child-hidemenu'
-                                , name: 'gridclasskey-property-child-hidemenu'
-                                , description: _('resource_hide_from_menus_help')
-                                , inputValue: 1
-                                , checked: parseInt(config.record['gridclasskey-property-child-hidemenu']) || 0
-                                , listeners: {
-                                    change: {
-                                        fn: function( cmp, newValue, oldValue ){
-                                            var btn = Ext.getCmp('modx-abtn-save');
-                                            if (btn) {
-                                                btn.enable();
+                                xtype: 'modx-combo-class-derivatives'
+                                , fieldLabel: _('resource_type')
+                                , description: '<b>[[*class_key]]</b><br />'
+                                , name: 'gridclasskey-property-child-class_key'
+                                , hiddenName: 'gridclasskey-property-child-class_key'
+                                , allowBlank: true
+                                , value: config.record['gridclasskey-property-child-class_key'] || 'modDocument'
+                                , anchor: '100%'
+                            }, {
+                                xtype: 'modx-combo-content-type'
+                                , fieldLabel: _('resource_content_type')
+                                , description: '<b>[[*content_type]]</b><br />' + _('resource_content_type_help')
+                                , name: 'gridclasskey-property-child-content_type'
+                                , hiddenName: 'gridclasskey-property-child-content_type'
+                                , anchor: '100%'
+                                , value: config.record['gridclasskey-property-child-content_type'] || (MODx.config.default_content_type || 1)
+                            }/*, {
+                                xtype: 'modx-combo-content-disposition'
+                                , fieldLabel: _('resource_contentdispo')
+                                , description: '<b>[[*content_dispo]]</b><br />' + _('resource_contentdispo_help')
+                                , name: 'gridclasskey-property-child-content_dispo'
+                                , hiddenName: 'gridclasskey-property-child-content_dispo'
+                                , anchor: '100%'
+                                , value: config.record['gridclasskey-property-child-content_dispo'] || 0
+                            }*/
+                        ]
+                    }, {
+                        columnWidth: .5
+                        , items: [
+                            {
+                                layout: 'column'
+                                , border: false
+                                , anchor: '100%'
+                                , defaults: {
+                                    labelSeparator: ''
+                                    , labelAlign: 'top'
+                                    , border: false
+                                    , layout: 'form'
+                                    , msgTarget: 'under'
+                                }
+                                , margins: 0
+                                , items: [
+                                    {
+                                        columnWidth: .5
+                                        , defaults: {
+                                            listeners: {
+                                                change: {
+                                                    fn: function(cmp, newValue, oldValue) {
+                                                        var btn = Ext.getCmp('modx-abtn-save');
+                                                        if (btn) {
+                                                            btn.enable();
+                                                        }
+                                                    }
+                                                    , scope: this
+                                                }
                                             }
                                         }
-                                        , scope: this
+                                        , items: [
+                                            {
+                                                xtype: 'checkbox' // 'xcheckbox' fails to get the value for some reason
+                                                , hideLabel: true
+                                                , boxLabel: _('resource_hide_from_menus')
+                                                , id: 'gridclasskey-property-child-hidemenu'
+                                                , name: 'gridclasskey-property-child-hidemenu'
+                                                , description: _('resource_hide_from_menus_help')
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-hidemenu']) || 0
+                                            }, /*{
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('resource_folder')
+                                                , description: '<b>[[*isfolder]]</b><br />' + _('resource_folder_help')
+                                                , hideLabel: true
+                                                , name: 'gridclasskey-property-child-isfolder'
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-isfolder']) || 0
+
+                                            },*/ {
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('resource_searchable')
+                                                , description: '<b>[[*searchable]]</b><br />' + _('resource_searchable_help')
+                                                , hideLabel: true
+                                                , name: 'gridclasskey-property-child-searchable'
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-searchable'])
+                                            }, {
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('resource_richtext')
+                                                , description: '<b>[[*richtext]]</b><br />' + _('resource_richtext_help')
+                                                , hideLabel: true
+                                                , name: 'gridclasskey-property-child-richtext'
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-richtext'])
+                                            }
+                                        ]
+                                    }, {
+                                        columnWidth: .5
+                                        , defaults: {
+                                            listeners: {
+                                                change: {
+                                                    fn: function(cmp, newValue, oldValue) {
+                                                        var btn = Ext.getCmp('modx-abtn-save');
+                                                        if (btn) {
+                                                            btn.enable();
+                                                        }
+                                                    }
+                                                    , scope: this
+                                                }
+                                            }
+                                        }
+                                        , items: [
+                                            {
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('resource_published')
+                                                , hideLabel: true
+                                                , description: '<b>[[*published]]</b><br />' + _('resource_published_help')
+                                                , name: 'gridclasskey-property-child-published'
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-published'])
+                                            }, {
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('resource_cacheable')
+                                                , description: '<b>[[*cacheable]]</b><br />' + _('resource_cacheable_help')
+                                                , hideLabel: true
+                                                , name: 'gridclasskey-property-child-cacheable'
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-cacheable'])
+
+                                            }, /*{
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('resource_syncsite')
+                                                , description: _('resource_syncsite_help')
+                                                , hideLabel: true
+                                                , name: 'gridclasskey-property-child-syncsite'
+                                                , inputValue: 1
+                                                , checked: config.record['gridclasskey-property-child-syncsite'] !== undefined
+                                                        && config.record['gridclasskey-property-child-syncsite'] !== null
+                                                        ? parseInt(config.record['gridclasskey-property-child-syncsite'])
+                                                        : true
+
+                                            },*/ {
+                                                xtype: 'checkbox'
+                                                , boxLabel: _('deleted')
+                                                , description: '<b>[[*deleted]]</b>'
+                                                , hideLabel: true
+                                                , name: 'gridclasskey-property-child-deleted'
+                                                , inputValue: 1
+                                                , checked: parseInt(config.record['gridclasskey-property-child-deleted']) || false
+                                            }
+                                        ]
                                     }
-                                }
+                                ]
                             }
                         ]
                     }
