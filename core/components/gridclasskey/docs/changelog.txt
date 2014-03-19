@@ -1,3 +1,7 @@
+GridClassKey
+=================================================
+- fix class_key initiation of the new child resource
+
 GridClassKey 1.0.0-rc2 (March 18, 2014)
 =================================================
 - [#41] option to replace the text of "Back to Container" button

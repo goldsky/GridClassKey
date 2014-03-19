@@ -166,7 +166,7 @@ GridClassKey.grid.Children = function(config) {
         , sortable: false
         , editable: false
         , fixed: true
-        , width: 80
+        , width: 85
         , items: [
             {
                 iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
@@ -273,6 +273,11 @@ GridClassKey.grid.Children = function(config) {
                                     && config.record.properties.gridclasskey
                                     && config.record.properties.gridclasskey['child-template']
                                     ? '&template=' + config.record.properties.gridclasskey['child-template']
+                                    : '')
+                            + (config.record.properties
+                                    && config.record.properties.gridclasskey
+                                    && config.record.properties.gridclasskey['child-class_key']
+                                    ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
                                     : '')
                             );
                 }
