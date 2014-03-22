@@ -1,13 +1,16 @@
 .icon-gridcontainer .x-tree-node-icon {
     background-image: url(../icons/grid_folder.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-document-edit {
     background-image: url(../icons/page_white_edit.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-document-new {
     background-image: url(../icons/page_white_add.png) !important;
+    background-repeat: no-repeat;
 }
 
 .gridclasskey-deleted .x-grid3-cell-inner {
@@ -52,18 +55,22 @@
 
 .icon-gridclasskey-filter {
     background-image: url(../icons/filter.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-filter-add {
     background-image: url(../icons/filter_add.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-filter-delete {
     background-image: url(../icons/filter_delete.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-settings {
     background-image: url(../icons/setting_tools.png) !important;
+    background-repeat: no-repeat;
 }
 
 #gridclasskey-panel-mainfieldscombo-filter .x-btn,
@@ -81,22 +88,37 @@
 
 .icon-gridclasskey-edit {
     background-image: url(../icons/pencil.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-view {
     background-image: url(../icons/eye.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-delete {
     background-image: url(../icons/delete.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-recycle {
     background-image: url(../icons/recycle.png) !important;
+    background-repeat: no-repeat;
+}
+
+.icon-gridclasskey-mute {
+    background-image: url(../icons/transmit_delete.png) !important;
+    background-repeat: no-repeat;
+}
+
+.icon-gridclasskey-publish {
+    background-image: url(../icons/transmit_blue.png) !important;
+    background-repeat: no-repeat;
 }
 
 .icon-gridclasskey-check_boxes {
     background-image: url(../icons/check_boxes.png) !important;
+    background-repeat: no-repeat;
 }
 
 // overrides modx-theme

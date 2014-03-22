@@ -1,5 +1,7 @@
 GridClassKey 1.0.0-rc3 (March 22, 2014)
 =================================================
+- [#35] Icons on button controls break in MODX 2.3
+- [#44] Feature request: Publish/unpublish icon
 - [#33] FR: Sorting based on TV values
 - move the back button field above the rest settings
 - fix TV parsed value on grid

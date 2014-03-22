@@ -166,7 +166,7 @@ GridClassKey.grid.Children = function(config) {
         , sortable: false
         , editable: false
         , fixed: true
-        , width: 85
+        , width: 100
         , items: [
             {
                 iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
@@ -186,6 +186,27 @@ GridClassKey.grid.Children = function(config) {
                     window.open(rec.get('preview_url'));
                 },
                 scope: this
+            }, {
+                handler: function(grid, row, col) {
+                    var _this = Ext.getCmp('gridclasskey-grid-children');
+                    var rec = _this.store.getAt(row);
+                    if (rec.get('published')) {
+                        _this.unpublishResource(rec.data);
+                    } else {
+                        _this.publishResource(rec.data);
+                    }
+                },
+                getClass: function(v, meta, rec) {
+                    if (rec.get('published')) {
+                        this.items[2].tooltip = _('resource_unpublish');
+                        this.items[2].altText = _('resource_unpublish');
+                        return 'icon-gridclasskey-mute icon-gridclasskey-actioncolumn-img';
+                    } else {
+                        this.items[2].tooltip = _('resource_publish');
+                        this.items[2].altText = _('resource_publish');
+                        return 'icon-gridclasskey-publish icon-gridclasskey-actioncolumn-img';
+                    }
+                }
             }, {
                 handler: function(grid, row, col) {
                     var _this = Ext.getCmp('gridclasskey-grid-children');
@@ -421,24 +442,24 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , publishResource: function(btn, e) {
+    , publishResource: function(record) {
         MODx.Ajax.request({
             url: MODx.config.connectors_url + 'resource/index.php'
             , params: {
                 action: 'publish'
-                , id: this.menu.record.id
+                , id: record.id
             }
             , listeners: {
                 'success': {fn: this.refresh, scope: this}
             }
         });
     }
-    , unpublishResource: function(btn, e) {
+    , unpublishResource: function(record) {
         MODx.Ajax.request({
             url: MODx.config.connectors_url + 'resource/index.php'
             , params: {
                 action: 'unpublish'
-                , id: this.menu.record.id
+                , id: record.id
             }
             , listeners: {
                 'success': {fn: this.refresh, scope: this}

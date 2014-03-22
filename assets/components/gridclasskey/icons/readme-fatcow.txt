@@ -2,7 +2,7 @@ FatCow Farm Fresh Icons
 
 03/29/2013, v3.5.0, 9.12 Mb
 
-© Copyright 2013 FatCow Web Hosting. All rights reserved.
+Copyright 2013 FatCow Web Hosting. All rights reserved.
 
 These icons are licensed under a Creative Commons
 Attribution 3.0 License.
