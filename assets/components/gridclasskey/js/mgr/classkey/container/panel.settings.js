@@ -265,9 +265,6 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
     getGridSettingsChildren: function(config) {
         return [
             {
-                html: '<p>' + _('gridclasskey.children_settings_desc') + '</p>'
-                , bodyCssClass: 'panel-desc'
-            }, {
                 layout: 'column'
                 , border: false
                 , anchor: '100%'
@@ -281,6 +278,49 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                 , margins: 0
                 , items: [
                     {
+                        columnWidth: .5
+                        , defaults: {
+                            listeners: {
+                                change: {
+                                    fn: function(cmp, newValue, oldValue) {
+                                        var btn = Ext.getCmp('modx-abtn-save');
+                                        if (btn) {
+                                            btn.enable();
+                                        }
+                                    }
+                                    , scope: this
+                                }
+                            }
+                        }
+                        , items: [
+                            {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , name: 'gridclasskey-property-child-backbutton-text'
+                                , fieldLabel: _('gridclasskey.backbutton_text')
+                                , description: _('gridclasskey.backbutton_text_desc')
+                                , listeners: {
+                                    change: {
+                                        fn: function(cmp, newValue, oldValue) {
+                                            var btn = Ext.getCmp('modx-abtn-save');
+                                            if (btn) {
+                                                btn.enable();
+                                            }
+                                        }
+                                        , scope: this
+                                    }
+                                }
+                            }
+                        ]
+                    }, {
+                        columnWidth: 1
+                        , items: [
+                            {
+                                html: '<p>' + _('gridclasskey.children_settings_desc') + '</p>'
+                                , bodyCssClass: 'panel-desc'
+                            }
+                        ]
+                    }, {
                         columnWidth: .5
                         , defaults: {
                             listeners: {
@@ -335,23 +375,6 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                         columnWidth: .5
                         , items: [
                             {
-                                xtype: 'textfield'
-                                , anchor: '100%'
-                                , name: 'gridclasskey-property-child-backbutton-text'
-                                , fieldLabel: _('gridclasskey.backbutton_text')
-                                , description: _('gridclasskey.backbutton_text_desc')
-                                , listeners: {
-                                    change: {
-                                        fn: function(cmp, newValue, oldValue) {
-                                            var btn = Ext.getCmp('modx-abtn-save');
-                                            if (btn) {
-                                                btn.enable();
-                                            }
-                                        }
-                                        , scope: this
-                                    }
-                                }
-                            }, {
                                 layout: 'column'
                                 , border: false
                                 , anchor: '100%'

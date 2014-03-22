@@ -1,5 +1,6 @@
-GridClassKey
+GridClassKey 1.0.0-rc3 (March 22, 2014)
 =================================================
+- move the back button field above the rest settings
 - fix TV parsed value on grid
 - fix class_key initiation of the new child resource
 - fix width of the Action column
