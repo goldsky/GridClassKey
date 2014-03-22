@@ -111,8 +111,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $tvLoopIndex = 0;
         if (!empty($this->selectedTVFields)) {
             foreach ($this->selectedTVFields as $k => $tv) {
-                $this->_joinTV($c, $tvLoopIndex, $tv, $query);
                 $tvLoopIndex++;
+                $this->_joinTV($c, $tvLoopIndex, $tv, $query);
             }
         }
 
@@ -147,8 +147,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                 }
                 if (!empty($fieldsArray)) {
                     foreach ($fieldsArray as $k => $tv) {
-                        $this->_joinTV($c, $tvLoopIndex, $tv['name'], $tv['value']);
                         $tvLoopIndex++;
+                        $this->_joinTV($c, $tvLoopIndex, $tv['name'], $tv['value']);
                     }
                 }
             }
@@ -206,6 +206,13 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             }
             // avoid null on returns
             $resourceArray[$field] = $resourceArray[$field] !== null ? $resourceArray[$field] : '';
+            
+            if (!empty($this->selectedTVFields)) {
+                $key = array_search($field, $this->selectedTVFields);
+                if (is_numeric($key)) {
+                    $resourceArray[$field] = $object->getTVValue($field);
+                }
+            }
         }
 
         if (isset($resourceArray['publishedon'])) {
