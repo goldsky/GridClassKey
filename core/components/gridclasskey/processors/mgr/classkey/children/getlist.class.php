@@ -92,6 +92,13 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             $this->selectedFields = array('id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published', 'hidemenu');
         }
 
+        // whatever selected sort field is, add it to the array
+        $sort = str_replace('`', '', $this->getProperty('sort'));
+        $isFound = array_search($sort, $this->selectedFields);
+        if (!$isFound) {
+            $this->selectedFields = array_merge($this->selectedFields, (array)$sort );
+        }
+
         $this->selectedMainFields = array_intersect($this->selectedFields, $mainFields);
         $this->selectedMainFields = array_values($this->selectedMainFields);
         $c->select($this->modx->getSelectColumns('modResource', 'modResource', '', $this->selectedMainFields));

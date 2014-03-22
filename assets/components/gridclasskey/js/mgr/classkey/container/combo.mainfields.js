@@ -4,7 +4,8 @@ GridClassKey.combo.MainFields = function(config) {
     Ext.apply(config, {
         url: GridClassKey.config.connectorUrl
         , baseParams: {
-            action: 'mgr/classkey/fields/getMainFieldsList'
+            action: 'mgr/classkey/fields/getMainFieldsList',
+            includeId: config.includeId ? 1 : 0
         }
         , fields: ['name']
         , width: config.comboWidth || 190

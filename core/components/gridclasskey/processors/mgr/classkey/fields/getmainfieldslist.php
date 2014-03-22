@@ -24,7 +24,12 @@
  * @subpackage processor
  */
 
-$columns = $modx->getSelectColumns('modResource', '', '', array('id'), true);
+$includeId = (int)$modx->getOption('includeId', $scriptProperties);
+if ($includeId) {
+    $columns = $modx->getSelectColumns('modResource');
+} else {
+    $columns = $modx->getSelectColumns('modResource', '', '', array('id'), true);
+}
 $columns = str_replace('`', '', $columns);
 $columns = @explode(',', $columns);
 array_walk($columns, create_function('&$v', '$v = trim($v);'));

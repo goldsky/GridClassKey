@@ -75,69 +75,88 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                         , record: config.record
                     }, {
                         columnWidth: .5
-                        , border: false
-                        , bodyStyle: 'margin: 5px 0'
-                        , layout: 'column'
-                        , defaults: {
-                            labelSeparator: ''
-                            , labelAlign: 'top'
-                            , border: false
-                            , layout: 'form'
-                            , msgTarget: 'under'
-                        }
+                        , xtype: 'buttongroup'
+                        , title: _('sort_by')
                         , items: [
                             {
-                                columnWidth: .5
-                                , items: [
-                                    {
-                                        xtype: 'modx-combo-boolean'
-                                        , name: 'gridclasskey-property-grid-sortby'
-                                        , fieldLabel: _('sort_by')
-                                        , store: new Ext.data.ArrayStore({
-                                            fields: ['sort']
-                                            , data: [['id'], ['pagetitle'], ['menuindex']]
-                                        })
-                                        , displayField: 'sort'
-                                        , valueField: 'sort'
-                                        , listeners: {
-                                            change: {
-                                                fn: function(cmp, newValue, oldValue) {
-                                                    var btn = Ext.getCmp('modx-abtn-save');
-                                                    if (btn) {
-                                                        btn.enable();
-                                                    }
-                                                }
-                                                , scope: this
+                                xtype: 'gridclasskey-combo-mainfields'
+                                , id: 'gridclasskey-combo-mainfields-sortby'
+                                , includeId: true
+                                , listeners: {
+                                    select: {
+                                        fn: function(combo, record, index) {
+                                            Ext.getCmp('gridclasskey-combo-tvfields-sortby').clearValue();
+                                            Ext.getCmp('gridclasskey-property-grid-sortby').setValue(combo.getValue());
+                                        },
+                                        scope: this
+                                    },
+                                    change: {
+                                        fn: function(cmp, newValue, oldValue) {
+                                            var btn = Ext.getCmp('modx-abtn-save');
+                                            if (btn) {
+                                                btn.enable();
                                             }
                                         }
+                                        , scope: this
                                     }
-                                ]
+                                }
                             }, {
-                                columnWidth: .5
-                                , items: [
-                                    {
-                                        xtype: 'modx-combo-boolean'
-                                        , name: 'gridclasskey-property-grid-sortdir'
-                                        , fieldLabel: _('gridclasskey.sort_dir')
-                                        , store: new Ext.data.ArrayStore({
-                                            fields: ['dir']
-                                            , data: [['asc'], ['desc']]
-                                        })
-                                        , displayField: 'dir'
-                                        , valueField: 'dir'
-                                        , listeners: {
-                                            change: {
-                                                fn: function(cmp, newValue, oldValue) {
-                                                    var btn = Ext.getCmp('modx-abtn-save');
-                                                    if (btn) {
-                                                        btn.enable();
-                                                    }
-                                                }
-                                                , scope: this
+                                xtype: 'gridclasskey-combo-tvfields'
+                                , id: 'gridclasskey-combo-tvfields-sortby'
+                                , listeners: {
+                                    select: {
+                                        fn: function(combo, record, index) {
+                                            Ext.getCmp('gridclasskey-combo-mainfields-sortby').clearValue();
+                                            Ext.getCmp('gridclasskey-property-grid-sortby').setValue(record.data.name);
+                                        },
+                                        scope: this
+                                    },
+                                    change: {
+                                        fn: function(cmp, newValue, oldValue) {
+                                            var btn = Ext.getCmp('modx-abtn-save');
+                                            if (btn) {
+                                                btn.enable();
                                             }
                                         }
+                                        , scope: this
                                     }
-                                ]
+                                }
+                            }
+                        ]
+                    }, {
+                        columnWidth: .5
+                        , xtype: 'buttongroup'
+                        , title: _('gridclasskey.sort_dir')
+                        , items: [
+                            {
+                                // will be used for the selection above on submission
+                                xtype: 'textfield'
+                                , id: 'gridclasskey-property-grid-sortby'
+                                , name: 'gridclasskey-property-grid-sortby'
+                                , value: config.record['gridclasskey-property-grid-sortby']
+                                , readOnly: true
+                            }, {
+                                xtype: 'modx-combo-boolean'
+                                , name: 'gridclasskey-property-grid-sortdir'
+                                , width: 80
+                                , listWidth: 60
+                                , store: new Ext.data.ArrayStore({
+                                    fields: ['dir']
+                                    , data: [['asc'], ['desc']]
+                                })
+                                , displayField: 'dir'
+                                , valueField: 'dir'
+                                , listeners: {
+                                    change: {
+                                        fn: function(cmp, newValue, oldValue) {
+                                            var btn = Ext.getCmp('modx-abtn-save');
+                                            if (btn) {
+                                                btn.enable();
+                                            }
+                                        }
+                                        , scope: this
+                                    }
+                                }
                             }
                         ]
                     }
@@ -362,14 +381,14 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , anchor: '100%'
                                 , value: config.record['gridclasskey-property-child-content_type'] || (MODx.config.default_content_type || 1)
                             }/*, {
-                                xtype: 'modx-combo-content-disposition'
-                                , fieldLabel: _('resource_contentdispo')
-                                , description: '<b>[[*content_dispo]]</b><br />' + _('resource_contentdispo_help')
-                                , name: 'gridclasskey-property-child-content_dispo'
-                                , hiddenName: 'gridclasskey-property-child-content_dispo'
-                                , anchor: '100%'
-                                , value: config.record['gridclasskey-property-child-content_dispo'] || 0
-                            }*/
+                             xtype: 'modx-combo-content-disposition'
+                             , fieldLabel: _('resource_contentdispo')
+                             , description: '<b>[[*content_dispo]]</b><br />' + _('resource_contentdispo_help')
+                             , name: 'gridclasskey-property-child-content_dispo'
+                             , hiddenName: 'gridclasskey-property-child-content_dispo'
+                             , anchor: '100%'
+                             , value: config.record['gridclasskey-property-child-content_dispo'] || 0
+                             }*/
                         ]
                     }, {
                         columnWidth: .5
@@ -413,15 +432,15 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , inputValue: 1
                                                 , checked: parseInt(config.record['gridclasskey-property-child-hidemenu']) || 0
                                             }, /*{
-                                                xtype: 'checkbox'
-                                                , boxLabel: _('resource_folder')
-                                                , description: '<b>[[*isfolder]]</b><br />' + _('resource_folder_help')
-                                                , hideLabel: true
-                                                , name: 'gridclasskey-property-child-isfolder'
-                                                , inputValue: 1
-                                                , checked: parseInt(config.record['gridclasskey-property-child-isfolder']) || 0
-
-                                            },*/ {
+                                             xtype: 'checkbox'
+                                             , boxLabel: _('resource_folder')
+                                             , description: '<b>[[*isfolder]]</b><br />' + _('resource_folder_help')
+                                             , hideLabel: true
+                                             , name: 'gridclasskey-property-child-isfolder'
+                                             , inputValue: 1
+                                             , checked: parseInt(config.record['gridclasskey-property-child-isfolder']) || 0
+                                             
+                                             },*/ {
                                                 xtype: 'checkbox'
                                                 , boxLabel: _('resource_searchable')
                                                 , description: '<b>[[*searchable]]</b><br />' + _('resource_searchable_help')
@@ -473,18 +492,18 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , checked: parseInt(config.record['gridclasskey-property-child-cacheable'])
 
                                             }, /*{
-                                                xtype: 'checkbox'
-                                                , boxLabel: _('resource_syncsite')
-                                                , description: _('resource_syncsite_help')
-                                                , hideLabel: true
-                                                , name: 'gridclasskey-property-child-syncsite'
-                                                , inputValue: 1
-                                                , checked: config.record['gridclasskey-property-child-syncsite'] !== undefined
-                                                        && config.record['gridclasskey-property-child-syncsite'] !== null
-                                                        ? parseInt(config.record['gridclasskey-property-child-syncsite'])
-                                                        : true
-
-                                            },*/ {
+                                             xtype: 'checkbox'
+                                             , boxLabel: _('resource_syncsite')
+                                             , description: _('resource_syncsite_help')
+                                             , hideLabel: true
+                                             , name: 'gridclasskey-property-child-syncsite'
+                                             , inputValue: 1
+                                             , checked: config.record['gridclasskey-property-child-syncsite'] !== undefined
+                                             && config.record['gridclasskey-property-child-syncsite'] !== null
+                                             ? parseInt(config.record['gridclasskey-property-child-syncsite'])
+                                             : true
+                                             
+                                             },*/ {
                                                 xtype: 'checkbox'
                                                 , boxLabel: _('deleted')
                                                 , description: '<b>[[*deleted]]</b>'
