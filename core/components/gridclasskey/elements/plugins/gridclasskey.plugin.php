@@ -126,7 +126,6 @@ Ext.onReady(function() {
         var backToParentBtn = {
             xtype: "button"
             , text: "' . $text . '"
-            , margins: "0 5 0 0"
             , handler: function() {
                 Ext.getCmp("modx-resource-tree").loadAction(
                         "a=" + MODx.action["resource/update"]
@@ -134,7 +133,7 @@ Ext.onReady(function() {
                         );
             }
         };
-        actionButtons.insert(0, backToParentBtn);
+        actionButtons.insertButton(0, [backToParentBtn, "-"]);
         actionButtons.doLayout();
     }
 });
