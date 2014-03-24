@@ -135,7 +135,7 @@ Ext.extend(GridClassKey.grid.Containers, MODx.grid.Grid, {
         this.refresh();
     }
     , _makeTemplates: function() {
-        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" title="' + _('edit') + ' {pagetitle}">{pagetitle}</a></tpl>', {
+        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" onclick="return event.button ? true : (MODx.loadPage(\'{action_edit}\'), false)" title="' + _('edit') + ' {pagetitle}">{pagetitle}</a></tpl>', {
             compiled: true
         });
     }

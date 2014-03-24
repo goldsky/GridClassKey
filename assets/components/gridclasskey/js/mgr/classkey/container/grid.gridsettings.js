@@ -305,5 +305,12 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
             }
         });
     }
+    , beforeDestroy: function() {
+        if (this.rendered) {
+            this.dragZone.destroy();
+            this.dropZone.destroy();
+        }
+        GridClassKey.grid.GridSettings.superclass.beforeDestroy.call(this);
+    }
 });
 Ext.reg('gridclasskey-grid-gridsettings', GridClassKey.grid.GridSettings);
