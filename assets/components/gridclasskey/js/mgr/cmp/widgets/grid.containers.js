@@ -58,7 +58,7 @@ GridClassKey.grid.Containers = function(config) {
                 , sortable: false
                 , editable: false
                 , fixed: true
-                , width: 80
+                , width: 86
                 , items: [
                     {
                         iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'

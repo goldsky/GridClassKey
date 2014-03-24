@@ -1,3 +1,10 @@
+GridClassKey 1.0.0
+=================================================
+- fix dropdown menuindex sorting
+- add version param when loading CSS and JS files
+- fix Action's column width on FireFox
+- [#53] Fix AjaxManager compatibility issues by @danyaPostfactum
+
 GridClassKey 1.0.0-rc3 (March 22, 2014)
 =================================================
 - [#35] Icons on button controls break in MODX 2.3

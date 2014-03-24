@@ -43,31 +43,39 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $connectorUrl = $gridclasskeyAssetsUrl . 'connector.php';
         $gridclasskeyJsUrl = $gridclasskeyAssetsUrl . 'js/';
 
-        $settings = $this->resource->getProperties('gridclasskey');
-        if (!empty($settings['grid-top-js'])) {
-            $this->addJavascript($settings['grid-top-js']);
+        $defaultGridClassKeyCorePath = $this->modx->getOption('core_path') . 'components/gridclasskey/';
+        $gridclasskeyCorePath = $this->modx->getOption('gridclasskey.core_path', null, $defaultGridClassKeyCorePath);
+        $gridclasskey = $this->modx->getService('gridclasskey', 'GridClassKey', $gridclasskeyCorePath . 'model/', $scriptProperties);
+
+        if (!($gridclasskey instanceof GridClassKey)) {
+            return;
         }
 
+        $version = str_replace(' ', '',$gridclasskey->config['version']);
+        $settings = $this->resource->getProperties('gridclasskey');
+        if (!empty($settings['grid-top-js'])) {
+            $this->addJavascript($settings['grid-top-js'] . '?v=' . $version);
+        }
         $this->addJavascript($managerUrl . 'assets/modext/util/datetime.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/element/modx.panel.tv.renders.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.grid.resource.security.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.tv.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
         $this->addJavascript($managerUrl . 'assets/modext/sections/resource/update.js');
-        $this->addJavascript($gridclasskeyJsUrl . 'mgr/gridclasskey.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.settings.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.template.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.tvfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.tvfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.mainfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.children.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.updatecontainer.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.actions.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.advancedsearch.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.advancedsearch.js');
+        $this->addJavascript($gridclasskeyJsUrl . 'mgr/gridclasskey.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.settings.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.template.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.tvfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.tvfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.mainfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.children.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.updatecontainer.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.actions.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.advancedsearch.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.advancedsearch.js?v=' . $version);
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[

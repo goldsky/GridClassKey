@@ -52,16 +52,26 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.tv.js');
         $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
         $this->addJavascript($managerUrl . 'assets/modext/sections/resource/create.js');
-        $this->addJavascript($gridclasskeyJsUrl . 'mgr/gridclasskey.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.settings.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.template.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.tvfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.tvfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.mainfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js');
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.createcontainer.js');
+        
+        $defaultGridClassKeyCorePath = $this->modx->getOption('core_path') . 'components/gridclasskey/';
+        $gridclasskeyCorePath = $this->modx->getOption('gridclasskey.core_path', null, $defaultGridClassKeyCorePath);
+        $gridclasskey = $this->modx->getService('gridclasskey', 'GridClassKey', $gridclasskeyCorePath . 'model/', $scriptProperties);
+
+        if (!($gridclasskey instanceof GridClassKey)) {
+            return;
+        }
+
+        $version = str_replace(' ', '',$gridclasskey->config['version']);
+        $this->addJavascript($gridclasskeyJsUrl . 'mgr/gridclasskey.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.settings.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.template.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.tvfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.tvfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.mainfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js?v=' . $version);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.createcontainer.js?v=' . $version);
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[

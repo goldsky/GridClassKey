@@ -23,41 +23,40 @@
  * @package gridclasskey
  * @subpackage controller
  */
-
 require_once dirname(__FILE__) . '/model/gridclasskey.class.php';
 
 abstract class GridClassKeyManagerController extends modExtraManagerController {
 
-	/** @var GridClassKey $gridclasskey */
-	public $gridclasskey;
+    /** @var GridClassKey $gridclasskey */
+    public $gridclasskey;
 
-	public function initialize() {
-		$this->gridclasskey = new GridClassKey($this->modx);
-
-		$this->addCss($this->gridclasskey->config['cssUrl'] . 'mgr.css');
-		$this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/gridclasskey.js');
-		$this->addHtml('<script type="text/javascript">
+    public function initialize() {
+        $this->gridclasskey = new GridClassKey($this->modx);
+        $version = str_replace(' ', '', $this->gridclasskey->config['version']);
+        $this->addCss($this->gridclasskey->config['cssUrl'] . 'mgr.css?v=' . $version);
+        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/gridclasskey.js?v=' . $version);
+        $this->addHtml('<script type="text/javascript">
         Ext.onReady(function() {
             GridClassKey.config = ' . $this->modx->toJSON($this->gridclasskey->config) . ';
         });
         </script>');
-		return parent::initialize();
-	}
+        return parent::initialize();
+    }
 
-	public function getLanguageTopics() {
-		return array('gridclasskey:default', 'gridclasskey:cmp');
-	}
+    public function getLanguageTopics() {
+        return array('gridclasskey:default', 'gridclasskey:cmp');
+    }
 
-	public function checkPermissions() {
-		return true;
-	}
+    public function checkPermissions() {
+        return true;
+    }
 
 }
 
 class IndexManagerController extends GridClassKeyManagerController {
 
-	public static function getDefaultController() {
-		return 'cmp/home';
-	}
+    public static function getDefaultController() {
+        return 'cmp/home';
+    }
 
 }

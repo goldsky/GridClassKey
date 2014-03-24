@@ -37,10 +37,11 @@ $children = $modx->getCollection('modResource', $c);
 if (!$children) {
     return $this->failure();
 }
+
 $i = 0;
 $j = count($children) - 1;
 foreach ($children as $child) {
-    if ($scriptProperties['sortdir'] === 'asc') {
+    if (strtolower($scriptProperties['sortdir']) === 'asc') {
         $child->set('menuindex', $i);
         $i++;
     } else {

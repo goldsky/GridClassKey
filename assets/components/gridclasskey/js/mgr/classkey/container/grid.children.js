@@ -166,7 +166,7 @@ GridClassKey.grid.Children = function(config) {
         , sortable: false
         , editable: false
         , fixed: true
-        , width: 100
+        , width: 107
         , items: [
             {
                 iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
