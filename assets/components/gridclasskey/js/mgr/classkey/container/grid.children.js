@@ -366,7 +366,7 @@ GridClassKey.grid.Children = function(config) {
 
     GridClassKey.grid.Children.superclass.constructor.call(this, config);
     this._makeTemplates();
-
+    this.dropTarget = null;
 };
 
 Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
@@ -377,7 +377,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
         this.refresh();
     }
     , _makeTemplates: function() {
-        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" title="' + _('edit') + ' {pagetitle}" class="gridclasskey-pagetitle">{pagetitle}</a></tpl>', {
+        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" onclick="return event.button ? true : (MODx.loadPage(\'{action_edit}\'), false)" title="' + _('edit') + ' {pagetitle}" class="gridclasskey-pagetitle">{pagetitle}</a></tpl>', {
             compiled: true
         });
     }
@@ -486,7 +486,40 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
     }
     , attachDragDropZone: function(gridPanel) {
         var _this = this;
-
+        this.dropTarget = new Ext.dd.DropTarget(gridPanel.container, {
+            ddGroup: 'gridclasskey-grid-children-dd'
+            , copy: false
+            , notifyDrop: function(dd, e, data) {
+                if (!_this.enableDragDrop) {
+                    return false;
+                }
+                var ds = gridPanel.store;
+                var sm = gridPanel.getSelectionModel();
+                var rows = sm.getSelections();
+                var dragData = dd.getDragData(e);
+                if (dragData) {
+                    var cindex = dragData.rowIndex;
+                    if (typeof (cindex) !== "undefined") {
+                        var target = ds.getAt(cindex);
+                        var dragIds = [];
+                        for (var i = 0; i < rows.length; i++) {
+                            ds.remove(ds.getById(rows[i].id));
+                            dragIds.push(rows[i].id);
+                        }
+                        ds.insert(cindex, data.selections);
+                        sm.clearSelections();
+                        _this.sortMenuIndex(target.id, dragIds);
+                        return true;
+                    }
+                }
+            }
+            , notifyOver : function(dd, e, data){
+                return _this.enableDragDrop ? this.dropAllowed : this.dropNotAllowed;
+            }
+            , notifyEnter : function(dd, e, data){
+                return _this.enableDragDrop ? this.dropAllowed : this.dropNotAllowed;
+            }
+        });
         this.getStore().on('load', function(store) {
             var jsonData = store.reader.jsonData;
             if (jsonData.sortby === 'menuindex') {
@@ -503,51 +536,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                     _this.enableDragDrop = false;
                 }
             }
-
-            if (_this.enableDragDrop) {
-                new Ext.dd.DropTarget(gridPanel.container, {
-                    ddGroup: 'gridclasskey-grid-children-dd'
-                    , copy: false
-                    , notifyDrop: function(dd, e, data) {
-                        var ds = gridPanel.store;
-                        var sm = gridPanel.getSelectionModel();
-                        var rows = sm.getSelections();
-                        var dragData = dd.getDragData(e);
-                        if (dragData) {
-                            var cindex = dragData.rowIndex;
-                            if (typeof (cindex) !== "undefined") {
-                                var target = ds.getAt(cindex);
-                                var dragIds = [];
-                                for (var i = 0; i < rows.length; i++) {
-                                    ds.remove(ds.getById(rows[i].id));
-                                    dragIds.push(rows[i].id);
-                                }
-                                ds.insert(cindex, data.selections);
-                                sm.clearSelections();
-                                _this.sortMenuIndex(target.id, dragIds);
-                                return true;
-                            }
-                        }
-                    }
-                });
-            } else {
-                new Ext.dd.DropTarget(gridPanel.container, {
-                    ddGroup: 'gridclasskey-grid-children-dd'
-                    , copy: false
-                    , notifyOver : function(dd, e, data){
-                        return this.dropNotAllowed;
-                    }
-                    , notifyEnter : function(dd, e, data){
-                        return this.dropNotAllowed;
-                    }
-                    , notifyDrop: function(dd, e, data) {
-                        return false;
-                    }
-                });
-            }
-
         });
-
     }
     , sortMenuIndex: function(targetId, movingIds) {
         var sortdir, store = this.getStore();
@@ -574,6 +563,12 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
     }
     , detachDragDropZone: function(gridPanel) {
 
+    }
+    , beforeDestroy: function() {
+        if (this.rendered) {
+            this.dropTarget.destroy();
+        }
+        GridClassKey.grid.Children.superclass.beforeDestroy.call(this);
     }
 });
 Ext.reg('gridclasskey-grid-children', GridClassKey.grid.Children);

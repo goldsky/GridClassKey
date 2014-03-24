@@ -1,7 +1,3 @@
-Ext.onReady(function() {
-    MODx.load({xtype: 'gridclasskey-page-home'});
-});
-
 GridClassKey.page.Home = function(config) {
     config = config || {};
     Ext.applyIf(config, {

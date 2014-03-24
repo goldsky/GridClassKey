@@ -48,6 +48,11 @@ class GridClassKeyCmpHomeManagerController extends GridClassKeyManagerController
         $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/grid.containers.js');
         $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/panel.home.js');
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/sections/index.js');
+        $this->addHtml('<script type="text/javascript">
+        Ext.onReady(function() {
+            MODx.load({xtype: "gridclasskey-page-home"});
+        });
+        </script>');
     }
 
     public function getTemplateFile() {
