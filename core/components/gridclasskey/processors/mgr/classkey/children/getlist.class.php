@@ -106,10 +106,10 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $query = $this->getProperty('query');
         if (!empty($query)) {
             $this->orCondition =  array_merge($this->orCondition, array(
-                "modResource.pagetitle:LIKE" => "'%{$query}%'",
-                "modResource.longtitle:LIKE" => "'%{$query}%'",
-                "modResource.menutitle:LIKE" => "'%{$query}%'",
-                "modResource.description:LIKE" => "'%{$query}%'",
+                "modResource.pagetitle:LIKE" => "%{$query}%",
+                "modResource.longtitle:LIKE" => "%{$query}%",
+                "modResource.menutitle:LIKE" => "%{$query}%",
+                "modResource.description:LIKE" => "%{$query}%",
             ));
         }
 

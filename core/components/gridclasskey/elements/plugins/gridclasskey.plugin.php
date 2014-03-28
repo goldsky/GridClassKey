@@ -98,18 +98,20 @@ switch ($modx->event->name) {
         if (empty($docId) && empty($parentId)) {
             return false;
         }
-        if (!empty($docId)) {
-            $resource = $modx->getObject('modResource', $docId);
-            $classKey = $resource->get('class_key');
-            if ($classKey === 'GridContainer') {
-                $properties = $resource->getProperties('gridclasskey');
-                if ($properties['grid-css']) {
-                    $modx->regClientCSS($properties['grid-css']);
+        $resource = $modx->getObject('modResource', $docId);
+        if ($resource) {
+            if (!empty($docId)) {
+                $classKey = $resource->get('class_key');
+                if ($classKey === 'GridContainer') {
+                    $properties = $resource->getProperties('gridclasskey');
+                    if ($properties['grid-css']) {
+                        $modx->regClientCSS($properties['grid-css']);
+                    }
                 }
             }
-        }
-        if (!empty($docId) && empty($parentId)) {
-            $parentId = $resource->get('parent');
+            if (!empty($docId) && empty($parentId)) {
+                $parentId = $resource->get('parent');
+            }
         }
 
         $parentResource = $modx->getObject('modResource', $parentId);

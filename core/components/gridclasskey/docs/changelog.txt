@@ -1,5 +1,6 @@
 GridClassKey 1.0.0
 =================================================
+- [#57] typo on LIKE query
 - fix dropdown menuindex sorting
 - add version param when loading CSS and JS files
 - fix Action's column width on FireFox
