@@ -44,8 +44,8 @@ switch ($modx->event->name) {
             if ($classKey !== 'GridContainer' &&
                     $isHideChildren == 1
             ) {
-                $properties = $resource->getProperties('gridclasskey');
-                if ($properties) {
+                $properties = $resource->get('properties');
+                if ($properties['gridclasskey'] || empty($properties['gridclasskey'])) {
                     $resource->set('hide_children_in_tree', 0);
                     $resource->save();
                 }
