@@ -81,8 +81,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         $mainFields = $this->modx->getSelectColumns('modResource');
         $mainFields = str_replace('`', '', $mainFields);
-        $mainFields = @explode(',', $mainFields);
-        array_walk($mainFields, create_function('&$v', '$v = trim($v);'));
+        $mainFields = array_map('trim', @explode(',', $mainFields));
 
         if ($this->parentProperties) {
             foreach ($this->parentProperties['fields'] as $field) {
