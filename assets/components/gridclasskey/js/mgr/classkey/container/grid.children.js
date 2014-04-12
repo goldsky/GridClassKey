@@ -381,15 +381,9 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
          * @link    http://modx.com/extras/package/ajaxmanager
          * @see     https://github.com/goldsky/GridClassKey/pull/53/files#r11042161
          */
-        if (MODx.config['ajaxmanager.compatible_namespaces']) {
-            this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" onclick="return event.button ? true : (MODx.loadPage(\'{action_edit}\'), false)" title="' + _('edit') + ' {pagetitle}" class="gridclasskey-pagetitle">{pagetitle}</a></tpl>', {
-                compiled: true
-            });
-        } else {
-            this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" title="' + _('edit') + ' {pagetitle}" class="gridclasskey-pagetitle">{pagetitle}</a></tpl>', {
-                compiled: true
-            });
-        }
+        this.tplPageTitle = new Ext.XTemplate('<tpl for="."><a href="{action_edit}" onclick="return event.button || event.ctrlKey || event.metaKey ? true : (MODx.loadPage(\'{action_edit}\'), false)" title="' + _('edit') + ' {pagetitle}" class="gridclasskey-pagetitle">{pagetitle}</a></tpl>', {
+            compiled: true
+        });
     }
     , _renderPageTitle: function(v, md, rec) {
         return this.tplPageTitle.apply(rec.data);
