@@ -111,19 +111,8 @@ GridClassKey.grid.GridSettings = function(config) {
                     {
                         handler: function(grid, row, col) {
                             var _this = Ext.getCmp('gridclasskey-grid-gridsettings'),
-                                    rec = _this.store.getAt(row),
-                                    dataLn = _this.data.length,
-                                    newArr = [], i;
-                            for (i = 0; i < dataLn; i++) {
-                                if (i === row) {
-                                    continue;
-                                }
-                                newArr.push(_this.data[i]);
-                            }
-                            _this.data = newArr;
-                            _this.getStore().loadData(_this.data);
-                            _this.getView().refresh();
-
+                                    rec = _this.store.getAt(row);
+                            _this.getStore().remove(rec);
                             var btn = Ext.getCmp('modx-abtn-save');
                             if (btn) {
                                 btn.enable();
@@ -142,6 +131,10 @@ GridClassKey.grid.GridSettings = function(config) {
         ]
         , bbar: [
             '->', {
+                text: _('reset')
+                , handler: this.resetData
+                , scope: this
+            }, {
                 text: _('gridclasskey.back_to_default')
                 , handler: this.revertDefaultData
                 , scope: this
@@ -229,6 +222,23 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
             [4, 'description', 'description', 200, false, false, false, 'textarea']
         ];
         return data;
+    }
+    , resetData: function(btn, e) {
+        var fields = this.config.record
+                && this.config.record.properties
+                && this.config.record.properties.gridclasskey
+                && this.config.record.properties.gridclasskey.fields
+                ? this.config.record.properties.gridclasskey.fields
+                : {};
+        if (fields.length) {
+            this.loadData(fields);
+            
+            var btn = Ext.getCmp('modx-abtn-save');
+            if (btn) {
+                btn.enable();
+            }
+        }
+
     }
     , revertDefaultData: function(btn, e) {
         this.data = this.getDefaultData();

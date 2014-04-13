@@ -1,5 +1,6 @@
 GridClassKey 1.0.0-rc4
 =================================================
+- add "Reset" button on setting's grid
 - add Properties field for new child
 - [#61][#62] enable TV updating on the grid
 - [#56] revert the checkbox action

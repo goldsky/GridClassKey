@@ -17,13 +17,15 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
         , text: _('add')
         , handler: function() {
             if (config.applyToGrid) {
-                var targetGrid = Ext.getCmp(config.applyToGrid);
+                var targetGrid = Ext.getCmp(config.applyToGrid),
+                        store = targetGrid.getStore();
                 var fieldsCombo = Ext.getCmp(config.id + '-combo');
                 var comboValue = fieldsCombo.getValue();
                 if (comboValue) {
-                    targetGrid.data.push([targetGrid.data.length + 1, comboValue]);
-                    targetGrid.getStore().loadData(targetGrid.data);
-                    targetGrid.getView().refresh();
+                    var r = new store.recordType({"sort": store.getCount() + 1, "name": comboValue}); 
+                    r.commit();
+                    store.add(r);
+                    store.commitChanges();
                     Ext.getCmp('modx-panel-resource').markDirty();
                     var btn = Ext.getCmp('modx-abtn-save');
                     if (btn) {
