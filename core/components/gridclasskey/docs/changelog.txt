@@ -1,5 +1,6 @@
-GridClassKey 1.0.0
+GridClassKey 1.0.0-rc4
 =================================================
+- add Properties field for new child
 - [#61][#62] enable TV updating on the grid
 - [#56] revert the checkbox action
 - [#57] typo on LIKE query

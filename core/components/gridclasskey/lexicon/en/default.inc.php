@@ -94,3 +94,4 @@ $_lang['gridclasskey.fixed'] = 'Fixed';
 $_lang['gridclasskey.children_settings_desc'] = 'Settings for new child resources, not existing ones.';
 $_lang['gridclasskey.backbutton_text'] = 'Text for "Back to Container" button';
 $_lang['gridclasskey.backbutton_text_desc'] = 'Replace the text for "Back to Container" tab for the children of this container only. Leave it empty for the default.';
+$_lang['gridclasskey.properties_desc'] = 'Custom properties in JSON format, usually for custom class key, plugin, or snippet.';

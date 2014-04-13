@@ -515,6 +515,12 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                         ]
                                     }
                                 ]
+                            }, {
+                                xtype: 'textarea'
+                                , name: 'gridclasskey-property-child-properties'
+                                , anchor: '100%'
+                                , fieldLabel: _('properties')
+                                , description: _('gridclasskey.properties_desc')
                             }
                         ]
                     }

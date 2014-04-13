@@ -72,6 +72,8 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js?v=' . $version);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js?v=' . $version);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.createcontainer.js?v=' . $version);
+        
+        $this->prepareResource();
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[
@@ -117,6 +119,17 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         if (is_array($settings) && !empty($settings)) {
             foreach ($settings as $k => $v) {
                 $this->resourceArray['gridclasskey-property-' . $k] = $v;
+            }
+        } elseif ($this->parent) {
+            $parentSettings = $this->parent->getProperties('gridclasskey');
+            if (is_array($parentSettings) && isset($parentSettings['child-properties'])) {
+                $settings = json_decode($parentSettings['child-properties'], 1);
+                $this->resourceArray['properties'] = $settings;
+                if (isset($settings['gridclasskey']) && !empty($settings['gridclasskey'])) {
+                    foreach ($settings['gridclasskey'] as $k => $v) {
+                        $this->resourceArray['gridclasskey-property-' . $k] = $v;
+                    }
+                }
             }
         }
     }
