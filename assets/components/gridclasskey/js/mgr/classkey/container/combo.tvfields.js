@@ -7,6 +7,11 @@ GridClassKey.combo.TVFields = function(config) {
             action: 'mgr/classkey/fields/getTVFieldsList'
         }
         , pageSize: 10
+        , typeAhead: true
+        , editable: true
+        , minChars: 1
+        , triggerAction: 'all'
+        , forceSelection:true
         , lazyRender: true
         , fields: ['id', 'name']
         , width: 190

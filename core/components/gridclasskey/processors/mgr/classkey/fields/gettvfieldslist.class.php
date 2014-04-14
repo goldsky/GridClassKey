@@ -27,6 +27,24 @@ require_once MODX_CORE_PATH . 'model/modx/processors/element/tv/getlist.class.ph
 
 class GetTVFieldsListProcessor extends modTemplateVarGetListProcessor {
 
+    public function prepareQueryBeforeCount(xPDOQuery $c) {
+        $query = $this->getProperty('query');
+        if ($query) {
+            $c->where(array(
+                'name:LIKE' => "{$query}%"
+            ));
+        }
+        $c->leftJoin('modCategory','Category');
+        return $c;
+    }
+    
+    public function prepareQueryAfterCount(xPDOQuery $c) {
+        $c->select($this->modx->getSelectColumns($this->classKey,$this->classKey));
+        $c->select(array(
+            'category_name' => 'Category.category',
+        ));
+        return $c;
+    }
 }
 
 return 'GetTVFieldsListProcessor';
