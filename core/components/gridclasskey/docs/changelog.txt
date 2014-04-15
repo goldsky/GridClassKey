@@ -1,5 +1,6 @@
 GridClassKey 1.0.0-rc4
 =================================================
+- [#55] Problem with drag-drop and menuindex direction on reverse order
 - [#65] Add snippet field
 - [#58] Setting to change amount of rows shown by default 
 - [#59] Add typeahead to Add TV Field combo box

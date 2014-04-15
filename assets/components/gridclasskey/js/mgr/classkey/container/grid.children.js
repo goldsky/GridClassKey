@@ -500,9 +500,10 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             ddGroup: 'gridclasskey-grid-children-dd'
             , copy: false
             , notifyDrop: function(dd, e, data) {
-                if (!_this.enableDragDrop) {
+                if (!_this.enableDragDrop || !data.selections || data.selections.length === 0) {
                     return false;
                 }
+                
                 var ds = gridPanel.store;
                 var sm = gridPanel.getSelectionModel();
                 var rows = sm.getSelections();
@@ -524,10 +525,10 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 }
             }
             , notifyOver : function(dd, e, data){
-                return _this.enableDragDrop ? this.dropAllowed : this.dropNotAllowed;
+                return (_this.enableDragDrop && data.selections && data.selections.length > 0) ? this.dropAllowed : this.dropNotAllowed;
             }
             , notifyEnter : function(dd, e, data){
-                return _this.enableDragDrop ? this.dropAllowed : this.dropNotAllowed;
+                return (_this.enableDragDrop && data.selections && data.selections.length > 0) ? this.dropAllowed : this.dropNotAllowed;
             }
         });
         this.getStore().on('load', function(store) {
