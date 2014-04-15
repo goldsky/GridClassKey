@@ -180,30 +180,32 @@ Ext.extend(GridClassKey.grid.Containers, MODx.grid.Grid, {
         ];
     }
     , updateSettings: function(btn, e) {
+        var check = Ext.getCmp('gridclasskey-window-setting');
+        if (check) {
+            check.destroy();
+        }
         var settingsGrid = Ext.getCmp('gridclasskey-grid-gridsettings');
         if (settingsGrid) {
             settingsGrid.loadData(this.menu.record['gridclasskey-property-fields']);
             settingsGrid.getView().refresh();
         }
-        if (!this.updateSettingWindow) {
-            this.updateSettingWindow = MODx.load({
-                xtype: 'gridclasskey-window-setting',
-                title: _('settings'),
-                baseParams: {
-                    action: 'mgr/cmp/containers/update'
-                },
-                record: this.menu.record,
-                listeners: {
-                    'success': {
-                        fn: this.refresh,
-                        scope: this
-                    }
+        var updateSettingWindow = MODx.load({
+            xtype: 'gridclasskey-window-setting'
+            , id: 'gridclasskey-window-setting'
+            , title: _('settings')
+            , baseParams: {
+                action: 'mgr/cmp/containers/update'
+            }
+            , record: this.menu.record
+            , listeners: {
+                'success': {
+                    fn: this.refresh
+                    , scope: this
                 }
-            });
-        }
-
-        this.updateSettingWindow.setValues(this.menu.record);
-        this.updateSettingWindow.show(e.target);
+            }
+        });
+        updateSettingWindow.setValues(this.menu.record);
+        updateSettingWindow.show(e.target);
     }
     , updateResource: function(record) {
         MODx.loadPage(MODx.action['resource/update'], 'id=' + record.id);

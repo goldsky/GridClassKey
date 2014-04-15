@@ -1,4 +1,4 @@
-GridClassKey 1.0.0-rc4
+GridClassKey 1.0.0-rc4 (April 15, 2014)
 =================================================
 - [#55] Problem with drag-drop and menuindex direction on reverse order
 - [#65] Add snippet field

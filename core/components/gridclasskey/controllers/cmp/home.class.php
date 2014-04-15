@@ -36,18 +36,20 @@ class GridClassKeyCmpHomeManagerController extends GridClassKeyManagerController
 
     public function loadCustomCssJs() {
         $version = str_replace(' ', '', $this->gridclasskey->config['version']);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.settings.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.template.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.tvfields.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.combo.tvfields.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.mainfields.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.combo.mainfields.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/grid.gridsettings.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/grid.children.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.settings.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.template.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.snippetfields.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.combo.snippetfields.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.tvfields.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.combo.tvfields.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/combo.mainfields.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/panel.combo.mainfields.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/grid.gridsettings.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/grid.children.js?v=' . $version);
 
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/window.setting.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/grid.containers.js?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/panel.home.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/window.setting.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/grid.containers.js?v=' . $version);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/panel.home.js?v=' . $version);
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/sections/index.js?v=' . $version);
         $this->addHtml('<script type="text/javascript">
         Ext.onReady(function() {

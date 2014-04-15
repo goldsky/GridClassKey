@@ -139,7 +139,15 @@ GridClassKey.grid.GridSettings = function(config) {
         , bbar: [
             '->', {
                 text: _('reset')
-                , handler: this.resetData
+                , handler: function() {
+                    var fields = config.record
+                            && config.record.properties
+                            && config.record.properties.gridclasskey
+                            && config.record.properties.gridclasskey.fields
+                            ? config.record.properties.gridclasskey.fields
+                            : {};
+                    this.resetData(fields);
+                }
                 , scope: this
             }, {
                 text: _('gridclasskey.back_to_default')
@@ -180,9 +188,8 @@ GridClassKey.grid.GridSettings = function(config) {
 };
 Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     loadData: function(fields) {
-        var data = [];
         if (fields.length) {
-            var hasID = false;
+            var data = [], hasID = false;
             Ext.each(fields, function(item, idx) {
                 if (item.name === 'id') {
                     hasID = true;
@@ -217,7 +224,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 ]);
             });
         } else {
-            data = this.getDefaultData();
+            var data = this.getDefaultData();
         }
         this.data = data;
         this.getStore().loadData(this.data);
@@ -232,13 +239,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
         ];
         return data;
     }
-    , resetData: function(btn, e) {
-        var fields = this.config.record
-                && this.config.record.properties
-                && this.config.record.properties.gridclasskey
-                && this.config.record.properties.gridclasskey.fields
-                ? this.config.record.properties.gridclasskey.fields
-                : {};
+    , resetData: function(fields) {
         if (fields.length) {
             this.loadData(fields);
             
@@ -247,7 +248,6 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 btn.enable();
             }
         }
-
     }
     , revertDefaultData: function(btn, e) {
         this.data = this.getDefaultData();
