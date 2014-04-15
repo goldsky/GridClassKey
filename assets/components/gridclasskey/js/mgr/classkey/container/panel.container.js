@@ -159,6 +159,7 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         for (var i = 0, l = store.data.items.length; i < l; i++) {
             fields.push({
                 name: store.data.items[i].data.name,
+                type: store.data.items[i].data.type,
                 lexicon: store.data.items[i].data.lexicon,
                 width: store.data.items[i].data.width,
                 fixed: store.data.items[i].data.fixed,

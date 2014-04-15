@@ -3,7 +3,7 @@ GridClassKey.grid.GridSettings = function(config) {
 
     Ext.apply(config, {
         id: 'gridclasskey-grid-gridsettings'
-        , fields: ['sort', 'name', 'lexicon', 'width', 'fixed', 'sortable', 'hidden', 'editor_type', 'output_filter']
+        , fields: ['sort', 'name', 'type', 'lexicon', 'width', 'fixed', 'sortable', 'hidden', 'editor_type', 'output_filter']
         , sortInfo: {field: 'sort', direction: 'asc'}
         , viewConfig: {
             forceFit: true
@@ -33,6 +33,13 @@ GridClassKey.grid.GridSettings = function(config) {
             }, {
                 header: _('name')
                 , dataIndex: 'name'
+            }, {
+                header: _('type')
+                , dataIndex: 'type'
+                , sortable: true
+                , width: 70
+                , editable: false
+//                , hidden: true
             }, {
                 header: _('lexicon') + ' / ' + _('caption')
                 , dataIndex: 'lexicon'
@@ -185,6 +192,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
             if (!hasID) {
                 data.push({
                     'name': 'id',
+                    'type': 'main',
                     'lexicon': 'id',
                     'width': 50,
                     'fixed': true,
@@ -198,6 +206,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 data.push([
                     idx + 1,
                     fieldRecord.name,
+                    fieldRecord.type,
                     fieldRecord.lexicon,
                     fieldRecord.width,
                     fieldRecord.fixed,
@@ -216,10 +225,10 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     }
     , getDefaultData: function() {
         var data = [
-            [1, 'id', 'id', 50, true, true, false],
-            [2, 'pagetitle', 'pagetitle', 200, true, true, false, 'textfield'],
-            [3, 'longtitle', 'gridclasskey.longtitle', 200, false, true, false, 'textfield'],
-            [4, 'description', 'description', 200, false, false, false, 'textarea']
+            [1, 'id', 'main', 'id', 50, true, true, false],
+            [2, 'pagetitle', 'main', 'pagetitle', 200, true, true, false, 'textfield'],
+            [3, 'longtitle', 'main', 'gridclasskey.longtitle', 200, false, true, false, 'textfield'],
+            [4, 'description', 'main', 'description', 200, false, false, false, 'textarea']
         ];
         return data;
     }

@@ -1,5 +1,7 @@
 GridClassKey 1.0.0-rc4
 =================================================
+- [#65] Add snippet field
+- [#58] Setting to change amount of rows shown by default 
 - [#59] Add typeahead to Add TV Field combo box
 - add "Reset" button on setting's grid
 - add Properties field for new child

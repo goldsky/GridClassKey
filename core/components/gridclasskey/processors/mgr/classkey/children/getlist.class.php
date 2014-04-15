@@ -36,6 +36,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     protected $selectedFields = array();
     protected $selectedMainFields = array();
     protected $selectedTVFields = array();
+    protected $selectedSnippetFields = array();
     protected $andCondition = array();
     protected $orCondition = array();
     protected $condition = '';
@@ -95,7 +96,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $sort = str_replace('`', '', $this->getProperty('sort'));
         $isFound = array_search($sort, $this->selectedFields);
         if (!$isFound) {
-            $this->selectedFields = array_merge($this->selectedFields, (array)$sort );
+            $this->selectedFields = array_merge($this->selectedFields, (array) $sort);
         }
 
         $this->selectedMainFields = array_intersect($this->selectedFields, $mainFields);
@@ -104,7 +105,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         $query = $this->getProperty('query');
         if (!empty($query)) {
-            $this->orCondition =  array_merge($this->orCondition, array(
+            $this->orCondition = array_merge($this->orCondition, array(
                 "modResource.pagetitle:LIKE" => "%{$query}%",
                 "modResource.longtitle:LIKE" => "%{$query}%",
                 "modResource.menutitle:LIKE" => "%{$query}%",
@@ -112,13 +113,24 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             ));
         }
 
-        $this->selectedTVFields = array_diff($this->selectedFields, $this->selectedMainFields);
-        $this->selectedTVFields = array_values($this->selectedTVFields);
-        $tvLoopIndex = 0;
-        if (!empty($this->selectedTVFields)) {
-            foreach ($this->selectedTVFields as $k => $tv) {
-                $tvLoopIndex++;
-                $this->_joinTV($c, $tvLoopIndex, $tv, $query);
+        if ($this->parentProperties) {
+            $this->selectedElementFields = array_diff($this->selectedFields, $this->selectedMainFields);
+            foreach ($this->parentProperties['fields'] as $field) {
+                if (in_array($field['name'], $this->selectedElementFields)) {
+                    if ($field['type'] === 'snippet') {
+                        $this->selectedSnippetFields = array_merge($this->selectedSnippetFields, (array) $field['name']);
+                    } else {
+                        $this->selectedTVFields = array_merge($this->selectedTVFields, (array) $field['name']);
+                    }
+                }
+            }
+            $this->selectedTVFields = array_values($this->selectedTVFields);
+            $tvLoopIndex = 0;
+            if (!empty($this->selectedTVFields)) {
+                foreach ($this->selectedTVFields as $k => $tv) {
+                    $tvLoopIndex++;
+                    $this->_joinTV($c, $tvLoopIndex, $tv, $query);
+                }
             }
         }
 
@@ -212,7 +224,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             }
             // avoid null on returns
             $resourceArray[$field] = $resourceArray[$field] !== null ? $resourceArray[$field] : '';
-            
+
             if (!empty($this->selectedTVFields)) {
                 $key = array_search($field, $this->selectedTVFields);
                 if (is_numeric($key)) {
@@ -230,6 +242,11 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         if (!empty($this->parentProperties)) {
             foreach ($this->parentProperties['fields'] as $field) {
+                if ($field['type'] === 'snippet') {
+                    $scriptProperties = $resourceArray;
+                    unset($scriptProperties[$field['name']]);
+                    $resourceArray[$field['name']] = $this->modx->runSnippet($field['name'], $scriptProperties);
+                }
                 if (!empty($field['output_filter'])) {
                     $resourceArray[$field['name']] = $this->_outputFilter($resourceArray[$field['name']], $field['output_filter']);
                 }

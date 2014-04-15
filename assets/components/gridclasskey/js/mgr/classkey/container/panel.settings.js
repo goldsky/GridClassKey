@@ -55,14 +55,35 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                         , comboWidth: 180
                         , applyToGrid: 'gridclasskey-grid-gridsettings'
                         , border: false
-                        , bodyStyle: 'margin: 5px 0'
                     }, {
                         columnWidth: .5
                         , id: 'gridclasskey-panel-tvfieldscombo'
                         , xtype: 'gridclasskey-panel-tvfieldscombo'
                         , applyToGrid: 'gridclasskey-grid-gridsettings'
                         , border: false
-                        , bodyStyle: 'margin: 5px 0'
+                    }, {
+                        columnWidth: .6
+                        , id: 'gridclasskey-panel-snippetfieldscombo'
+                        , xtype: 'gridclasskey-panel-snippetfieldscombo'
+                        , applyToGrid: 'gridclasskey-grid-gridsettings'
+                        , border: false
+                    }, {
+                        columnWidth: .4
+                        , layout: 'hbox'
+                        , layoutConfig: {
+                            align: 'middle'
+                        }
+                        , items: [
+                            {
+                                html: '<div class="x-form-item-label">' + _('gridclasskey.default_per_page') + ': </div>'
+                                , border: false
+                            }, {
+                                xtype: 'numberfield'
+                                , name: 'gridclasskey-property-grid-default_per_page'
+                                , width: 50
+                                , description: _('gridclasskey.default_per_page_desc')
+                            }
+                        ]
                     }, {
                         // will be used for the grid below on submission
                         xtype: 'hidden'

@@ -23,7 +23,7 @@ GridClassKey.panel.TVFieldsCombo = function(config) {
                 var comboValue = fieldsCombo.getValue();
                 var text = fieldsCombo.lastSelectionText;
                 if (comboValue) {
-                    var r = new store.recordType({"sort": store.getCount() + 1, "name": text}); 
+                    var r = new store.recordType({"sort": store.getCount() + 1, "name": text, "type": "tv"}); 
                     r.commit();
                     store.add(r);
                     store.commitChanges();

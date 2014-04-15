@@ -228,6 +228,11 @@ GridClassKey.grid.Children = function(config) {
         ]
     });
 
+    var limit = config.record.properties
+            && config.record.properties.gridclasskey
+            && config.record.properties.gridclasskey['grid-default_per_page']
+            ? config.record.properties.gridclasskey['grid-default_per_page'] - 0
+            : 0;
     Ext.apply(config, {
         id: 'gridclasskey-grid-children'
         , url: GridClassKey.config.connectorUrl
@@ -237,6 +242,7 @@ GridClassKey.grid.Children = function(config) {
         }
         , fields: fields
         , paging: true
+        , pageSize : limit
         , remoteSort: true
         , enableColumnMove: false
                 /**

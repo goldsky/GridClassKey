@@ -112,10 +112,23 @@ $category->set('category', 'GridClassKey');
 $modx->log(modX::LOG_LEVEL_INFO, 'Adding in plugins.');
 $plugins = include $sources['data'] . 'transport.plugins.php';
 if (is_array($plugins)) {
-	$category->addMany($plugins);
+    $category->addMany($plugins);
     $modx->log(modX::LOG_LEVEL_INFO, 'Adding in ' . count($plugins) . ' plugins done.');
 } else {
-	$modx->log(modX::LOG_LEVEL_FATAL, 'Adding plugins failed.');
+    $modx->log(modX::LOG_LEVEL_FATAL, 'Adding plugins failed.');
+}
+
+/**
+ * SNIPPETS
+ */
+$snippets = include $sources['data'] . 'transport.snippets.php';
+if (is_array($snippets)) {
+    $modx->log(modX::LOG_LEVEL_INFO, 'Adding in snippets.');
+    $category->addMany($snippets);
+    $modx->log(modX::LOG_LEVEL_INFO, 'Adding in snippets done.');
+    flush();
+} else {
+    $modx->log(modX::LOG_LEVEL_FATAL, 'Adding snippets failed.');
 }
 
 /**
@@ -127,16 +140,21 @@ $elementsAttribute = array(
     xPDOTransport::UPDATE_OBJECT => true,
     xPDOTransport::RELATED_OBJECTS => true,
     xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array(
-		'Plugins' => array(
-			xPDOTransport::PRESERVE_KEYS => false,
-			xPDOTransport::UPDATE_OBJECT => true,
-			xPDOTransport::UNIQUE_KEY => 'name',
-		),
-		'PluginEvents' => array(
-			xPDOTransport::PRESERVE_KEYS => true,
-			xPDOTransport::UPDATE_OBJECT => false,
-			xPDOTransport::UNIQUE_KEY => array('pluginid', 'event'),
-		),
+        'Snippets' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY => 'name',
+        ),
+        'Plugins' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY => 'name',
+        ),
+        'PluginEvents' => array(
+            xPDOTransport::PRESERVE_KEYS => true,
+            xPDOTransport::UPDATE_OBJECT => false,
+            xPDOTransport::UNIQUE_KEY => array('pluginid', 'event'),
+        ),
     )
 );
 

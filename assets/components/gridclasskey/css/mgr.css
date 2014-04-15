@@ -75,8 +75,10 @@
 
 #gridclasskey-panel-mainfieldscombo-filter .x-btn,
 #gridclasskey-panel-tvfieldscombo-filter .x-btn,
+#gridclasskey-panel-snippetfieldscombo-filter .x-btn,
 #gridclasskey-panel-mainfieldscombo .x-btn,
-#gridclasskey-panel-tvfieldscombo .x-btn {
+#gridclasskey-panel-tvfieldscombo .x-btn,
+#gridclasskey-panel-snippetfieldscombo .x-btn {
     position: absolute !important;
 }
 
