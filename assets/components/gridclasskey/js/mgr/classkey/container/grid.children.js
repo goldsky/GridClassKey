@@ -116,7 +116,15 @@ GridClassKey.grid.Children = function(config) {
             if (fieldRecord.name === 'pagetitle') {
                 rowField.renderer = {fn: _this._renderPageTitle, scope: _this};
             }
-
+            if (fieldRecord.type === 'tv') {
+                fields.push({
+                    name: fieldRecord.name + '_output'
+                    , mapping: fieldRecord.name + '_output'
+                });
+                rowField.renderer = function(v, md, rec) {
+                    return rec.data[fieldRecord.name + '_output'];
+                };
+            }
             columns.push(rowField);
         });
 
@@ -245,10 +253,6 @@ GridClassKey.grid.Children = function(config) {
         , pageSize : limit
         , remoteSort: true
         , enableColumnMove: false
-                /**
-                 * @todo need to track this value when the store is reloaded
-                 */
-//        , enableDragDrop: config.record['gridclasskey-property-grid-sortby'] === 'menuindex' ? true : false
         , enableDragDrop: true
         , ddGroup: 'gridclasskey-grid-children-dd'
         , viewConfig: {

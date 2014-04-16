@@ -114,13 +114,26 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         }
 
         if ($this->parentProperties) {
+            // backward compatibility
+            $fixParentProperties = false;
             $this->selectedElementFields = array_diff($this->selectedFields, $this->selectedMainFields);
-            foreach ($this->parentProperties['fields'] as $field) {
+            foreach ($this->parentProperties['fields'] as $k => $field) {
                 if (in_array($field['name'], $this->selectedElementFields)) {
                     if ($field['type'] === 'snippet') {
                         $this->selectedSnippetFields = array_merge($this->selectedSnippetFields, (array) $field['name']);
                     } else {
                         $this->selectedTVFields = array_merge($this->selectedTVFields, (array) $field['name']);
+                        // backward compatibility : adding 'type'
+                        if (!isset($this->parentProperties['fields'][$k]['type']) || empty($this->parentProperties['fields'][$k]['type'])) {
+                            $this->parentProperties['fields'][$k]['type'] = 'tv';
+                            $fixParentProperties = true;
+                        }
+                    }
+                } elseif (in_array($field['name'], $this->selectedMainFields)) {
+                    // backward compatibility : adding 'type'
+                    if (!isset($this->parentProperties['fields'][$k]['type']) || empty($this->parentProperties['fields'][$k]['type'])) {
+                        $this->parentProperties['fields'][$k]['type'] = 'main';
+                        $fixParentProperties = true;
                     }
                 }
             }
@@ -131,6 +144,13 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                     $tvLoopIndex++;
                     $this->_joinTV($c, $tvLoopIndex, $tv, $query);
                 }
+            }
+            
+            // backward compatibility
+            if ($fixParentProperties) {
+                $parentObj = $this->modx->getObject('modResource', $parent);
+                $parentObj->setProperties($this->parentProperties, 'gridclasskey');
+                $parentObj->save();
             }
         }
 
@@ -228,7 +248,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             if (!empty($this->selectedTVFields)) {
                 $key = array_search($field, $this->selectedTVFields);
                 if (is_numeric($key)) {
-                    $resourceArray[$field] = $object->getTVValue($field);
+                    $resourceArray[$field . '_output'] = $object->getTVValue($field);
                 }
             }
         }
