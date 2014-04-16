@@ -110,7 +110,18 @@ foreach ($collection as $item) {
     if (!empty($scriptProperties['action-change-template'])) {
         $item->set('template', $scriptProperties['action-change-template']);
     }
-    $item->save();
+    
+    if ($item->save()) {
+        /* empty cache */
+        $cacheManager = $modx->getCacheManager();
+        $contexts = array($item->get('context_key'));
+        $cacheManager->refresh(array(
+            'db' => array(),
+            'auto_publish' => array('contexts' => $contexts),
+            'context_settings' => array('contexts' => $contexts),
+            'resource' => array('contexts' => $contexts),
+        ));
+    }
 }
 
 return $this->success();
