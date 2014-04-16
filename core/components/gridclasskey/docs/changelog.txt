@@ -1,3 +1,7 @@
+GridClassKey 1.0.0-rc5 (April 16, 2014)
+=================================================
+- [#67][#71] condition to avoid breaking JS because of compress_css and compress_js
+
 GridClassKey 1.0.0-rc4 (April 15, 2014)
 =================================================
 - [#55] Problem with drag-drop and menuindex direction on reverse order

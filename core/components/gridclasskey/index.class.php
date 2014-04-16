@@ -33,8 +33,12 @@ abstract class GridClassKeyManagerController extends modExtraManagerController {
     public function initialize() {
         $this->gridclasskey = new GridClassKey($this->modx);
         $version = str_replace(' ', '', $this->gridclasskey->config['version']);
-        $this->addCss($this->gridclasskey->config['cssUrl'] . 'mgr.css?v=' . $version);
-        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/gridclasskey.js?v=' . $version);
+        $isCssCompressed = $this->modx->getOption('compress_css');
+        $withVersion = $isCssCompressed? '' : '?v=' . $version;
+        $this->addCss($this->gridclasskey->config['cssUrl'] . 'mgr.css' . $withVersion);
+        $isJsCompressed = $this->modx->getOption('compress_js');
+        $withVersion = $isJsCompressed? '' : '?v=' . $version;
+        $this->addJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/gridclasskey.js' . $withVersion);
         $this->addHtml('<script type="text/javascript">
         Ext.onReady(function() {
             GridClassKey.config = ' . $this->modx->toJSON($this->gridclasskey->config) . ';
