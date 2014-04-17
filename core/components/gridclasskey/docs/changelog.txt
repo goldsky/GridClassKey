@@ -1,4 +1,4 @@
-GridClassKey 1.0.0-rc5 (April 16, 2014)
+GridClassKey 1.0.0-rc5 (April 17, 2014)
 =================================================
 - [#70] fix inline editing that breaks parsed TV 
 - [#67][#71] condition to avoid breaking JS because of compress_css and compress_js
