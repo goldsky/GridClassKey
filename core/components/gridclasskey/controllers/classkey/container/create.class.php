@@ -89,8 +89,8 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         MODx.config.publish_document = "' . $this->canPublish . '";
         MODx.onDocFormRender = "' . $this->onDocFormRender . '";
         MODx.ctx = "' . $this->resource->get('context_key') . '";
-        MODx.perm["gridclasskey.batch_actions"] = ' . (boolean) $this->modx->hasPermission('gridclasskey.batch_actions') . ';
-        MODx.perm["gridclasskey.advanced_search"] = ' . (boolean) $this->modx->hasPermission('gridclasskey.advanced_search') . ';
+        MODx.perm["gridclasskey.batch_actions"] = ' . ($this->modx->hasPermission('gridclasskey.batch_actions') ? 1 : 0) . ';
+        MODx.perm["gridclasskey.advanced_search"] = ' . ($this->modx->hasPermission('gridclasskey.advanced_search') ? 1 : 0) . ';
         Ext.onReady(function() {
             MODx.load({
                 xtype: "gridclasskey-page-container-create"

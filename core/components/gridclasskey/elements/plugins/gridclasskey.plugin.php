@@ -90,6 +90,7 @@ switch ($modx->event->name) {
                      * @todo This does not work, because there is no place to hack the list
                      */
 //                    $resourceGroups = json_decode($v, 1);
+//                    $addMany = array();
 //                    foreach ($resourceGroups as $k => $v) {
 //                        $params = array(
 //                            'document_group' => $v['id'],
@@ -106,7 +107,9 @@ switch ($modx->event->name) {
 //                                $parentResGrpRes->set('document', 0);
 //                            }
 //                        }
+//                        $addMany[] = $parentResGrpRes;
 //                    }
+//                    $parentResource->addMany($addMany);
                 } elseif ($key === 'content_dispo' || $key === 'isfolder' || $key === 'syncsite') {
                     // no place to override
                 } else {
