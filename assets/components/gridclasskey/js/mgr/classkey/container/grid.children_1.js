@@ -241,105 +241,6 @@ GridClassKey.grid.Children = function(config) {
             && config.record.properties.gridclasskey['grid-default_per_page']
             ? config.record.properties.gridclasskey['grid-default_per_page'] - 0
             : 0;
-
-    var topBar = [];
-    if (MODx.perm['gridclasskey.batch_actions']) {
-        topBar.push({
-            text: _('actions')
-            , iconCls: 'icon-gridclasskey-check_boxes'
-            , handler: function(btn, e) {
-                var actionsWindow = new GridClassKey.window.Actions({
-                    record: {
-                        parent: config.record.id
-                    }
-                });
-                return actionsWindow.show();
-            }
-        });
-    }
-    topBar.push({
-        text: config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
-        , id: 'gridclasskey-property-grid-addnewdocbtn'
-        , iconCls: 'icon-gridclasskey-document-new'
-        , handler: function(itm, e) {
-            Ext.getCmp('modx-resource-tree').loadAction(
-                    'a=' + MODx.action['resource/create']
-                    + '&parent=' + config.record.id
-                    + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
-                    + (config.record.properties
-                            && config.record.properties.gridclasskey
-                            && config.record.properties.gridclasskey['child-template']
-                            ? '&template=' + config.record.properties.gridclasskey['child-template']
-                            : '')
-                    + (config.record.properties
-                            && config.record.properties.gridclasskey
-                            && config.record.properties.gridclasskey['child-class_key']
-                            ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
-                            : '')
-                    );
-        }
-    });
-    topBar.push('->');
-    topBar.push({
-        xtype: 'textfield'
-        , id: 'gridclasskey-search-field'
-        , emptyText: _('gridclasskey.search...')
-        , listeners: {
-            'render': {
-                fn: function(cmp) {
-                    var _this = this;
-                    new Ext.KeyMap(cmp.getEl(), {
-                        key: Ext.EventObject.ENTER
-                        , fn: function() {
-                            _this.search(cmp);
-                            this.blur();
-                            return true;
-                        }
-                        , scope: cmp
-                    });
-                }
-                , scope: this
-            }
-        }
-    });
-    if (MODx.perm['gridclasskey.advanced_search']) {
-        topBar.push({
-            text: _('gridclasskey.advanced_search')
-            , iconCls: 'icon-gridclasskey-filter'
-            , handler: function(btn, e) {
-                var searchField = Ext.getCmp('gridclasskey-search-field');
-                searchField.setDisabled(true);
-                searchField.reset();
-                var advSearchWin = MODx.load({
-                    xtype: 'gridclasskey-window-advancedsearch'
-                    , parent: config.record.id
-                });
-                this.getStore().baseParams.query = '';
-                advSearchWin.fp.getForm().reset();
-                advSearchWin.show();
-            }
-            , scope: this
-        });
-        topBar.push({
-            xtype: 'button'
-            , text: _('gridclasskey.clear')
-            , iconCls: 'icon-gridclasskey-filter-delete'
-            , handler: function(btn, e) {
-                var searchField = Ext.getCmp('gridclasskey-search-field');
-                searchField.reset();
-                searchField.setDisabled(false);
-
-                var s = this.getStore();
-                s.baseParams.query = '';
-                s.baseParams.advancedSearch = false;
-                s.baseParams.template = '';
-                s.baseParams.fields = '';
-                this.getBottomToolbar().changePage(1);
-                this.refresh();
-            }
-            , scope: this
-        });
-    }
     Ext.apply(config, {
         id: 'gridclasskey-grid-children'
         , url: GridClassKey.config.connectorUrl
@@ -349,7 +250,7 @@ GridClassKey.grid.Children = function(config) {
         }
         , fields: fields
         , paging: true
-        , pageSize: limit
+        , pageSize : limit
         , remoteSort: true
         , enableColumnMove: false
         , enableDragDrop: true
@@ -378,7 +279,96 @@ GridClassKey.grid.Children = function(config) {
         , autosave: true
         , sm: checkBoxSelMod
         , columns: columns
-        , tbar: topBar
+        , tbar: [
+            {
+                text: _('actions')
+                , iconCls: 'icon-gridclasskey-check_boxes'
+                , handler: function(btn, e) {
+                    var actionsWindow = new GridClassKey.window.Actions({
+                        record: {
+                            parent: config.record.id
+                        }
+                    });
+                    return actionsWindow.show();
+                }
+            }, {
+                text: config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
+                , id: 'gridclasskey-property-grid-addnewdocbtn'
+                , iconCls: 'icon-gridclasskey-document-new'
+                , handler: function(itm, e) {
+                    Ext.getCmp('modx-resource-tree').loadAction(
+                            'a=' + MODx.action['resource/create']
+                            + '&parent=' + config.record.id
+                            + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
+                            + (config.record.properties
+                                    && config.record.properties.gridclasskey
+                                    && config.record.properties.gridclasskey['child-template']
+                                    ? '&template=' + config.record.properties.gridclasskey['child-template']
+                                    : '')
+                            + (config.record.properties
+                                    && config.record.properties.gridclasskey
+                                    && config.record.properties.gridclasskey['child-class_key']
+                                    ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
+                                    : '')
+                            );
+                }
+            }, '->', {
+                xtype: 'textfield'
+                , id: 'gridclasskey-search-field'
+                , emptyText: _('gridclasskey.search...')
+                , listeners: {
+                    'render': {
+                        fn: function(cmp) {
+                            var _this = this;
+                            new Ext.KeyMap(cmp.getEl(), {
+                                key: Ext.EventObject.ENTER
+                                , fn: function() {
+                                    _this.search(cmp);
+                                    this.blur();
+                                    return true;
+                                }
+                                , scope: cmp
+                            });
+                        }
+                        , scope: this
+                    }
+                }
+            }, {
+                text: _('gridclasskey.advanced_search')
+                , iconCls: 'icon-gridclasskey-filter'
+                , handler: function(btn, e) {
+                    var searchField = Ext.getCmp('gridclasskey-search-field');
+                    searchField.setDisabled(true);
+                    searchField.reset();
+                    var advSearchWin = MODx.load({
+                        xtype: 'gridclasskey-window-advancedsearch'
+                        , parent: config.record.id
+                    });
+                    this.getStore().baseParams.query = '';
+                    advSearchWin.fp.getForm().reset();
+                    advSearchWin.show();
+                }
+                , scope: this
+            }, {
+                xtype: 'button'
+                , text: _('gridclasskey.clear')
+                , iconCls: 'icon-gridclasskey-filter-delete'
+                , handler: function(btn, e) {
+                    var searchField = Ext.getCmp('gridclasskey-search-field');
+                    searchField.reset();
+                    searchField.setDisabled(false);
+
+                    var s = this.getStore();
+                    s.baseParams.query = '';
+                    s.baseParams.advancedSearch = false;
+                    s.baseParams.template = '';
+                    s.baseParams.fields = '';
+                    this.getBottomToolbar().changePage(1);
+                    this.refresh();
+                }
+                , scope: this
+            }
+        ]
         , listeners: {
             render: this.attachDragDropZone
         }
@@ -517,7 +507,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 if (!_this.enableDragDrop || !data.selections || data.selections.length === 0) {
                     return false;
                 }
-
+                
                 var ds = gridPanel.store;
                 var sm = gridPanel.getSelectionModel();
                 var rows = sm.getSelections();
@@ -538,10 +528,10 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                     }
                 }
             }
-            , notifyOver: function(dd, e, data) {
+            , notifyOver : function(dd, e, data){
                 return (_this.enableDragDrop && data.selections && data.selections.length > 0) ? this.dropAllowed : this.dropNotAllowed;
             }
-            , notifyEnter: function(dd, e, data) {
+            , notifyEnter : function(dd, e, data){
                 return (_this.enableDragDrop && data.selections && data.selections.length > 0) ? this.dropAllowed : this.dropNotAllowed;
             }
         });
