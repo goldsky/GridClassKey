@@ -194,12 +194,12 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
         var fields = this.getGridSettingValues();
         Ext.getCmp('gridclasskey-property-fields').setValue(JSON.stringify(fields));
 
-        var g = Ext.getCmp('gridclasskey-grid-childrenresource-security');
-        if (g) {
-            Ext.apply(o.form.baseParams,{
-                "gridclasskey-property-child-resource_groups": g.encode()
-            });
-        }
+//        var g = Ext.getCmp('gridclasskey-grid-childrenresource-security');
+//        if (g) {
+//            Ext.apply(o.form.baseParams,{
+//                "gridclasskey-property-child-resource_groups": g.encode()
+//            });
+//        }
         
         return GridClassKey.panel.Container.superclass.beforeSubmit.apply(this, arguments);
     },

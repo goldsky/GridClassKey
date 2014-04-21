@@ -9,10 +9,16 @@ GridClassKey.grid.Containers = function(config) {
             action: 'mgr/cmp/containers/getlist'
         }
         , fields: ['id', 'pagetitle', 'deleted', 'published', 'action_edit', 'preview_url', 'properties'
-                    , 'gridclasskey-property-fields', 'gridclasskey-property-grid-sortby'
-                    , 'gridclasskey-property-grid-sortdir', 'gridclasskey-property-grid-css', 'gridclasskey-property-grid-top-js'
-                    , 'gridclasskey-property-grid-bottom-js', 'gridclasskey-property-grid-childrentab-text'
-                    , 'gridclasskey-property-grid-addnewdocbtn-text', 'gridclasskey-property-child-template']
+                    , 'gridclasskey-property-grid-default_per_page', 'gridclasskey-property-fields'
+                    , 'gridclasskey-property-grid-sortby', 'gridclasskey-property-grid-sortdir'
+                    , 'gridclasskey-property-grid-css', 'gridclasskey-property-grid-top-js', 'gridclasskey-property-grid-bottom-js'
+                    , 'gridclasskey-property-grid-childrentab-text', 'gridclasskey-property-grid-addnewdocbtn-text'
+                    , 'gridclasskey-property-child-backbutton-text', 'gridclasskey-property-child-template'
+                    , 'gridclasskey-property-child-class_key', 'gridclasskey-property-child-content_type'
+                    , 'gridclasskey-property-child-hidemenu', 'gridclasskey-property-child-searchable'
+                    , 'gridclasskey-property-child-richtext', 'gridclasskey-property-child-cacheable'
+                    , 'gridclasskey-property-child-deleted', 'gridclasskey-property-child-properties'
+                ]
         , paging: true
         , remoteSort: true
         , autoExpandColumn: 'pagetitle'
@@ -195,17 +201,16 @@ Ext.extend(GridClassKey.grid.Containers, MODx.grid.Grid, {
             , title: _('settings')
             , baseParams: {
                 action: 'mgr/cmp/containers/update'
+                , id: this.menu.record.id
             }
             , record: this.menu.record
-            , listeners: {
-                'success': {
-                    fn: this.refresh
-                    , scope: this
-                }
-            }
         });
         updateSettingWindow.setValues(this.menu.record);
         updateSettingWindow.show(e.target);
+        var _this = this;
+        updateSettingWindow.on('success', function(o){
+            _this.refresh();
+        });
     }
     , updateResource: function(record) {
         MODx.loadPage(MODx.action['resource/update'], 'id=' + record.id);

@@ -1,3 +1,11 @@
+GridClassKey 1.0.0-pl (April 21, 2014)
+=================================================
+- bugfix missed compress JS checking
+- add gridclasskey.mgr_css to system settings
+- [#73] fix custom output filters for TV fields
+- [#42] Option to hide bulk action button and advanced search
+- fix saving on CMP
+
 GridClassKey 1.0.0-rc5 (April 17, 2014)
 =================================================
 - [#70] fix inline editing that breaks parsed TV 

@@ -43,5 +43,13 @@ $settings['gridclasskey.assets_url']->fromArray(array(
     'area' => 'URL',
         ), '', true, true);
 
+$settings['gridclasskey.mgr_css'] = $modx->newObject('modSystemSetting');
+$settings['gridclasskey.mgr_css']->fromArray(array(
+    'key' => 'gridclasskey.mgr_css',
+    'value' => '',
+    'xtype' => 'textfield',
+    'namespace' => 'gridclasskey',
+    'area' => 'file',
+        ), '', true, true);
 
 return $settings;
