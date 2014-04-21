@@ -269,7 +269,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                 }
                 if (!empty($field['output_filter'])) {
                     $resourceArray[$field['name']] = $this->_outputFilter($resourceArray[$field['name']], $field['output_filter']);
-                    if (!empty($resourceArray[$field['name'] . '_output'])) {
+                    if (isset($resourceArray[$field['name'] . '_output']) && !empty($resourceArray[$field['name'] . '_output'])) {
                         $resourceArray[$field['name'] . '_output'] = $this->_outputFilter($resourceArray[$field['name'] . '_output'], $field['output_filter']);
                     }
                 }

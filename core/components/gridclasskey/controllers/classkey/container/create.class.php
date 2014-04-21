@@ -62,6 +62,7 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         }
 
         $version = str_replace(' ', '',$gridclasskey->config['version']);
+        $isJsCompressed = $this->modx->getOption('compress_js');
         $withVersion = $isJsCompressed? '' : '?v=' . $version;
         $this->addJavascript($gridclasskeyJsUrl . 'mgr/gridclasskey.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.settings.js' . $withVersion);
@@ -73,6 +74,7 @@ class GridContainerCreateManagerController extends ResourceCreateManagerControll
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.mainfields.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js' . $withVersion);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.childrenresource.security.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.createcontainer.js' . $withVersion);
         

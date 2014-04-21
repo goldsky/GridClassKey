@@ -145,6 +145,11 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
                             {
                                 xtype: 'gridclasskey-panel-settings'
                                 , record: config.record
+                                // for resource-group's settings
+                                , resource: config.resource
+                                , mode: config.mode || 'update'
+                                , "parent": config.record["parent"] || 0
+                                , "token": config.record.create_resource_token
                             }
                         ]
                     }
@@ -172,10 +177,30 @@ Ext.extend(GridClassKey.panel.Container, MODx.panel.Resource, {
 
         return fields;
     },
+//    setup: function() {
+//        if (!Ext.isEmpty(this.config.record['gridclasskey-property-child-resource_groups'])) {
+//            var g = Ext.getCmp('gridclasskey-grid-childrenresource-security');
+//            if (g && Ext.isEmpty(g.config.url)) {
+//                var s = g.getStore();
+//                if (s) {
+//                    var childResourceGroups = JSON.parse(this.config.record['gridclasskey-property-child-resource_groups']);
+//                    s.loadData(childResourceGroups);
+//                }
+//            }
+//        }
+//        return GridClassKey.panel.Container.superclass.setup.apply(this, arguments);
+//    },
     beforeSubmit: function(o) {
         var fields = this.getGridSettingValues();
         Ext.getCmp('gridclasskey-property-fields').setValue(JSON.stringify(fields));
 
+        var g = Ext.getCmp('gridclasskey-grid-childrenresource-security');
+        if (g) {
+            Ext.apply(o.form.baseParams,{
+                "gridclasskey-property-child-resource_groups": g.encode()
+            });
+        }
+        
         return GridClassKey.panel.Container.superclass.beforeSubmit.apply(this, arguments);
     },
     success: function(o) {

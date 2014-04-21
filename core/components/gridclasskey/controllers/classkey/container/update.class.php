@@ -74,6 +74,7 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.mainfields.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js' . $withVersion);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.childrenresource.security.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.children.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.updatecontainer.js' . $withVersion);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GridClassKey
  *
@@ -26,9 +27,13 @@ switch ($modx->event->name) {
     case 'OnManagerPageInit':
         $cssFile = $modx->getOption('gridclasskey.assets_url', null, $modx->getOption('assets_url') . 'components/gridclasskey/') . 'css/mgr.css';
         $modx->regClientCSS($cssFile);
+        $customCssFile = $modx->getOption('gridclasskey.mgr_css');
+        if (!empty($customCssFile)) {
+            $modx->regClientCSS($customCssFile);
+        }
         break;
     case 'OnDocFormSave':
-        if ($mode === 'upd') {
+        if ($mode === modSystemEvent::MODE_UPD) {
             $classKey = $resource->get('class_key');
             $isHideChildren = $resource->get('hide_children_in_tree');
             $c = $modx->newQuery($classKey);
@@ -56,33 +61,56 @@ switch ($modx->event->name) {
         if (empty($scriptProperties['mode']) || $scriptProperties['mode'] !== 'new') {
             return;
         }
-        $parentResource = $modx->getObject('modResource', intval($_GET['parent']));
-        if (!$parentResource) {
+        $parentId = filter_input(INPUT_GET, 'parent', FILTER_VALIDATE_INT);
+        $parentResource = $modx->getObject('modResource', $parentId);
+        if (!$parentResource || $parentResource->get('class_key') !== 'GridContainer') {
             return;
         }
-        $parent = $parentResource->toArray();
-        if ($parent['class_key'] === 'GridContainer') {
-            $parentProperties = $parentResource->getProperties('gridclasskey');
-            if (!$parentProperties) {
-                return;
-            }
-            /**
-             * @see manager\controllers\default\resource\create\ResourceCreateManagerController::process()
-             */
-            foreach ($parentProperties as $k => $v) {
-                if (substr($k, 0, 6) == 'child-') {
-                    $key = substr($k, 6);
-                    if ($key === 'template') {
-                        $modx->controller->setProperty($key, $v);
-                    } elseif ($key === 'content_type') {
-                        $modx->_userConfig['default_' . $key] = $v;
-                    } elseif ($key === 'class_key') {
-                        $modx->controller->resourceClass = $v;
-                    } elseif ($key === 'content_dispo' || $key === 'isfolder' || $key === 'syncsite') {
-                        // no place to override
-                    } else {
-                        $modx->_userConfig[$key . '_default'] = $v;
-                    }
+        $parentProperties = $parentResource->getProperties('gridclasskey');
+        if (!$parentProperties) {
+            return;
+        }
+        /**
+         * @see manager\controllers\default\resource\create\ResourceCreateManagerController::process()
+         */
+        foreach ($parentProperties as $k => $v) {
+            if (substr($k, 0, 6) == 'child-') {
+                $key = substr($k, 6);
+                if ($key === 'template') {
+                    $modx->controller->setProperty($key, $v);
+                } elseif ($key === 'content_type') {
+                    $modx->_userConfig['default_' . $key] = $v;
+                } elseif ($key === 'class_key') {
+                    $modx->controller->resourceClass = $v;
+                } elseif ($key === 'resource_groups') {
+                    /**
+                     * Because there is no place to override the recource group in run time,
+                     * pretend the parent has these usergroups to be inherited
+                     * @see manager\controllers\default\resource\resource\ResourceManagerController::getResourceGroups()
+                     * @todo This does not work, because there is no place to hack the list
+                     */
+//                    $resourceGroups = json_decode($v, 1);
+//                    foreach ($resourceGroups as $k => $v) {
+//                        $params = array(
+//                            'document_group' => $v['id'],
+//                            'document' => $parentId
+//                        );
+//                        $parentResGrpRes = $modx->getObject('modResourceGroupResource', $params);
+//                        if ($v['access']) {
+//                            if (!$parentResGrpRes) {
+//                                $parentResGrpRes = $modx->newObject('modResourceGroupResource');
+//                                $parentResGrpRes->fromArray($params);
+//                            }
+//                        } else {
+//                            if ($parentResGrpRes) {
+//                                $parentResGrpRes->set('document', 0);
+//                            }
+//                        }
+//                    }
+                } elseif ($key === 'content_dispo' || $key === 'isfolder' || $key === 'syncsite') {
+                    // no place to override
+                } else {
+                    $modx->_userConfig[$key . '_default'] = $v;
                 }
             }
         }
@@ -90,7 +118,15 @@ switch ($modx->event->name) {
         break;
     case 'OnDocFormPrerender':
         $actionId = intval($_GET['a']);
-        if ($actionId !== 30 && $actionId !== 55) {
+        $createAction = $modx->getObject('modAction', array(
+            'namespace' => 'core',
+            'controller' => 'resource/create',
+        ));
+        $editAction = $modx->getObject('modAction', array(
+            'namespace' => 'core',
+            'controller' => 'resource/update',
+        ));
+        if ($actionId !== $createAction->get('id') && $actionId !== $editAction->get('id')) {
             return false;
         }
         $docId = isset($_GET['id']) ? intval($_GET['id']) : '';
@@ -115,13 +151,17 @@ switch ($modx->event->name) {
         }
 
         $parentResource = $modx->getObject('modResource', $parentId);
-        if ($parentResource) {
-            $parentClassKey = $parentResource->get('class_key');
-            if ($parentClassKey === 'GridContainer') {
-                $modx->lexicon->load('gridclasskey:default');
-                $parentProperties = $parentResource->getProperties('gridclasskey');
-                $text = !empty($parentProperties['child-backbutton-text']) ? $parentProperties['child-backbutton-text'] : $modx->lexicon('gridclasskey.back_to_container');
-                $modx->regClientStartupHTMLBlock('<script type="text/javascript">
+        if (!$parentResource || $parentResource->get('class_key') !== 'GridContainer') {
+            return;
+        }
+        $modx->lexicon->load('gridclasskey:default');
+        $parentProperties = $parentResource->getProperties('gridclasskey');
+        if (!$parentProperties) {
+            return;
+        }
+
+        $text = !empty($parentProperties['child-backbutton-text']) ? $parentProperties['child-backbutton-text'] : $modx->lexicon('gridclasskey.back_to_container');
+        $modx->regClientStartupHTMLBlock('<script type="text/javascript">
 Ext.onReady(function() {
     var actionButtons = Ext.getCmp("modx-action-buttons");
     if (actionButtons) {
@@ -140,10 +180,7 @@ Ext.onReady(function() {
     }
 });
         </script>');
-            }
-        }
-
-    break;
+        break;
     default:
         break;
 }

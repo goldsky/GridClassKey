@@ -26,7 +26,13 @@ GridClassKey.panel.Settings = function(config) {
                 , layout: 'form'
                 , items: this.getGridSettingsChildren(config)
                 , bodyStyle: 'padding: 15px'
-            }
+            }/*, {
+                title: _('gridclasskey.resourcegroups_children')
+                , defaults: {msgTarget: 'under'}
+                , layout: 'form'
+                , items: this.getGridResourceGroupsChildren(config)
+                , bodyStyle: 'padding: 15px'
+            }*/
         ]
     });
     GridClassKey.panel.Settings.superclass.constructor.call(this, config);
@@ -546,6 +552,35 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                         ]
                     }
                 ]
+            }
+        ];
+    },
+    getGridResourceGroupsChildren: function(config) {
+        return [
+            {
+                html: '<p>' + _('griclasskey.children_resource_access_message') + '</p>'
+                , bodyCssClass: 'panel-desc'
+                , border: false
+            }, {
+                xtype: 'gridclasskey-grid-childrenresource-security'
+                , cls: 'main-wrapper'
+                , preventRender: true
+                , resource: config.resource
+                , mode: config.mode || 'update'
+                , "parent": config.resource || 0
+                , "token": config.record.create_resource_token
+                , reloaded: !Ext.isEmpty(MODx.request.reload)
+                , record: config.record['gridclasskey-property-child-resource_groups']
+                , listeners: {
+                    'afteredit': {
+                        fn: function(fld){
+                            var resourcePanel = Ext.getCmp('gridclasskey-panel-container');
+                            if (resourcePanel) {
+                                resourcePanel.fieldChangeEvent(fld);
+                            }
+                        }
+                    }
+                }
             }
         ];
     }
