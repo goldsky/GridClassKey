@@ -120,18 +120,27 @@ switch ($modx->event->name) {
 
         break;
     case 'OnDocFormPrerender':
-        $actionId = intval($_GET['a']);
-        $createAction = $modx->getObject('modAction', array(
-            'namespace' => 'core',
-            'controller' => 'resource/create',
-        ));
-        $editAction = $modx->getObject('modAction', array(
-            'namespace' => 'core',
-            'controller' => 'resource/update',
-        ));
-        if ($actionId !== $createAction->get('id') && $actionId !== $editAction->get('id')) {
-            return false;
+        $action = $_GET['a'];
+        $vers = $modx->getVersionData();
+        $ver_comp = version_compare($vers['full_version'], '2.3.0');
+        if ($ver_comp < 0) {
+            if ($action !== 'resource/create' && $action !== 'resource/update') {
+                return false;
+            }
+        } else {
+            $createAction = $modx->getObject('modAction', array(
+                'namespace' => 'core',
+                'controller' => 'resource/create',
+            ));
+            $editAction = $modx->getObject('modAction', array(
+                'namespace' => 'core',
+                'controller' => 'resource/update',
+            ));
+            if ($action !== $createAction->get('id') && $action !== $editAction->get('id')) {
+                return false;
+            }
         }
+        
         $docId = isset($_GET['id']) ? intval($_GET['id']) : '';
         $parentId = isset($_GET['parent']) ? intval($_GET['parent']) : '';
         if (empty($docId) && empty($parentId)) {

@@ -1,3 +1,7 @@
+GridClassKey dev
+=================================================
+- [#79] Compatibility adjustment for action's value on 2.3.0+
+
 GridClassKey 1.0.0-pl (April 21, 2014)
 =================================================
 - bugfix missed compress JS checking

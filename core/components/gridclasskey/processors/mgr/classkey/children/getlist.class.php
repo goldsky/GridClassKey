@@ -42,10 +42,18 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     protected $condition = '';
 
     public function initialize() {
-        $this->editAction = $this->modx->getObject('modAction', array(
-            'namespace' => 'core',
-            'controller' => 'resource/update',
-        ));
+        $vers = $this->modx->getVersionData();
+        $ver_comp = version_compare($vers['full_version'], '2.3.0');
+        if ($ver_comp < 0) {
+            $this->editAction = 'resource/update';
+        } else {
+            $editAction = $this->modx->getObject('modAction', array(
+                'namespace' => 'core',
+                'controller' => 'resource/update',
+            ));
+            $this->editAction = $editAction->get('id');
+        }
+        
         $parent = $this->getProperty('parent');
         if (empty($parent)) {
             return $this->failure($this->modx->lexicon('gridclasskey.parent_missing_err'));
@@ -275,7 +283,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                 }
             }
         }
-        $resourceArray['action_edit'] = '?a=' . $this->editAction->get('id') . '&id=' . $resourceArray['id'];
+        $resourceArray['action_edit'] = '?a=' . $this->editAction . '&id=' . $resourceArray['id'];
 
         $this->modx->getContext($resourceArray['context_key']);
         $resourceArray['preview_url'] = $this->modx->makeUrl($resourceArray['id'], $resourceArray['context_key'], null, 'full');
