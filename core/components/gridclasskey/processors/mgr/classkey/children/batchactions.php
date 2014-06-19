@@ -23,7 +23,6 @@
  * @package gridclasskey
  * @subpackage processor
  */
-
 // Apache's timeout: 600 secs
 if (function_exists('ini_get') && !ini_get('safe_mode')) {
     if (function_exists('set_time_limit')) {
@@ -67,13 +66,17 @@ if (!empty($ids)) {
         'id:IN' => $ids
     ));
 }
-
+$total = $modx->getCount('modResource', $c);
+if (isset($scriptProperties['limit']) && !empty($scriptProperties['limit'])) {
+    $c->limit($scriptProperties['limit'], (isset($scriptProperties['start']) && !empty($scriptProperties['start']) ? $scriptProperties['start'] : 0));
+}
 $collection = $modx->getCollection('modResource', $c);
 if (!$collection) {
     return $this->failure(__LINE__ . ': ' . $modx->lexicon('gridclasskey.empty_return_err'));
 }
 
 $uId = $modx->user->get('id');
+$count = 0;
 foreach ($collection as $item) {
     if (!empty($scriptProperties['action-hidemenu'])) {
         if ($scriptProperties['action-hidemenu'] === 'hide') {
@@ -110,7 +113,7 @@ foreach ($collection as $item) {
     if (!empty($scriptProperties['action-change-template'])) {
         $item->set('template', $scriptProperties['action-change-template']);
     }
-    
+
     if ($item->save()) {
         /* empty cache */
         $cacheManager = $modx->getCacheManager();
@@ -121,7 +124,14 @@ foreach ($collection as $item) {
             'context_settings' => array('contexts' => $contexts),
             'resource' => array('contexts' => $contexts),
         ));
+        $count++;
     }
 }
 
-return $this->success();
+return json_encode(array(
+    'success' => true,
+    'total' => $total,
+    'message' => $this->error,
+    'totalUpdated' => $count,
+    'nextStart' => intval($scriptProperties['start']) + intval($scriptProperties['limit']),
+));

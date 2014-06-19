@@ -68,7 +68,7 @@ GridClassKey.grid.Containers = function(config) {
                 , items: [
                     {
                         iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
-                        , toolTip: _('edit')
+                        , tooltip: _('edit')
                         , altText: _('edit')
                         , handler: function(grid, row, col) {
                             var rec = this.store.getAt(row);
@@ -77,7 +77,7 @@ GridClassKey.grid.Containers = function(config) {
                         scope: this
                     }, {
                         iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
-                        , toolTip: _('view')
+                        , tooltip: _('view')
                         , altText: _('view')
                         , handler: function(grid, row, col) {
                             var rec = this.store.getAt(row);

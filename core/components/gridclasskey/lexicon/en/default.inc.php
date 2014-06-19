@@ -105,3 +105,4 @@ $_lang['gridclasskey.default_per_page'] = 'Default Per Page';
 $_lang['gridclasskey.default_per_page_desc'] = 'If not empty, this will override the default number of results to show in grids throughout the manager';
 $_lang['gridclasskey.resourcegroups_children'] = 'Children\'s Resource Groups';
 $_lang['griclasskey.children_resource_access_message'] = 'Here you can select which Resource Groups the New Child Resource belongs to.';
+$_lang['gridclasskey.please_wait'] = 'Please wait...';

@@ -2,16 +2,10 @@ GridClassKey.window.Actions = function(config) {
     config = config || {};
 
     Ext.apply(config, {
-        id: 'gridclasskey-window-actions'
-        , url: GridClassKey.config.connectorUrl
-        , title: _('actions')
-        , baseParams: {
-            action: 'mgr/classkey/children/batchactions'
-        }
+        title: _('actions')
         , closeAction: 'close'
         , labelAlign: 'left'
         , labelWidth: 120
-        , record: config.record
         , blankValues: true
         , fields: [
             {
@@ -226,5 +220,62 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
             this.fp.getForm().findField('action-selected-range').setValue(JSON.stringify(selectedIds));
         }
     }
+    , submit: function(close) {
+        close = close === false ? false : true;
+        var f = this.fp.getForm();
+        if (f.isValid() && this.fireEvent('beforeSubmit', f.getValues())) {
+            this.loopActions(f.getValues());
+        }
+    }
+    , loopActions: function(values, limit, start) {
+        limit = limit ? limit : 20;
+        start = start ? start : 0;
+        console.info('limit, start', limit, start);
+
+        var _this = this;
+        _this.loadMask();
+        var params = Ext.apply({}, {
+            action: 'mgr/classkey/children/batchactions',
+            record: this.config.record,
+            limit: limit,
+            start: start
+        }, values);
+        MODx.Ajax.request({
+            url: GridClassKey.config.connectorUrl,
+            params: params,
+            listeners: {
+                'success': {
+                    fn: function(response) {
+                        _this.config.closeAction !== 'close' ? _this.hide() : _this.close();
+                        if (response.success) {
+                            var total = response.total - 0; // typecasting
+                            if (total > response.nextStart) {
+                                // recursive loop
+                                _this.loopActions(values, limit, response.nextStart);
+                            } else {
+                                Ext.getCmp('gridclasskey-grid-children').refresh();
+                                _this.hideMask();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    , loadMask: function() {
+        if (!this.loadConverterMask) {
+            var domHandler = Ext.getCmp('gridclasskey-grid-children').body.dom;
+            this.loadConverterMask = new Ext.LoadMask(domHandler, {
+                msg: _('gridclasskey.please_wait')
+            });
+        }
+        this.loadConverterMask.show();
+    }
+    , hideMask: function() {
+        if (this.loadConverterMask) {
+            this.loadConverterMask.hide();
+        }
+    }
+
 });
 Ext.reg('gridclasskey-window-actions', GridClassKey.window.Actions);
