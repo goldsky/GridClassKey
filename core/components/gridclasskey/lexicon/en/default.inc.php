@@ -23,6 +23,11 @@
  * @package gridclasskey
  * @subpackage lexicon
  */
+$_lang['setting_gridclasskey.mgr_css'] = 'Additional CSS file on manager loading';
+$_lang['setting_gridclasskey.mgr_css_desc'] = 'This CSS file will only override (not replace) the default: {assets_url}components/gridclasskey/css/mgr.css';
+$_lang['setting_gridclasskey.unhide_children_in_tree_limit'] = 'Limit number of children to revert them to tree';
+$_lang['setting_gridclasskey.unhide_children_in_tree_limit_desc'] = 'Limit number of children to be shown again on the resource tree. Too many children will break the manager.';
+
 $_lang['gridclasskey'] = 'Grid Container';
 $_lang['gridclasskey.management_desc'] = 'Managing the Grid Containers';
 $_lang['gridclasskey.container_create_here'] = 'Create a Grid Container Here';
@@ -53,8 +58,6 @@ $_lang['gridclasskey.default_template'] = 'Default template';
 $_lang['gridclasskey.child_default_template_desc'] = 'Default template to be applied when creating new document under this container is initiated.';
 $_lang['gridclasskey.mgr_css'] = 'Additional CSS file on manager loading';
 $_lang['gridclasskey.mgr_css_desc'] = 'This CSS file will only override (not replace) the default:<br>assets/components/gridclasskey/css/mgr.css';
-$_lang['setting_gridclasskey.mgr_css'] = 'Additional CSS file on manager loading';
-$_lang['setting_gridclasskey.mgr_css_desc'] = 'This CSS file will only override (not replace) the default: {assets_url}components/gridclasskey/css/mgr.css';
 $_lang['gridclasskey.mgr_top_js'] = 'Additional top JS file on manager loading';
 $_lang['gridclasskey.mgr_top_js_desc'] = 'This JS file will be loaded before other JS files when opening this container';
 $_lang['gridclasskey.mgr_bottom_js'] = 'Additional bottom JS file on manager loading';

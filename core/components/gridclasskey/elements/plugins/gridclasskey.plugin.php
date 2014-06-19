@@ -41,9 +41,13 @@ switch ($modx->event->name) {
             $c->where(array(
                 'parent' => $resourceId,
             ));
-            $c->limit(21);
+            $limit = (int) $modx->getOption('gridclasskey.unhide_children_in_tree_limit');
+            if (empty($limit) || !is_numeric($limit)) {
+                $limit = 20;
+            }
+            $c->limit($limit + 1);
             $numChildren = $modx->getCount($classKey, $c);
-            if ($numChildren > 20) {
+            if ($numChildren > $limit) {
                 return;
             }
             if ($classKey !== 'GridContainer' &&

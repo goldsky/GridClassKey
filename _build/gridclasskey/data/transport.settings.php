@@ -52,4 +52,13 @@ $settings['gridclasskey.mgr_css']->fromArray(array(
     'area' => 'file',
         ), '', true, true);
 
+$settings['gridclasskey.unhide_children_in_tree_limit'] = $modx->newObject('modSystemSetting');
+$settings['gridclasskey.unhide_children_in_tree_limit']->fromArray(array(
+    'key' => 'gridclasskey.unhide_children_in_tree_limit',
+    'value' => 20,
+    'xtype' => 'textfield',
+    'namespace' => 'gridclasskey',
+    'area' => 'manager',
+        ), '', true, true);
+
 return $settings;
