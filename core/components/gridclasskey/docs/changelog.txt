@@ -1,4 +1,4 @@
-GridClassKey dev
+GridClassKey 1.0.1-beta1 (July 4, 2014)
 =================================================
 - [#81] AJAX loop for actions
 - [#82][#92] Give limit option for number of children to revert grid to tree.
