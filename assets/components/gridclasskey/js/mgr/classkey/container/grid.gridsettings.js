@@ -180,6 +180,12 @@ GridClassKey.grid.GridSettings = function(config) {
                 }
                 , scope: this
             }
+            , afteredit: {
+                fn: function(e) {
+                    this.getStore().commitChanges();
+                }
+                , scope: this
+            }
         }
     });
 
@@ -187,6 +193,28 @@ GridClassKey.grid.GridSettings = function(config) {
 
 };
 Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
+    updateModifiedRecords: function() {
+        var records = this.getStore().getRange();
+        var newData = [];
+        Ext.each(records, function(record, idx){
+            var fieldRecord = record.data;
+            newData.push([
+                idx + 1,
+                fieldRecord.name,
+                fieldRecord.type,
+                fieldRecord.lexicon,
+                fieldRecord.width,
+                fieldRecord.fixed,
+                fieldRecord.sortable,
+                fieldRecord.hidden,
+                fieldRecord.editor_type,
+                fieldRecord.output_filter
+            ]);
+        });
+        this.getStore().loadData(newData);
+        this.getView().refresh();
+        return newData;
+    },
     loadData: function(fields) {
         if (fields.length) {
             var data = [], hasID = false;
@@ -292,17 +320,18 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                 var targetRowIndex = gridPanel.getView().findRowIndex(target);
                 var draggedRowIndex = gridPanel.getView().findRowIndex(data.draggedRecord);
                 var isSteppingUp = (targetRowIndex < draggedRowIndex);
-                var newData = gridPanel.data; // initial fills
-                var draggedData = gridPanel.data[draggedRowIndex];
+                var oldData = gridPanel.updateModifiedRecords();
+                var newData = oldData; // initial fills
+                var draggedData = oldData[draggedRowIndex];
                 if (isSteppingUp) {
                     for (var i = draggedRowIndex; i > targetRowIndex; i--) {
-                        var item = gridPanel.data[i - 1];
+                        var item = oldData[i - 1];
                         item[0] = i + 1;
                         newData[i] = item;
                     }
                 } else {
                     for (var i = draggedRowIndex; i < targetRowIndex; i++) {
-                        var item = gridPanel.data[i + 1];
+                        var item = oldData[i + 1];
                         item[0] = i + 1;
                         newData[i] = item;
                     }

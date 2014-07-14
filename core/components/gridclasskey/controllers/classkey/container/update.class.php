@@ -93,6 +93,10 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         MODx.ctx = "' . $this->resource->get('context_key') . '";
         MODx.perm["gridclasskey.batch_actions"] = ' . ($this->modx->hasPermission('gridclasskey.batch_actions') ? 1 : 0) . ';
         MODx.perm["gridclasskey.advanced_search"] = ' . ($this->modx->hasPermission('gridclasskey.advanced_search') ? 1 : 0) . ';
+        MODx.perm["new_document"] = ' . ($this->modx->hasPermission('new_document') ? 1 : 0) . ';
+        MODx.perm["edit_document"] = ' . ($this->modx->hasPermission('edit_document') ? 1 : 0) . ';
+        MODx.perm["delete_document"] = ' . ($this->modx->hasPermission('delete_document') ? 1 : 0) . ';
+        MODx.perm["undelete_document"] = ' . ($this->modx->hasPermission('undelete_document') ? 1 : 0) . ';
         Ext.onReady(function() {
             MODx.load({
                 xtype: "gridclasskey-page-container-update"

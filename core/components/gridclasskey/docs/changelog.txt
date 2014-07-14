@@ -1,3 +1,11 @@
+GridClassKey 1.0.1-beta2 (July 14, 2014)
+=================================================
+- [#76] fix bug on dragging fields brings back description field and removes output filters and titles
+- [#79] fix compatibility adjustment for action's value on 2.3.0+
+- [#89] Field Order bug
+- [#94] Add permissions for containers
+- [#95] fix error when context_key is not in the list of fields to show in the child list
+
 GridClassKey 1.0.1-beta1 (July 4, 2014)
 =================================================
 - [#81] AJAX loop for actions

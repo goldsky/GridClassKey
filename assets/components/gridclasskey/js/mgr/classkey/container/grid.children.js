@@ -166,75 +166,91 @@ GridClassKey.grid.Children = function(config) {
         });
     }
 
-    // add the Actions column for the last column
-    columns.push({
-        header: _('actions')
-        , xtype: 'actioncolumn'
-        , dataIndex: 'id'
-        , sortable: false
-        , editable: false
-        , fixed: true
-        , width: 107
-        , items: [
-            {
-                iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
-                , tooltip: _('edit')
-                , altText: _('edit')
-                , handler: function(grid, row, col) {
-                    var rec = this.store.getAt(row);
-                    MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
-                },
-                scope: this
-            }, {
-                iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
-                , tooltip: _('view')
-                , altText: _('view')
-                , handler: function(grid, row, col) {
-                    var rec = this.store.getAt(row);
-                    window.open(rec.get('preview_url'));
-                },
-                scope: this
-            }, {
-                handler: function(grid, row, col) {
-                    var _this = Ext.getCmp('gridclasskey-grid-children');
-                    var rec = _this.store.getAt(row);
-                    if (rec.get('published')) {
-                        _this.unpublishResource(rec.data);
-                    } else {
-                        _this.publishResource(rec.data);
-                    }
-                },
-                getClass: function(v, meta, rec) {
-                    if (rec.get('published')) {
-                        this.items[2].tooltip = _('resource_unpublish');
-                        this.items[2].altText = _('resource_unpublish');
-                        return 'icon-gridclasskey-mute icon-gridclasskey-actioncolumn-img';
-                    } else {
-                        this.items[2].tooltip = _('resource_publish');
-                        this.items[2].altText = _('resource_publish');
-                        return 'icon-gridclasskey-publish icon-gridclasskey-actioncolumn-img';
-                    }
+    var actionItems = [];
+    
+    if (MODx.perm['edit_document']) {
+        actionItems.push(
+                {
+                    iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
+                    , tooltip: _('edit')
+                    , altText: _('edit')
+                    , handler: function(grid, row, col) {
+                        var rec = this.store.getAt(row);
+                        MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
+                    },
+                    scope: this
+                }, {
+            iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
+            , tooltip: _('view')
+            , altText: _('view')
+            , handler: function(grid, row, col) {
+                var rec = this.store.getAt(row);
+                window.open(rec.get('preview_url'));
+            },
+            scope: this
+        });
+    }
+    
+    if (MODx.perm['publish_document'] && MODx.perm['unpublish_document']) {
+        actionItems.push({
+            handler: function(grid, row, col) {
+                var _this = Ext.getCmp('gridclasskey-grid-children');
+                var rec = _this.store.getAt(row);
+                if (rec.get('published')) {
+                    _this.unpublishResource(rec.data);
+                } else {
+                    _this.publishResource(rec.data);
                 }
-            }, {
-                handler: function(grid, row, col) {
-                    var _this = Ext.getCmp('gridclasskey-grid-children');
-                    var rec = _this.store.getAt(row);
-                    _this.removeResource(rec.data);
-                },
-                getClass: function(v, meta, rec) {
-                    if (rec.get('deleted')) {
-                        this.items[2].tooltip = _('resource_undelete');
-                        this.items[2].altText = _('resource_undelete');
-                        return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
-                    } else {
-                        this.items[2].tooltip = _('resource_delete');
-                        this.items[2].altText = _('resource_delete');
-                        return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
-                    }
+            },
+            getClass: function(v, meta, rec) {
+                if (rec.get('published')) {
+                    this.items[2].tooltip = _('resource_unpublish');
+                    this.items[2].altText = _('resource_unpublish');
+                    return 'icon-gridclasskey-mute icon-gridclasskey-actioncolumn-img';
+                } else {
+                    this.items[2].tooltip = _('resource_publish');
+                    this.items[2].altText = _('resource_publish');
+                    return 'icon-gridclasskey-publish icon-gridclasskey-actioncolumn-img';
                 }
             }
-        ]
-    });
+        });
+    }
+    
+    if (MODx.perm['delete_document'] && MODx.perm['undelete_document']) {
+        actionItems.push({
+            handler: function(grid, row, col) {
+                var _this = Ext.getCmp('gridclasskey-grid-children');
+                var rec = _this.store.getAt(row);
+                _this.removeResource(rec.data);
+            },
+            getClass: function(v, meta, rec) {
+                if (rec.get('deleted')) {
+                    this.items[2].tooltip = _('resource_undelete');
+                    this.items[2].altText = _('resource_undelete');
+                    return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
+                } else {
+                    this.items[2].tooltip = _('resource_delete');
+                    this.items[2].altText = _('resource_delete');
+                    return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
+                }
+                return;
+            }
+        });
+    }
+
+    if (actionItems.length > 0) {
+        // add the Actions column for the last column
+        columns.push({
+            header: _('actions')
+            , xtype: 'actioncolumn'
+            , dataIndex: 'id'
+            , sortable: false
+            , editable: false
+            , fixed: true
+            , width: 107
+            , items: actionItems
+        });
+    }
 
     var limit = config.record.properties
             && config.record.properties.gridclasskey
@@ -257,28 +273,30 @@ GridClassKey.grid.Children = function(config) {
             }
         });
     }
-    topBar.push({
-        text: config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
-        , id: 'gridclasskey-property-grid-addnewdocbtn'
-        , iconCls: 'icon-gridclasskey-document-new'
-        , handler: function(itm, e) {
-            Ext.getCmp('modx-resource-tree').loadAction(
-                    'a=' + MODx.action['resource/create']
-                    + '&parent=' + config.record.id
-                    + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
-                    + (config.record.properties
-                            && config.record.properties.gridclasskey
-                            && config.record.properties.gridclasskey['child-template']
-                            ? '&template=' + config.record.properties.gridclasskey['child-template']
-                            : '')
-                    + (config.record.properties
-                            && config.record.properties.gridclasskey
-                            && config.record.properties.gridclasskey['child-class_key']
-                            ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
-                            : '')
-                    );
-        }
-    });
+    if (MODx.perm['new_document']) {
+        topBar.push({
+            text: config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
+            , id: 'gridclasskey-property-grid-addnewdocbtn'
+            , iconCls: 'icon-gridclasskey-document-new'
+            , handler: function(itm, e) {
+                Ext.getCmp('modx-resource-tree').loadAction(
+                        'a=' + MODx.action['resource/create']
+                        + '&parent=' + config.record.id
+                        + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
+                        + (config.record.properties
+                                && config.record.properties.gridclasskey
+                                && config.record.properties.gridclasskey['child-template']
+                                ? '&template=' + config.record.properties.gridclasskey['child-template']
+                                : '')
+                        + (config.record.properties
+                                && config.record.properties.gridclasskey
+                                && config.record.properties.gridclasskey['child-class_key']
+                                ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
+                                : '')
+                        );
+            }
+        });
+    }
     topBar.push('->');
     topBar.push({
         xtype: 'textfield'

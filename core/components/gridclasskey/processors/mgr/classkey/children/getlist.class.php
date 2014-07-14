@@ -44,7 +44,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
     public function initialize() {
         $vers = $this->modx->getVersionData();
         $ver_comp = version_compare($vers['full_version'], '2.3.0');
-        if ($ver_comp < 0) {
+        if ($ver_comp > 0) {
             $this->editAction = 'resource/update';
         } else {
             $editAction = $this->modx->getObject('modAction', array(
@@ -73,6 +73,11 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $condition = $this->getProperty('condition', 'or');
         $this->condition = $condition === 'or' ? 'orCondition' : 'andCondition';
 
+        $limit = $this->getProperty('limit');
+        if ($limit === 0) {
+            $this->setProperty('limit', $this->modx->getOption('default_per_page'));
+        }
+        
         return parent::initialize();
     }
 
@@ -245,6 +250,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                     $field !== 'published' &&
                     $field !== 'deleted' &&
                     $field !== 'hidemenu' &&
+                    $field !== 'context_key' &&
                     $field !== 'isfolder'
             ) {
                 unset($resourceArray[$field]);
