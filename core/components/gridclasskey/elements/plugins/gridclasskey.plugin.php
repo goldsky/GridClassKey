@@ -126,8 +126,8 @@ switch ($modx->event->name) {
     case 'OnDocFormPrerender':
         $action = $_GET['a'];
         $vers = $modx->getVersionData();
-        $ver_comp = version_compare($vers['full_version'], '2.3.0');
-        if ($ver_comp > 0) {
+        $ver_comp = version_compare($vers['version'].'.'.$vers['major_version'].'.'.$vers['minor_version'], '2.3.0');
+        if ($ver_comp >= 0) {
             if ($action !== 'resource/create' && $action !== 'resource/update') {
                 return false;
             }
