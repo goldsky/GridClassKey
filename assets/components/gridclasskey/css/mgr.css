@@ -88,6 +88,10 @@
     margin-top: 6px;
 }
 
+.icon-gridclasskey-hidden {
+    display: none;
+}
+
 .icon-gridclasskey-edit {
     background-image: url(../icons/pencil.png) !important;
     background-repeat: no-repeat;

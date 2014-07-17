@@ -119,6 +119,9 @@ GridClassKey.grid.GridSettings = function(config) {
                         handler: function(grid, row, col) {
                             var _this = Ext.getCmp('gridclasskey-grid-gridsettings'),
                                     rec = _this.store.getAt(row);
+                            if (rec.get('name') === 'id') {
+                                return false;
+                            }
                             _this.getStore().remove(rec);
                             var btn = Ext.getCmp('modx-abtn-save');
                             if (btn) {
@@ -126,7 +129,11 @@ GridClassKey.grid.GridSettings = function(config) {
                             }
                         },
                         getClass: function(v, meta, rec) {
-                            if (rec.get('name') !== 'id') {
+                            if (rec.get('name') === 'id') {
+                                this.items[0].tooltip = '';
+                                this.items[0].altText = '';
+                                return 'icon-gridclasskey-hidden';
+                            } else {
                                 this.items[0].tooltip = _('delete');
                                 this.items[0].altText = _('delete');
                                 return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';

@@ -1,5 +1,6 @@
 GridClassKey 1.0.1
 =================================================
+- [#90] Delete button still exists for 'id' in settings > fields
 - [#68] Error egress when user put wrong editor_type
 - [#91] Documentation on Editor type (feature request)
 - [#97] Fix MODX version comparing issues
