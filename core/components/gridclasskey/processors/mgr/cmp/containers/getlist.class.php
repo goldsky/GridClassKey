@@ -39,7 +39,7 @@ class ContainersGetListProccessor extends modObjectGetListProcessor {
     public function initialize() {
         $vers = $this->modx->getVersionData();
         $ver_comp = version_compare($vers['full_version'], '2.3.0');
-        if ($ver_comp < 0) {
+        if ($ver_comp >= 0) {
             $this->editAction = 'resource/update';
         } else {
             $editAction = $this->modx->getObject('modAction', array(

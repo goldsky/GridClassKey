@@ -1,3 +1,7 @@
+GridClassKey 1.0.1
+=================================================
+- [#97] Fix MODX version comparing issues
+
 GridClassKey 1.0.1-beta2 (July 14, 2014)
 =================================================
 - [#76] fix bug on dragging fields brings back description field and removes output filters and titles
