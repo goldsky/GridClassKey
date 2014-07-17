@@ -106,12 +106,15 @@ GridClassKey.grid.Children = function(config) {
                     && fieldRecord.output_filter === ''
                     || fieldRecord.output_filter === null
                     ) {
-                if (fieldRecord.editor_type === 'text') {
-                    fieldRecord.editor_type = 'textfield';
+                if (Ext.ComponentMgr.isRegistered(fieldRecord.editor_type)) {
+                    rowField.editor = {
+                        xtype: fieldRecord.editor_type
+                    };
+                } else {
+                    rowField.editor = {
+                        xtype: 'textfield'
+                    };
                 }
-                rowField.editor = {
-                    xtype: fieldRecord.editor_type
-                };
             }
             if (fieldRecord.name === 'pagetitle') {
                 rowField.renderer = {fn: _this._renderPageTitle, scope: _this};

@@ -1,5 +1,7 @@
 GridClassKey 1.0.1
 =================================================
+- [#68] Error egress when user put wrong editor_type
+- [#91] Documentation on Editor type (feature request)
 - [#97] Fix MODX version comparing issues
 
 GridClassKey 1.0.1-beta2 (July 14, 2014)
