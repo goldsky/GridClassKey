@@ -1,5 +1,10 @@
-GridClassKey 1.0.1
+GridClassKey 1.0.1-dev
 =================================================
+- [#99] fix different data types on action comparison
+
+GridClassKey 1.0.1-beta3 (July 27, 2014)
+=================================================
+- fix un/publish permission existence on JS's config
 - [#90] Delete button still exists for 'id' in settings > fields
 - [#68] Error egress when user put wrong editor_type
 - [#91] Documentation on Editor type (feature request)

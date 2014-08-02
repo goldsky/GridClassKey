@@ -140,7 +140,7 @@ switch ($modx->event->name) {
                 'namespace' => 'core',
                 'controller' => 'resource/update',
             ));
-            if ($action !== $createAction->get('id') && $action !== $editAction->get('id')) {
+            if (intval($action) !== $createAction->get('id') && intval($action) !== $editAction->get('id')) {
                 return false;
             }
         }
