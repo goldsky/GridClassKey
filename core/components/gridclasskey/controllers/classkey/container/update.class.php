@@ -88,6 +88,7 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
             assetsUrl: "' . $gridclasskeyAssetsUrl . '"
             , connectorUrl: "' . $connectorUrl . '"
         };
+        MODx.version_is22 = ' . version_compare('2.2.100', $this->modx->getOption('settings_version')) . ';
         MODx.config.publish_document = "' . $this->canPublish . '";
         MODx.onDocFormRender = "' . $this->onDocFormRender . '";
         MODx.ctx = "' . $this->resource->get('context_key') . '";

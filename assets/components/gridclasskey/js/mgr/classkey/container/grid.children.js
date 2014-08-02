@@ -1,6 +1,7 @@
 GridClassKey.grid.Children = function(config) {
     config = config || {};
 
+    var _this = this;
     var defaultFields = [{
             'name': 'id',
             'mapping': 'id'
@@ -76,7 +77,6 @@ GridClassKey.grid.Children = function(config) {
             && config.record.properties.gridclasskey.fields
             && config.record.properties.gridclasskey.fields.length > 0) {
 
-        var _this = this;
         Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord) {
             fields.push({
                 name: fieldRecord.name
@@ -197,13 +197,8 @@ GridClassKey.grid.Children = function(config) {
     if (MODx.perm['publish_document'] && MODx.perm['unpublish_document']) {
         actionItems.push({
             handler: function(grid, row, col) {
-                var _this = Ext.getCmp('gridclasskey-grid-children');
                 var rec = _this.store.getAt(row);
-                if (rec.get('published')) {
-                    _this.unpublishResource(rec.data);
-                } else {
-                    _this.publishResource(rec.data);
-                }
+                _this.publishResource(rec.data);
             },
             getClass: function(v, meta, rec) {
                 if (rec.get('published')) {
@@ -222,18 +217,17 @@ GridClassKey.grid.Children = function(config) {
     if (MODx.perm['delete_document'] && MODx.perm['undelete_document']) {
         actionItems.push({
             handler: function(grid, row, col) {
-                var _this = Ext.getCmp('gridclasskey-grid-children');
                 var rec = _this.store.getAt(row);
                 _this.removeResource(rec.data);
             },
             getClass: function(v, meta, rec) {
                 if (rec.get('deleted')) {
-                    this.items[2].tooltip = _('resource_undelete');
-                    this.items[2].altText = _('resource_undelete');
+                    this.items[3].tooltip = _('resource_undelete');
+                    this.items[3].altText = _('resource_undelete');
                     return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
                 } else {
-                    this.items[2].tooltip = _('resource_delete');
-                    this.items[2].altText = _('resource_delete');
+                    this.items[3].tooltip = _('resource_delete');
+                    this.items[3].altText = _('resource_delete');
                     return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
                 }
                 return;
@@ -308,7 +302,6 @@ GridClassKey.grid.Children = function(config) {
         , listeners: {
             'render': {
                 fn: function(cmp) {
-                    var _this = this;
                     new Ext.KeyMap(cmp.getEl(), {
                         key: Ext.EventObject.ENTER
                         , fn: function() {
@@ -446,11 +439,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }, {
                 text: publishTitle
                 , handler: function(btn, e) {
-                    if (this.menu.record.published === true) {
-                        this.unpublishResource(this.menu.record);
-                    } else {
-                        this.publishResource(this.menu.record);
-                    }
+                    this.publishResource(this.menu.record);
                 }
             }, {
                 text: _('resource_duplicate')
@@ -470,11 +459,11 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
     , removeResource: function(record) {
         var title = record.deleted ? _('resource_undelete') : _('resource_delete');
         var text = record.deleted ? _('resource_undelete_confirm') : _('resource_delete_confirm');
-        var action = record.deleted ? 'undelete' : 'delete';
+        var action = record.deleted ? (MODx.version_is22 < 0 ? 'resource/undelete' : 'undelete') : (MODx.version_is22 < 0 ? 'resource/delete' : 'delete');
         MODx.msg.confirm({
             title: title
             , text: text
-            , url: MODx.config.connectors_url + 'resource/index.php'
+            , url: MODx.config.connectors_url + (MODx.version_is22 < 0 ? 'index.php' : 'resource/index.php')
             , params: {
                 action: action
                 , id: record.id
@@ -488,22 +477,11 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
         });
     }
     , publishResource: function(record) {
+        var action = record.published ? (MODx.version_is22 < 0 ? 'resource/unpublish' : 'unpublish') : (MODx.version_is22 < 0 ? 'resource/publish' : 'publish');
         MODx.Ajax.request({
-            url: MODx.config.connectors_url + 'resource/index.php'
+            url: MODx.config.connectors_url + (MODx.version_is22 < 0 ? 'index.php' : 'resource/index.php')
             , params: {
-                action: 'publish'
-                , id: record.id
-            }
-            , listeners: {
-                'success': {fn: this.refresh, scope: this}
-            }
-        });
-    }
-    , unpublishResource: function(record) {
-        MODx.Ajax.request({
-            url: MODx.config.connectors_url + 'resource/index.php'
-            , params: {
-                action: 'unpublish'
+                action: action
                 , id: record.id
             }
             , listeners: {

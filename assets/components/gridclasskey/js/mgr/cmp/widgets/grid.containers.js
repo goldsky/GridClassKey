@@ -2,13 +2,78 @@ GridClassKey.grid.Containers = function(config) {
     config = config || {};
 
     var _this = this;
-    Ext.apply(config, {
+    var actionItems = [];
+    if (MODx.perm['edit_document']) {
+        actionItems.push({
+            iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
+            , tooltip: _('edit')
+            , altText: _('edit')
+            , handler: function(grid, row, col) {
+                var rec = this.store.getAt(row);
+                MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
+            },
+            scope: this
+        });
+    }
+    
+    actionItems.push({
+        iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
+        , tooltip: _('view')
+        , altText: _('view')
+        , handler: function(grid, row, col) {
+            var rec = this.store.getAt(row);
+            window.open(rec.get('preview_url'));
+        },
+        scope: this
+    });
+    
+    if (MODx.perm['publish_document'] && MODx.perm['unpublish_document']) {
+        actionItems.push({
+            handler: function(grid, row, col) {
+                var rec = _this.store.getAt(row);
+                _this.publishResource(rec.data);
+            },
+            getClass: function(v, meta, rec) {
+                if (rec.get('published')) {
+                    this.items[2].tooltip = _('resource_unpublish');
+                    this.items[2].altText = _('resource_unpublish');
+                    return 'icon-gridclasskey-mute icon-gridclasskey-actioncolumn-img';
+                } else {
+                    this.items[2].tooltip = _('resource_publish');
+                    this.items[2].altText = _('resource_publish');
+                    return 'icon-gridclasskey-publish icon-gridclasskey-actioncolumn-img';
+                }
+            }
+        });
+    }
+    
+    if (MODx.perm['delete_document'] && MODx.perm['undelete_document']) {
+        actionItems.push({
+            handler: function(grid, row, col) {
+                var rec = _this.store.getAt(row);
+                _this.removeResource(rec.data);
+            },
+            getClass: function(v, meta, rec) {
+                if (rec.get('deleted')) {
+                    this.items[3].tooltip = _('resource_undelete');
+                    this.items[3].altText = _('resource_undelete');
+                    return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
+                } else {
+                    this.items[3].tooltip = _('resource_delete');
+                    this.items[3].altText = _('resource_delete');
+                    return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
+                }
+            }
+        });
+    }
+
+    Ext.applyIf(config, {
         id: 'gridclasskey-grid-containers'
         , url: GridClassKey.config.connectorUrl
         , baseParams: {
             action: 'mgr/cmp/containers/getlist'
         }
-        , fields: ['id', 'pagetitle', 'deleted', 'published', 'action_edit', 'preview_url', 'properties'
+        , fields: ['id', 'pagetitle', 'deleted', 'published', 'action_edit', 'preview_url', 'context_key', 'properties'
                     , 'gridclasskey-property-grid-default_per_page', 'gridclasskey-property-fields'
                     , 'gridclasskey-property-grid-sortby', 'gridclasskey-property-grid-sortdir'
                     , 'gridclasskey-property-grid-css', 'gridclasskey-property-grid-top-js', 'gridclasskey-property-grid-bottom-js'
@@ -18,7 +83,7 @@ GridClassKey.grid.Containers = function(config) {
                     , 'gridclasskey-property-child-hidemenu', 'gridclasskey-property-child-searchable'
                     , 'gridclasskey-property-child-richtext', 'gridclasskey-property-child-cacheable'
                     , 'gridclasskey-property-child-deleted', 'gridclasskey-property-child-properties'
-                ]
+        ]
         , paging: true
         , remoteSort: true
         , autoExpandColumn: 'pagetitle'
@@ -64,44 +129,8 @@ GridClassKey.grid.Containers = function(config) {
                 , sortable: false
                 , editable: false
                 , fixed: true
-                , width: 86
-                , items: [
-                    {
-                        iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
-                        , tooltip: _('edit')
-                        , altText: _('edit')
-                        , handler: function(grid, row, col) {
-                            var rec = this.store.getAt(row);
-                            MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
-                        },
-                        scope: this
-                    }, {
-                        iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
-                        , tooltip: _('view')
-                        , altText: _('view')
-                        , handler: function(grid, row, col) {
-                            var rec = this.store.getAt(row);
-                            window.open(rec.get('preview_url'));
-                        },
-                        scope: this
-                    }, {
-                        handler: function(grid, row, col) {
-                            var rec = _this.store.getAt(row);
-                            _this.removeResource(rec.data);
-                        },
-                        getClass: function(v, meta, rec) {
-                            if (rec.get('deleted')) {
-                                this.items[2].tooltip = _('resource_undelete');
-                                this.items[2].altText = _('resource_undelete');
-                                return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
-                            } else {
-                                this.items[2].tooltip = _('resource_delete');
-                                this.items[2].altText = _('resource_delete');
-                                return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
-                            }
-                        }
-                    }
-                ]
+                , width: 107
+                , items: actionItems
             }
         ]
         , tbar: [
@@ -168,11 +197,7 @@ Ext.extend(GridClassKey.grid.Containers, MODx.grid.Grid, {
             }, {
                 text: publishTitle
                 , handler: function(btn, e) {
-                    if (this.menu.record.published === true) {
-                        this.unpublishResource(this.menu.record);
-                    } else {
-                        this.publishResource(this.menu.record);
-                    }
+                    this.publishResource(this.menu.record);
                 }
             }, {
                 text: _('resource_duplicate')
@@ -208,7 +233,7 @@ Ext.extend(GridClassKey.grid.Containers, MODx.grid.Grid, {
         updateSettingWindow.setValues(this.menu.record);
         updateSettingWindow.show(e.target);
         var _this = this;
-        updateSettingWindow.on('success', function(o){
+        updateSettingWindow.on('success', function(o) {
             _this.refresh();
         });
     }
@@ -218,44 +243,79 @@ Ext.extend(GridClassKey.grid.Containers, MODx.grid.Grid, {
     , removeResource: function(record) {
         var title = record.deleted ? _('resource_undelete') : _('resource_delete');
         var text = record.deleted ? _('resource_undelete_confirm') : _('resource_delete_confirm');
-        var action = record.deleted ? 'undelete' : 'delete';
+        var action = record.deleted ? (MODx.version_is22 < 0 ? 'resource/undelete' : 'undelete') : (MODx.version_is22 < 0 ? 'resource/delete' : 'delete');
         MODx.msg.confirm({
             title: title
             , text: text
-            , url: MODx.config.connectors_url + 'resource/index.php'
+            , url: MODx.config.connectors_url + (MODx.version_is22 < 0 ? 'index.php' : 'resource/index.php')
             , params: {
                 action: action
                 , id: record.id
             }
             , listeners: {
                 'success': {
-                    fn: this.refresh,
+                    fn: function(response){
+                        this.refresh();
+                        var t = Ext.getCmp('modx-resource-tree');
+                        if (t) {
+                            var treeNode = t.getNodeById(record.context_key + '_' + record.id);
+                            var ui = treeNode.getUI();
+                            
+                            if (record.deleted) {
+                                ui.removeClass('deleted');
+                            } else {
+                                ui.addClass('deleted');
+                            }
+                            treeNode.cascade(function(nd) {
+                                nd.getUI().addClass('deleted');
+                                if (record.deleted) {
+                                    nd.getUI().removeClass('deleted');
+                                } else {
+                                    nd.getUI().addClass('deleted');
+                                }
+                            }, t);
+                            Ext.get(ui.getEl()).frame();
+                        }
+                    },
                     scope: this
                 }
             }
         });
     }
-    , publishResource: function(btn, e) {
+    , publishResource: function(record) {
+        var action = record.published ? (MODx.version_is22 < 0 ? 'resource/unpublish' : 'unpublish') : (MODx.version_is22 < 0 ? 'resource/publish' : 'publish');
         MODx.Ajax.request({
-            url: MODx.config.connectors_url + 'resource/index.php'
+            url: MODx.config.connectors_url + (MODx.version_is22 < 0 ? 'index.php' : 'resource/index.php')
             , params: {
-                action: 'publish'
-                , id: this.menu.record.id
+                action: action
+                , id: record.id
             }
             , listeners: {
-                'success': {fn: this.refresh, scope: this}
-            }
-        });
-    }
-    , unpublishResource: function(btn, e) {
-        MODx.Ajax.request({
-            url: MODx.config.connectors_url + 'resource/index.php'
-            , params: {
-                action: 'unpublish'
-                , id: this.menu.record.id
-            }
-            , listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {
+                    fn: function(response){
+                        this.refresh();
+                        var t = Ext.getCmp('modx-resource-tree');
+                        if (t) {
+                            var treeNode = t.getNodeById(record.context_key + '_' + record.id);
+                            var ui = treeNode.getUI();
+                            
+                            if (record.published) {
+                                ui.addClass('unpublished');
+                            } else {
+                                ui.removeClass('unpublished');
+                            }
+                            treeNode.cascade(function(nd) {
+                                if (record.published) {
+                                    nd.getUI().addClass('unpublished');
+                                } else {
+                                    nd.getUI().removeClass('unpublished');
+                                }
+                            }, t);
+                            Ext.get(ui.getEl()).frame();
+                        }
+                    },
+                    scope: this
+                }
             }
         });
     }

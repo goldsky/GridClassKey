@@ -1,5 +1,7 @@
 GridClassKey 1.0.1-dev
 =================================================
+- [#100] Delete/undelete icon doesn't work in Revo 2.3.1
+- Update permissions in CMP
 - add Static Grid Container
 - [#99] fix different data types on action comparison
 

@@ -54,6 +54,12 @@ class GridClassKeyCmpHomeManagerController extends GridClassKeyManagerController
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/panel.home.js' . $withVersion);
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/sections/index.js' . $withVersion);
         $this->addHtml('<script type="text/javascript">
+        MODx.version_is22 = ' . version_compare('2.2.100', $this->modx->getOption('settings_version')) . ';
+        MODx.perm["edit_document"] = ' . ($this->modx->hasPermission('edit_document') ? 1 : 0) . ';
+        MODx.perm["delete_document"] = ' . ($this->modx->hasPermission('delete_document') ? 1 : 0) . ';
+        MODx.perm["undelete_document"] = ' . ($this->modx->hasPermission('undelete_document') ? 1 : 0) . ';
+        MODx.perm["publish_document"] = ' . ($this->modx->hasPermission('publish_document') ? 1 : 0) . ';
+        MODx.perm["unpublish_document"] = ' . ($this->modx->hasPermission('unpublish_document') ? 1 : 0) . ';
         Ext.onReady(function() {
             MODx.load({xtype: "gridclasskey-page-home"});
         });

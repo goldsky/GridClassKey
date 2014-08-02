@@ -70,7 +70,8 @@ class ContainersGetListProccessor extends modObjectGetListProcessor {
         }
 
         $c->where(array(
-            'class_key' => 'GridContainer'
+            'class_key:=' => 'GridContainer',
+            'OR:class_key:=' => 'StaticGridContainer',
         ));
 
         return $c;
@@ -85,7 +86,7 @@ class ContainersGetListProccessor extends modObjectGetListProcessor {
         $resourceArray = parent::prepareRow($object);
 
         foreach ($resourceArray as $field => $value) {
-            if (!in_array($field, array('id', 'pagetitle', 'published', 'deleted', 'hidemenu', 'isfolder', 'publishedon', 'properties'))) {
+            if (!in_array($field, array('id', 'pagetitle', 'published', 'deleted', 'hidemenu', 'isfolder', 'publishedon', 'context_key', 'properties'))) {
                 unset($resourceArray[$field]);
                 continue;
             }
