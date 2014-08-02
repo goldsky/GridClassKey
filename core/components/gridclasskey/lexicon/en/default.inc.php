@@ -29,9 +29,12 @@ $_lang['setting_gridclasskey.unhide_children_in_tree_limit'] = 'Limit number of 
 $_lang['setting_gridclasskey.unhide_children_in_tree_limit_desc'] = 'Limit number of children to be shown again on the resource tree. Too many children will break the manager.';
 
 $_lang['gridclasskey'] = 'Grid Container';
+$_lang['gridclasskey.static_container'] = 'Static Grid Container';
+$_lang['gridclasskey.static_container_create_here'] = 'Create a Static Grid Container Here';
 $_lang['gridclasskey.management_desc'] = 'Managing the Grid Containers';
 $_lang['gridclasskey.container_create_here'] = 'Create a Grid Container Here';
 $_lang['gridclasskey.container_new'] = 'New Grid Container';
+$_lang['gridclasskey.static_container_new'] = 'New Static Grid Container';
 $_lang['gridclasskey.container_update'] = 'Update Grid Container';
 $_lang['gridclasskey.children'] = 'Children';
 $_lang['gridclasskey.longtitle'] = 'Long Title';

@@ -2,6 +2,10 @@
     background-image: url(../icons/grid_folder.png) !important;
     background-repeat: no-repeat;
 }
+.icon-staticgridcontainer .x-tree-node-icon {
+    background-image: url(../icons/grid_folder_gear.png) !important;
+    background-repeat: no-repeat;
+}
 
 .icon-gridclasskey-document-edit {
     background-image: url(../icons/page_white_edit.png) !important;

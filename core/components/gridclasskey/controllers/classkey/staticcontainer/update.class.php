@@ -33,7 +33,7 @@ if(!class_exists('ResourceUpdateManagerController')) {
 /**
  * @package gridclasskey
  */
-class GridContainerUpdateManagerController extends ResourceUpdateManagerController {
+class StaticGridContainerUpdateManagerController extends ResourceUpdateManagerController {
 
     public function loadCustomCssJs() {
         $managerUrl = $this->context->getOption('manager_url', MODX_MANAGER_URL, $this->modx->_userConfig);
@@ -77,7 +77,8 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.childrenresource.security.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.children.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js' . $withVersion);
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.updatecontainer.js' . $withVersion);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.static.js' . $withVersion);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.updatecontainer.static.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.actions.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.advancedsearch.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.advancedsearch.js' . $withVersion);

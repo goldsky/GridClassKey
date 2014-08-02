@@ -5,4 +5,8 @@ $xpdo_meta_map = array (
   array (
     0 => 'GridContainer',
   ),
+  'modStaticResource' => 
+  array (
+    0 => 'StaticGridContainer',
+  ),
 );

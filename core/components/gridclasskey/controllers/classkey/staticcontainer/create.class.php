@@ -26,14 +26,17 @@
 /**
  * @var modX $modx
  */
-if(!class_exists('ResourceUpdateManagerController')) {
-    require_once $modx->getOption('manager_path', null, MODX_MANAGER_PATH) . 'controllers/default/resource/update.class.php';
+if(!class_exists('ResourceCreateManagerController')) {
+    require_once $modx->getOption('manager_path', null, MODX_MANAGER_PATH) . 'controllers/default/resource/create.class.php';
 }
 
 /**
  * @package gridclasskey
  */
-class GridContainerUpdateManagerController extends ResourceUpdateManagerController {
+class StaticGridContainerCreateManagerController extends ResourceCreateManagerController {
+
+    /** @var GridContainer $resource */
+    public $resource;
 
     public function loadCustomCssJs() {
         $managerUrl = $this->context->getOption('manager_url', MODX_MANAGER_URL, $this->modx->_userConfig);
@@ -43,6 +46,13 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $connectorUrl = $gridclasskeyAssetsUrl . 'connector.php';
         $gridclasskeyJsUrl = $gridclasskeyAssetsUrl . 'js/';
 
+        $this->addJavascript($managerUrl . 'assets/modext/util/datetime.js');
+        $this->addJavascript($managerUrl . 'assets/modext/widgets/element/modx.panel.tv.renders.js');
+        $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.grid.resource.security.js');
+        $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.tv.js');
+        $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
+        $this->addJavascript($managerUrl . 'assets/modext/sections/resource/create.js');
+        
         $defaultGridClassKeyCorePath = $this->modx->getOption('core_path') . 'components/gridclasskey/';
         $gridclasskeyCorePath = $this->modx->getOption('gridclasskey.core_path', null, $defaultGridClassKeyCorePath);
         $gridclasskey = $this->modx->getService('gridclasskey', 'GridClassKey', $gridclasskeyCorePath . 'model/', $scriptProperties);
@@ -54,16 +64,6 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $version = str_replace(' ', '',$gridclasskey->config['version']);
         $isJsCompressed = $this->modx->getOption('compress_js');
         $withVersion = $isJsCompressed? '' : '?v=' . $version;
-        $settings = $this->resource->getProperties('gridclasskey');
-        if (!empty($settings['grid-top-js'])) {
-            $this->addJavascript($settings['grid-top-js'] . '' . $withVersion);
-        }
-        $this->addJavascript($managerUrl . 'assets/modext/util/datetime.js');
-        $this->addJavascript($managerUrl . 'assets/modext/widgets/element/modx.panel.tv.renders.js');
-        $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.grid.resource.security.js');
-        $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.tv.js');
-        $this->addJavascript($managerUrl . 'assets/modext/widgets/resource/modx.panel.resource.js');
-        $this->addJavascript($managerUrl . 'assets/modext/sections/resource/update.js');
         $this->addJavascript($gridclasskeyJsUrl . 'mgr/gridclasskey.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.settings.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/combo.template.js' . $withVersion);
@@ -75,12 +75,11 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.combo.mainfields.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.gridsettings.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.childrenresource.security.js' . $withVersion);
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.children.js' . $withVersion);
         $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.js' . $withVersion);
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.updatecontainer.js' . $withVersion);
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.actions.js' . $withVersion);
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/grid.advancedsearch.js' . $withVersion);
-        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/window.advancedsearch.js' . $withVersion);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/panel.container.static.js' . $withVersion);
+        $this->addLastJavascript($gridclasskeyJsUrl . 'mgr/classkey/container/page.createcontainer.static.js' . $withVersion);
+        
+        $this->prepareResource();
         $this->addHtml('
         <script type="text/javascript">
         // <![CDATA[
@@ -93,37 +92,25 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
         MODx.ctx = "' . $this->resource->get('context_key') . '";
         MODx.perm["gridclasskey.batch_actions"] = ' . ($this->modx->hasPermission('gridclasskey.batch_actions') ? 1 : 0) . ';
         MODx.perm["gridclasskey.advanced_search"] = ' . ($this->modx->hasPermission('gridclasskey.advanced_search') ? 1 : 0) . ';
-        MODx.perm["new_document"] = ' . ($this->modx->hasPermission('new_document') ? 1 : 0) . ';
-        MODx.perm["edit_document"] = ' . ($this->modx->hasPermission('edit_document') ? 1 : 0) . ';
-        MODx.perm["delete_document"] = ' . ($this->modx->hasPermission('delete_document') ? 1 : 0) . ';
-        MODx.perm["undelete_document"] = ' . ($this->modx->hasPermission('undelete_document') ? 1 : 0) . ';
-        MODx.perm["publish_document"] = ' . ($this->modx->hasPermission('publish_document') ? 1 : 0) . ';
-        MODx.perm["unpublish_document"] = ' . ($this->modx->hasPermission('unpublish_document') ? 1 : 0) . ';
         Ext.onReady(function() {
             MODx.load({
-                xtype: "gridclasskey-page-container-update"
+                xtype: "gridclasskey-page-container-create"
                 ,resource: "' . $this->resource->get('id') . '"
                 ,record: ' . $this->modx->toJSON($this->resourceArray) . '
                 ,publish_document: "' . $this->canPublish . '"
-                ,preview_url: "' . $this->previewUrl . '"
-                ,locked: ' . ($this->locked ? 1 : 0) . '
-                ,lockedText: "' . $this->lockedText . '"
                 ,canSave: ' . ($this->canSave ? 1 : 0) . '
                 ,canEdit: ' . ($this->canEdit ? 1 : 0) . '
                 ,canCreate: ' . ($this->canCreate ? 1 : 0) . '
                 ,canDuplicate: ' . ($this->canDuplicate ? 1 : 0) . '
                 ,canDelete: ' . ($this->canDelete ? 1 : 0) . '
                 ,show_tvs: ' . (!empty($this->tvCounts) ? 1 : 0) . '
-                ,mode: "update"
+                ,mode: "create"
             });
         });
         // ]]>
         </script>');
         /* load RTE */
         $this->loadRichTextEditor();
-        if (!empty($settings['grid-bottom-js'])) {
-            $this->addLastJavascript($settings['grid-bottom-js']);
-        }
     }
 
     public function getLanguageTopics() {
@@ -141,7 +128,22 @@ class GridContainerUpdateManagerController extends ResourceUpdateManagerControll
             foreach ($settings as $k => $v) {
                 $this->resourceArray['gridclasskey-property-' . $k] = $v;
             }
+        } elseif ($this->parent) {
+            $parentSettings = $this->parent->getProperties('gridclasskey');
+            if (is_array($parentSettings) && isset($parentSettings['child-properties'])) {
+                $settings = json_decode($parentSettings['child-properties'], 1);
+                $this->resourceArray['properties'] = $settings;
+                if (isset($settings['gridclasskey']) && !empty($settings['gridclasskey'])) {
+                    foreach ($settings['gridclasskey'] as $k => $v) {
+                        $this->resourceArray['gridclasskey-property-' . $k] = $v;
+                    }
+                }
+            }
         }
+    }
+
+    public function getPageTitle() {
+        return $this->modx->lexicon('gridclasskey.static_container_new');
     }
 
 }

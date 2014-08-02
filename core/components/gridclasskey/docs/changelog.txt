@@ -1,5 +1,6 @@
 GridClassKey 1.0.1-dev
 =================================================
+- add Static Grid Container
 - [#99] fix different data types on action comparison
 
 GridClassKey 1.0.1-beta3 (July 27, 2014)
