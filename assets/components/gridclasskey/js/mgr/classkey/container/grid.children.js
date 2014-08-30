@@ -109,10 +109,27 @@ GridClassKey.grid.Children = function(config) {
                     && fieldRecord.output_filter === ''
                     || fieldRecord.output_filter === null
                     ) {
+                // @link https://github.com/goldsky/GridClassKey/issues/104#issuecomment-52289593
+                //First we check if this is maybe a JSON record
+                var jsonData = null;
+                try {
+                    jsonData = Ext.decode(fieldRecord.editor_type);
+                } catch (e) {
+                    //Nothing to do, we just know it's not JSON record
+                }
+                if (jsonData !== null) {
+                    //We assign the editor_type back to it's type to check if it is registered
+                    fieldRecord.editor_type = jsonData.xtype;
+                }
                 if (Ext.ComponentMgr.isRegistered(fieldRecord.editor_type)) {
-                    rowField.editor = {
-                        xtype: fieldRecord.editor_type
-                    };
+                    if (jsonData !== null) {
+                        //We have an editor object
+                        rowField.editor = jsonData;
+                    } else {
+                        rowField.editor = {
+                            xtype: fieldRecord.editor_type
+                        };
+                    }
                 } else {
                     rowField.editor = {
                         xtype: 'textfield'

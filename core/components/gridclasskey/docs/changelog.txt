@@ -1,5 +1,6 @@
 GridClassKey 1.0.1-dev
 =================================================
+- [#104] FR: field editor as json-params 
 - refresh grid after row editing
 - [#103][#104] fix Inline Editing Not working MODx 2.3
 - avoid duplicate values on advanced search grid
