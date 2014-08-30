@@ -1,4 +1,4 @@
-GridClassKey 1.0.1-dev
+GridClassKey 1.0.1-rc1 (August 30, 2014)
 =================================================
 - [#104] FR: field editor as json-params 
 - refresh grid after row editing
