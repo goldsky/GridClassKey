@@ -21,6 +21,13 @@ GridClassKey.panel.MainFieldsCombo = function(config) {
                         store = targetGrid.getStore();
                 var fieldsCombo = Ext.getCmp(config.id + '-combo');
                 var comboValue = fieldsCombo.getValue();
+                var array = [];
+                Ext.each(store.data.items, function(item){
+                    array.push(item.data.name);
+                });
+                if (indexOf.call(array, comboValue) !== -1) {
+                    return false;
+                }
                 if (comboValue) {
                     var r = new store.recordType({"sort": store.getCount() + 1, "name": comboValue, "type": "main"}); 
                     r.commit();

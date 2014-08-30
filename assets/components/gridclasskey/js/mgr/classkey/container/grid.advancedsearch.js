@@ -13,7 +13,6 @@ GridClassKey.grid.AdvancedSearch = function(config) {
             , emptyText: config.emptyText || _('gridclasskey.empty')
         }
         , enableDragDrop: true
-        , data: []
         , deferredRender: true
         , preventRender: true
         , autoHeight: true
@@ -40,18 +39,8 @@ GridClassKey.grid.AdvancedSearch = function(config) {
                         , altText: _('delete')
                         , tooltip: _('delete')
                         , handler: function(grid, row, col) {
-                            var rec = this.store.getAt(row),
-                                    dataLn = this.data.length,
-                                    newArr = [], i;
-                            for (i = 0; i < dataLn; i++) {
-                                if (i === row) {
-                                    continue;
-                                }
-                                newArr.push(this.data[i]);
-                            }
-                            this.data = newArr;
-                            this.getStore().loadData(this.data);
-                            this.getView().refresh();
+                            var rec = this.store.getAt(row);
+                            grid.getStore().remove(rec);
                         }
                         , scope: this
                     }
@@ -71,8 +60,7 @@ GridClassKey.grid.AdvancedSearch = function(config) {
 };
 Ext.extend(GridClassKey.grid.AdvancedSearch, MODx.grid.LocalGrid, {
     clearGrid: function(btn, e) {
-        this.data = [];
-        this.getStore().loadData(this.data);
+        this.getStore().loadData([],false);
         this.getView().refresh();
     }
 });

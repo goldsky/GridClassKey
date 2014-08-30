@@ -1,5 +1,10 @@
 GridClassKey 1.0.1-dev
 =================================================
+- avoid duplicate values on advanced search grid
+- bugfix Removing Field Criteria removes all
+
+GridClassKey 1.0.1-beta4 (August 12, 2014)
+=================================================
 - [#100] Delete/undelete icon doesn't work in Revo 2.3.1
 - Update permissions in CMP
 - add Static Grid Container
