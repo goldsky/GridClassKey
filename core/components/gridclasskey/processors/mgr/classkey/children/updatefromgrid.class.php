@@ -81,6 +81,7 @@ class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProc
                 case 'autotag':
                     // --- MODIFIED for GCK
                     $value = array_map('trim', @explode(',', $value));
+                    $value = @implode(',',$value);
                     break;
                 default:
                     /* handles checkboxes & multiple selects elements */
