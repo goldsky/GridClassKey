@@ -50,7 +50,8 @@ switch ($modx->event->name) {
             if ($numChildren > $limit) {
                 return;
             }
-            if ($classKey !== 'GridContainer' &&
+            if (($classKey !== 'GridContainer' &&
+                    $classKey !== 'StaticGridContainer') &&
                     $isHideChildren == 1
             ) {
                 $properties = $resource->get('properties');
@@ -67,7 +68,10 @@ switch ($modx->event->name) {
         }
         $parentId = filter_input(INPUT_GET, 'parent', FILTER_VALIDATE_INT);
         $parentResource = $modx->getObject('modResource', $parentId);
-        if (!$parentResource || $parentResource->get('class_key') !== 'GridContainer') {
+        if (!$parentResource ||
+                ($parentResource->get('class_key') !== 'GridContainer' &&
+                $parentResource->get('class_key') !== 'StaticGridContainer')
+        ) {
             return;
         }
         $parentProperties = $parentResource->getProperties('gridclasskey');
@@ -144,7 +148,7 @@ switch ($modx->event->name) {
                 return false;
             }
         }
-        
+
         $docId = isset($_GET['id']) ? intval($_GET['id']) : '';
         $parentId = isset($_GET['parent']) ? intval($_GET['parent']) : '';
         if (empty($docId) && empty($parentId)) {
@@ -154,7 +158,7 @@ switch ($modx->event->name) {
         if ($resource) {
             if (!empty($docId)) {
                 $classKey = $resource->get('class_key');
-                if ($classKey === 'GridContainer') {
+                if ($classKey === 'GridContainer' || $classKey === 'StaticGridContainer') {
                     $properties = $resource->getProperties('gridclasskey');
                     if ($properties['grid-css']) {
                         $modx->regClientCSS($properties['grid-css']);
@@ -167,7 +171,10 @@ switch ($modx->event->name) {
         }
 
         $parentResource = $modx->getObject('modResource', $parentId);
-        if (!$parentResource || $parentResource->get('class_key') !== 'GridContainer') {
+        if (!$parentResource || 
+                ($parentResource->get('class_key') !== 'GridContainer' &&
+                $parentResource->get('class_key') !== 'StaticGridContainer')
+        ) {
             return;
         }
         $modx->lexicon->load('gridclasskey:default');
