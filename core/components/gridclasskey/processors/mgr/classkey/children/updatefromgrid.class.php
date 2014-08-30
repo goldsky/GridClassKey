@@ -27,6 +27,8 @@ require_once MODX_CORE_PATH . 'model/modx/processors/resource/updatefromgrid.cla
 
 class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProcessor {
 
+    protected $selectedTVFields = array();
+
     /**
      * Override in your derivative class to do functionality after save() is run
      * @return boolean
@@ -37,9 +39,9 @@ class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProc
         $mainFields = $this->modx->getSelectColumns('modResource');
         $mainFields = str_replace('`', '', $mainFields);
         $mainFields = array_map('trim', @explode(',', $mainFields));
-        $tvFields = array_diff(array_keys($props), $mainFields);
-        
-        foreach ($tvFields as $tvName) {
+        $this->selectedTVFields = array_diff(array_keys($props), $mainFields);
+
+        foreach ($this->selectedTVFields as $tvName) {
             $tv = $this->modx->getObject('modTemplateVar', array(
                 'name' => $tvName,
             ));
@@ -54,7 +56,7 @@ class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProc
                 continue;
             }
 
-            $tvKey = 'tv'.$tv->get('id');
+            $tvKey = 'tv' . $tv->get('id');
             // --- MODIFIED for GCK
             $value = $props[$tvName];
             /* set value of TV */
@@ -67,31 +69,33 @@ class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProc
             /* validation for different types */
             switch ($tv->get('type')) {
                 case 'url':
-                    $prefix = $this->getProperty($tvKey.'_prefix','');
+                    $prefix = $this->getProperty($tvKey . '_prefix', '');
                     if ($prefix != '--') {
-                        $value = str_replace(array('ftp://','http://'),'', $value);
-                        $value = $prefix.$value;
+                        $value = str_replace(array('ftp://', 'http://'), '', $value);
+                        $value = $prefix . $value;
                     }
                     break;
                 case 'date':
-                    $value = empty($value) ? '' : strftime('%Y-%m-%d %H:%M:%S',strtotime($value));
+                    $value = empty($value) ? '' : strftime('%Y-%m-%d %H:%M:%S', strtotime($value));
                     break;
                 /* ensure tag types trim whitespace from tags */
                 case 'tag':
                 case 'autotag':
                     // --- MODIFIED for GCK
                     $value = array_map('trim', @explode(',', $value));
-                    $value = @implode(',',$value);
+                    $value = @implode(',', $value);
                     break;
                 default:
                     /* handles checkboxes & multiple selects elements */
                     if (is_array($value)) {
                         $featureInsert = array();
                         while (list($featureValue, $featureItem) = each($value)) {
-                            if(empty($featureItem)) { continue; }
+                            if (empty($featureItem)) {
+                                continue;
+                            }
                             $featureInsert[count($featureInsert)] = $featureItem;
                         }
-                        $value = implode('||',$featureInsert);
+                        $value = implode('||', $featureInsert);
                     }
                     // --- MODIFIED for GCK
                     else {
@@ -99,31 +103,31 @@ class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProc
                         // getting values from 'default' output
                         $value = array_map('trim', @explode('||', $value));
                         $value = array_unique($value);
-                        $value = @implode('||',$value);
+                        $value = @implode('||', $value);
                     }
                     break;
             }
 
             /* if different than default and set, set TVR record */
-            $default = $tv->processBindings($tv->get('default_text'),$this->object->get('id'));
-            if (strcmp($value,$default) != 0) {
+            $default = $tv->processBindings($tv->get('default_text'), $this->object->get('id'));
+            if (strcmp($value, $default) != 0) {
                 /* update the existing record */
-                $tvc = $this->modx->getObject('modTemplateVarResource',array(
+                $tvc = $this->modx->getObject('modTemplateVarResource', array(
                     'tmplvarid' => $tv->get('id'),
                     'contentid' => $this->object->get('id'),
                 ));
                 if ($tvc == null) {
                     /** @var modTemplateVarResource $tvc add a new record */
                     $tvc = $this->modx->newObject('modTemplateVarResource');
-                    $tvc->set('tmplvarid',$tv->get('id'));
-                    $tvc->set('contentid',$this->object->get('id'));
+                    $tvc->set('tmplvarid', $tv->get('id'));
+                    $tvc->set('contentid', $this->object->get('id'));
                 }
-                $tvc->set('value',$value);
+                $tvc->set('value', $value);
                 $tvc->save();
 
-            /* if equal to default value, erase TVR record */
+                /* if equal to default value, erase TVR record */
             } else {
-                $tvc = $this->modx->getObject('modTemplateVarResource',array(
+                $tvc = $this->modx->getObject('modTemplateVarResource', array(
                     'tmplvarid' => $tv->get('id'),
                     'contentid' => $this->object->get('id'),
                 ));
@@ -132,8 +136,53 @@ class GridContainerUpdateFromGridProcessor extends modResourceUpdateFromGridProc
                 }
             }
         }
-        
+
         return true;
+    }
+
+    /**
+     * Return the success message
+     * @return array
+     */
+    public function cleanup() {
+        $resourceArray = $this->object->toArray();
+        $parentProperties = $this->object->getOne('Parent')->getProperties('gridclasskey');
+
+        if ($parentProperties) {
+            $selectedFields = array();
+            foreach ($parentProperties['fields'] as $field) {
+                $selectedFields = array_merge($selectedFields, (array) $field['name']);
+            }
+        } else {
+            $selectedFields = array('id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published', 'hidemenu');
+        }
+
+        foreach ($resourceArray as $field => $value) {
+            if (!in_array($field, $selectedFields) &&
+                    $field !== 'published' &&
+                    $field !== 'deleted' &&
+                    $field !== 'hidemenu' &&
+                    $field !== 'context_key' &&
+                    $field !== 'isfolder'
+            ) {
+                unset($resourceArray[$field]);
+                continue;
+            }
+            // avoid null on returns
+            $resourceArray[$field] = $resourceArray[$field] !== null ? $resourceArray[$field] : '';
+        }
+
+        if (!empty($this->selectedTVFields)) {
+            foreach ($this->selectedTVFields as $tv) {
+                $matches = null;
+                preg_match('/(.*)_output/', $tv, $matches);
+                if (!empty($matches)) {
+                    $resourceArray[$matches[1] . '_output'] = $this->object->getTVValue($matches[1]);
+                }
+            }
+        }
+
+        return $this->success('', $resourceArray);
     }
 
 }

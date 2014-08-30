@@ -1,5 +1,7 @@
 GridClassKey 1.0.1-dev
 =================================================
+- refresh grid after row editing
+- [#103][#104] fix Inline Editing Not working MODx 2.3
 - avoid duplicate values on advanced search grid
 - bugfix Removing Field Criteria removes all
 

@@ -24,6 +24,9 @@ GridClassKey.grid.Children = function(config) {
             'name': 'hidemenu',
             'mapping': 'hidemenu'
         }, {
+            'name': 'context_key',
+            'mapping': 'context_key'
+        }, {
             'name': 'publishedon_date',
             'mapping': 'publishedon_date'
         }, {
@@ -132,6 +135,12 @@ GridClassKey.grid.Children = function(config) {
         });
 
         // Because Ext overrides the default Array, we can not use concat(), and this ExtJS 3 doesn't have Ext.Array singleton!
+        if (fields.indexOf({name: 'context_key', mapping: 'context_key'}) === -1) {
+            fields.push({
+                name: 'context_key'
+                , mapping: 'context_key'
+            });
+        }
         if (fields.indexOf({name: 'published', mapping: 'published'}) === -1) {
             fields.push({
                 name: 'published'
@@ -170,7 +179,7 @@ GridClassKey.grid.Children = function(config) {
     }
 
     var actionItems = [];
-    
+
     if (MODx.perm['edit_document']) {
         actionItems.push(
                 {
@@ -193,7 +202,7 @@ GridClassKey.grid.Children = function(config) {
             scope: this
         });
     }
-    
+
     if (MODx.perm['publish_document'] && MODx.perm['unpublish_document']) {
         actionItems.push({
             handler: function(grid, row, col) {
@@ -213,7 +222,7 @@ GridClassKey.grid.Children = function(config) {
             }
         });
     }
-    
+
     if (MODx.perm['delete_document'] && MODx.perm['undelete_document']) {
         actionItems.push({
             handler: function(grid, row, col) {
@@ -390,6 +399,7 @@ GridClassKey.grid.Children = function(config) {
         }
         , save_action: 'mgr/classkey/children/updateFromGrid'
         , autosave: true
+        , preventSaveRefresh: false
         , sm: checkBoxSelMod
         , columns: columns
         , tbar: topBar
