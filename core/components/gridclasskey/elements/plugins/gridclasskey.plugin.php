@@ -149,9 +149,9 @@ switch ($modx->event->name) {
             }
         }
 
-        $docId = isset($_GET['id']) ? intval($_GET['id']) : '';
-        $parentId = isset($_GET['parent']) ? intval($_GET['parent']) : '';
-        if (empty($docId) && empty($parentId)) {
+        $docId = isset($_GET['id']) ? intval($_GET['id']) : null;
+        $parentId = isset($_GET['parent']) ? intval($_GET['parent']) : null;
+        if (isset($docId) && isset($parentId)) {
             return false;
         }
         $resource = $modx->getObject('modResource', $docId);
