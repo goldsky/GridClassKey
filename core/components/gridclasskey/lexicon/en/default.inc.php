@@ -26,7 +26,7 @@
 $_lang['setting_gridclasskey.mgr_css'] = 'Additional CSS file on manager loading';
 $_lang['setting_gridclasskey.mgr_css_desc'] = 'This CSS file will only override (not replace) the default: {assets_url}components/gridclasskey/css/mgr.css';
 $_lang['setting_gridclasskey.unhide_children_in_tree_limit'] = 'Limit number of children to revert them to tree';
-$_lang['setting_gridclasskey.unhide_children_in_tree_limit_desc'] = 'Limit number of children to be shown again on the resource tree. Too many children will break the manager.';
+$_lang['setting_gridclasskey.unhide_children_in_tree_limit_desc'] = 'Limit number of children to be shown again on the resource tree. Too many children will break the manager. Put 0 (zero) to disable limit.';
 
 $_lang['gridclasskey'] = 'Grid Container';
 $_lang['gridclasskey.static_container'] = 'Static Grid Container';

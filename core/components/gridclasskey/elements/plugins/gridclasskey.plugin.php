@@ -42,20 +42,19 @@ switch ($modx->event->name) {
                 'parent' => $resourceId,
             ));
             $limit = (int) $modx->getOption('gridclasskey.unhide_children_in_tree_limit');
-            if (empty($limit) || !is_numeric($limit)) {
-                $limit = 20;
-            }
-            $c->limit($limit + 1);
-            $numChildren = $modx->getCount($classKey, $c);
-            if ($numChildren > $limit) {
-                return;
+            if (!empty($limit)) {
+                $c->limit($limit + 1);
+                $numChildren = $modx->getCount($classKey, $c);
+                if ($numChildren > $limit) {
+                    return;
+                }
             }
             if (($classKey !== 'GridContainer' &&
                     $classKey !== 'StaticGridContainer') &&
                     $isHideChildren == 1
             ) {
                 $properties = $resource->get('properties');
-                if (!isset($properties['gridclasskey']) || empty($properties['gridclasskey'])) {
+                if ($properties['gridclasskey']) {
                     $resource->set('hide_children_in_tree', 0);
                     $resource->save();
                 }
