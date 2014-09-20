@@ -1,7 +1,7 @@
 GridClassKey.panel.Settings = function(config) {
     config = config || {};
 
-    Ext.apply(config, {
+    Ext.applyIf(config, {
         id: 'gridclasskey-panel-settings'
         , forceLayout: true
         , deferredRender: false
@@ -537,7 +537,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , hideLabel: true
                                                 , name: 'gridclasskey-property-child-deleted'
                                                 , inputValue: 1
-                                                , checked: parseInt(config.record['gridclasskey-property-child-deleted']) || false
+                                                , checked: parseInt(config.record['gridclasskey-property-child-deleted']) || 0
                                             }
                                         ]
                                     }

@@ -28,7 +28,7 @@
 class GridClassKey {
 
     const VERSION = '1.0.1';
-    const RELEASE = 'rc1';
+    const RELEASE = 'rc2';
 
     /**
      * modX object

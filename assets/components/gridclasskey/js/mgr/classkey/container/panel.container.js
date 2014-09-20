@@ -1,6 +1,8 @@
 GridClassKey.panel.Container = function(config) {
     config = config || {};
-
+    Ext.applyIf(config,{
+        class_key: 'GridContainer'
+    });
     GridClassKey.panel.Container.superclass.constructor.call(this, config);
 };
 

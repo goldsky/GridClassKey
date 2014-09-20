@@ -55,7 +55,7 @@ switch ($modx->event->name) {
                     $isHideChildren == 1
             ) {
                 $properties = $resource->get('properties');
-                if ($properties['gridclasskey'] || empty($properties['gridclasskey'])) {
+                if (!isset($properties['gridclasskey']) || empty($properties['gridclasskey'])) {
                     $resource->set('hide_children_in_tree', 0);
                     $resource->save();
                 }
@@ -121,6 +121,19 @@ switch ($modx->event->name) {
                 } elseif ($key === 'content_dispo' || $key === 'isfolder' || $key === 'syncsite') {
                     // no place to override
                 } else {
+                    /**
+                     * convert some keys
+                     * @see manager\controllers\default\resource\ResourceCreateManagerController::process()
+                     */
+                    if ($key === 'published') {
+                        $key = 'publish';
+                    }
+                    if ($key === 'searchable') {
+                        $key = 'search';
+                    }
+                    if ($key === 'cacheable') {
+                        $key = 'cache';
+                    }
                     $modx->_userConfig[$key . '_default'] = $v;
                 }
             }
@@ -171,7 +184,7 @@ switch ($modx->event->name) {
         }
 
         $parentResource = $modx->getObject('modResource', $parentId);
-        if (!$parentResource || 
+        if (!$parentResource ||
                 ($parentResource->get('class_key') !== 'GridContainer' &&
                 $parentResource->get('class_key') !== 'StaticGridContainer')
         ) {

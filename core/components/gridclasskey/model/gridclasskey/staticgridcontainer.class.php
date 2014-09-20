@@ -84,7 +84,25 @@ class StaticGridContainerCreateProcessor extends modResourceCreateProcessor {
                 $settings[$key] = $v;
             }
         }
-
+        // xcheckbox -> checkbox
+        if (!isset($settings['child-hidemenu'])) {
+            $settings['child-hidemenu'] = 0;
+        }
+        if (!isset($settings['child-searchable'])) {
+            $settings['child-searchable'] = 0;
+        }
+        if (!isset($settings['child-richtext'])) {
+            $settings['child-richtext'] = 0;
+        }
+        if (!isset($settings['child-published'])) {
+            $settings['child-published'] = 0;
+        }
+        if (!isset($settings['child-cacheable'])) {
+            $settings['child-cacheable'] = 0;
+        }
+        if (!isset($settings['deleted'])) {
+            $settings['child-deleted'] = 0;
+        }
         $this->object->setProperties($settings, 'gridclasskey');
 
         return parent::beforeSave();
@@ -124,7 +142,25 @@ class StaticGridContainerUpdateProcessor extends modResourceUpdateProcessor {
                 $settings[$key] = $v;
             }
         }
-
+        // xcheckbox -> checkbox
+        if (!isset($settings['child-hidemenu'])) {
+            $settings['child-hidemenu'] = 0;
+        }
+        if (!isset($settings['child-searchable'])) {
+            $settings['child-searchable'] = 0;
+        }
+        if (!isset($settings['child-richtext'])) {
+            $settings['child-richtext'] = 0;
+        }
+        if (!isset($settings['child-published'])) {
+            $settings['child-published'] = 0;
+        }
+        if (!isset($settings['child-cacheable'])) {
+            $settings['child-cacheable'] = 0;
+        }
+        if (!isset($settings['deleted'])) {
+            $settings['child-deleted'] = 0;
+        }
         $this->object->setProperties($settings, 'gridclasskey');
 
         return parent::beforeSave();
