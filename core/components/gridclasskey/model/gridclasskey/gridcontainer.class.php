@@ -69,6 +69,25 @@ class GridContainerCreateProcessor extends modResourceCreateProcessor {
         $this->object->set('isfolder', true);
 
         $properties = $this->getProperties();
+        // xcheckbox -> checkbox
+        if (!isset($properties['gridclasskey-property-child-hidemenu'])) {
+            $properties['gridclasskey-property-child-hidemenu'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-searchable'])) {
+            $properties['gridclasskey-property-child-searchable'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-richtext'])) {
+            $properties['gridclasskey-property-child-richtext'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-published'])) {
+            $properties['gridclasskey-property-child-published'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-cacheable'])) {
+            $properties['gridclasskey-property-child-cacheable'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-deleted'])) {
+            $properties['gridclasskey-property-child-deleted'] = 0;
+        }
         $settings = $this->object->getProperties('gridclasskey');
         foreach ($properties as $k => $v) {
             if (substr($k, 0, 22) == 'gridclasskey-property-') {
@@ -83,25 +102,6 @@ class GridContainerCreateProcessor extends modResourceCreateProcessor {
                 }
                 $settings[$key] = $v;
             }
-        }
-        // xcheckbox -> checkbox
-        if (!isset($settings['child-hidemenu'])) {
-            $settings['child-hidemenu'] = 0;
-        }
-        if (!isset($settings['child-searchable'])) {
-            $settings['child-searchable'] = 0;
-        }
-        if (!isset($settings['child-richtext'])) {
-            $settings['child-richtext'] = 0;
-        }
-        if (!isset($settings['child-published'])) {
-            $settings['child-published'] = 0;
-        }
-        if (!isset($settings['child-cacheable'])) {
-            $settings['child-cacheable'] = 0;
-        }
-        if (!isset($settings['deleted'])) {
-            $settings['child-deleted'] = 0;
         }
         $this->object->setProperties($settings, 'gridclasskey');
 
@@ -127,6 +127,25 @@ class GridContainerUpdateProcessor extends modResourceUpdateProcessor {
         $this->object->set('isfolder', true);
 
         $properties = $this->getProperties();
+        // xcheckbox -> checkbox
+        if (!isset($properties['gridclasskey-property-child-hidemenu'])) {
+            $properties['gridclasskey-property-child-hidemenu'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-searchable'])) {
+            $properties['gridclasskey-property-child-searchable'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-richtext'])) {
+            $properties['gridclasskey-property-child-richtext'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-published'])) {
+            $properties['gridclasskey-property-child-published'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-cacheable'])) {
+            $properties['gridclasskey-property-child-cacheable'] = 0;
+        }
+        if (!isset($properties['gridclasskey-property-child-deleted'])) {
+            $properties['gridclasskey-property-child-deleted'] = 0;
+        }
         $settings = $this->object->getProperties('gridclasskey');
         foreach ($properties as $k => $v) {
             if (substr($k, 0, 22) == 'gridclasskey-property-') {
@@ -141,25 +160,6 @@ class GridContainerUpdateProcessor extends modResourceUpdateProcessor {
                 }
                 $settings[$key] = $v;
             }
-        }
-        // xcheckbox -> checkbox
-        if (!isset($settings['child-hidemenu'])) {
-            $settings['child-hidemenu'] = 0;
-        }
-        if (!isset($settings['child-searchable'])) {
-            $settings['child-searchable'] = 0;
-        }
-        if (!isset($settings['child-richtext'])) {
-            $settings['child-richtext'] = 0;
-        }
-        if (!isset($settings['child-published'])) {
-            $settings['child-published'] = 0;
-        }
-        if (!isset($settings['child-cacheable'])) {
-            $settings['child-cacheable'] = 0;
-        }
-        if (!isset($settings['deleted'])) {
-            $settings['child-deleted'] = 0;
         }
         $this->object->setProperties($settings, 'gridclasskey');
 
