@@ -1,3 +1,8 @@
+GridClassKey 1.0.1-rc2 (September 21, 2014)
+=================================================
+- [#116] fix error when creating a document in the root of the site by @RuGa
+- [#113] New children's settings checkboxes not saved [$10] bounty placed by @vierkantemeter
+
 GridClassKey 1.0.1-rc1 (August 30, 2014)
 =================================================
 - [#104] FR: field editor as json-params 
