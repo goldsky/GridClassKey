@@ -270,8 +270,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         if (isset($resourceArray['publishedon'])) {
             $publishedon = strtotime($resourceArray['publishedon']);
             $resourceArray['publishedon_date'] = strftime($this->modx->getOption('gridclasskey.mgr_date_format', null, '%b %d'), $publishedon);
-            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('gridclasskey.mgr_time_format', null, '%H:%I %p'), $publishedon);
-            $resourceArray['publishedon'] = strftime('%b %d, %Y %H:%I %p', $publishedon);
+            $resourceArray['publishedon_time'] = strftime($this->modx->getOption('gridclasskey.mgr_time_format', null, '%I:%M %p'), $publishedon);
+            $resourceArray['publishedon'] = strftime('%b %d, %Y %I:%M %p', $publishedon);
         }
 
         if (!empty($this->parentProperties)) {
