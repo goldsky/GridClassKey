@@ -1,4 +1,4 @@
-GridClassKey.grid.Children = function(config) {
+GridClassKey.grid.Children = function (config) {
     config = config || {};
 
     var _this = this;
@@ -80,7 +80,7 @@ GridClassKey.grid.Children = function(config) {
             && config.record.properties.gridclasskey.fields
             && config.record.properties.gridclasskey.fields.length > 0) {
 
-        Ext.each(config.record.properties.gridclasskey.fields, function(fieldRecord) {
+        Ext.each(config.record.properties.gridclasskey.fields, function (fieldRecord) {
             fields.push({
                 name: fieldRecord.name
                 , mapping: fieldRecord.name
@@ -144,7 +144,7 @@ GridClassKey.grid.Children = function(config) {
                     name: fieldRecord.name + '_output'
                     , mapping: fieldRecord.name + '_output'
                 });
-                rowField.renderer = function(v, md, rec) {
+                rowField.renderer = function (v, md, rec) {
                     return rec.data[fieldRecord.name + '_output'];
                 };
             }
@@ -190,7 +190,7 @@ GridClassKey.grid.Children = function(config) {
         });
     } else {
         fields = defaultFields;
-        Ext.each(defaultColumns, function(item, idx) {
+        Ext.each(defaultColumns, function (item, idx) {
             columns.push(item);
         });
     }
@@ -203,7 +203,7 @@ GridClassKey.grid.Children = function(config) {
                     iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
                     , tooltip: _('edit')
                     , altText: _('edit')
-                    , handler: function(grid, row, col) {
+                    , handler: function (grid, row, col) {
                         var rec = this.store.getAt(row);
                         MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
                     },
@@ -212,7 +212,7 @@ GridClassKey.grid.Children = function(config) {
             iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
             , tooltip: _('view')
             , altText: _('view')
-            , handler: function(grid, row, col) {
+            , handler: function (grid, row, col) {
                 var rec = this.store.getAt(row);
                 window.open(rec.get('preview_url'));
             },
@@ -222,11 +222,11 @@ GridClassKey.grid.Children = function(config) {
 
     if (MODx.perm['publish_document'] && MODx.perm['unpublish_document']) {
         actionItems.push({
-            handler: function(grid, row, col) {
+            handler: function (grid, row, col) {
                 var rec = _this.store.getAt(row);
                 _this.publishResource(rec.data);
             },
-            getClass: function(v, meta, rec) {
+            getClass: function (v, meta, rec) {
                 if (rec.get('published')) {
                     this.items[2].tooltip = _('resource_unpublish');
                     this.items[2].altText = _('resource_unpublish');
@@ -242,11 +242,11 @@ GridClassKey.grid.Children = function(config) {
 
     if (MODx.perm['delete_document'] && MODx.perm['undelete_document']) {
         actionItems.push({
-            handler: function(grid, row, col) {
+            handler: function (grid, row, col) {
                 var rec = _this.store.getAt(row);
                 _this.removeResource(rec.data);
             },
-            getClass: function(v, meta, rec) {
+            getClass: function (v, meta, rec) {
                 if (rec.get('deleted')) {
                     this.items[3].tooltip = _('resource_undelete');
                     this.items[3].altText = _('resource_undelete');
@@ -286,7 +286,7 @@ GridClassKey.grid.Children = function(config) {
         topBar.push({
             text: _('actions')
             , iconCls: 'icon-gridclasskey-check_boxes'
-            , handler: function(btn, e) {
+            , handler: function (btn, e) {
                 var actionsWindow = new GridClassKey.window.Actions({
                     record: {
                         parent: config.record.id
@@ -297,28 +297,38 @@ GridClassKey.grid.Children = function(config) {
         });
     }
     if (MODx.perm['new_document']) {
-        topBar.push({
-            text: config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
-            , id: 'gridclasskey-property-grid-addnewdocbtn'
-            , iconCls: 'icon-gridclasskey-document-new'
-            , handler: function(itm, e) {
-                Ext.getCmp('modx-resource-tree').loadAction(
-                        'a=' + MODx.action['resource/create']
-                        + '&parent=' + config.record.id
-                        + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
-                        + (config.record.properties
-                                && config.record.properties.gridclasskey
-                                && config.record.properties.gridclasskey['child-template']
-                                ? '&template=' + config.record.properties.gridclasskey['child-template']
-                                : '')
-                        + (config.record.properties
-                                && config.record.properties.gridclasskey
-                                && config.record.properties.gridclasskey['child-class_key']
-                                ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
-                                : '')
-                        );
-            }
-        });
+        topBar.push(
+                new Ext.Toolbar.SplitButton({
+                    text: config.record['gridclasskey-property-grid-addnewdocbtn-text'] || _('gridclasskey.document_new')
+                    , id: 'gridclasskey-property-grid-addnewdocbtn'
+                    , iconCls: 'icon-gridclasskey-document-new'
+                    , handler: function (itm, e) {
+                        Ext.getCmp('modx-resource-tree').loadAction(
+                                'a=' + MODx.action['resource/create']
+                                + '&parent=' + config.record.id
+                                + (config.record.context_key ? '&context_key=' + config.record.context_key : '')
+                                + (config.record.properties
+                                        && config.record.properties.gridclasskey
+                                        && config.record.properties.gridclasskey['child-template']
+                                        ? '&template=' + config.record.properties.gridclasskey['child-template']
+                                        : '')
+                                + (config.record.properties
+                                        && config.record.properties.gridclasskey
+                                        && config.record.properties.gridclasskey['child-class_key']
+                                        ? '&class_key=' + config.record.properties.gridclasskey['child-class_key']
+                                        : '')
+                                );
+                    }
+                    , menu: {
+                        items: [{
+                            text: config.record['gridclasskey-property-grid-quickaddnewdocbtn-text'] || _('gridclasskey.document_new_quick')
+                            , id: 'gridclasskey-property-grid-quickaddnewdocbtn'
+                            , iconCls: 'icon-gridclasskey-document-new'
+                            , handler: this.quickCreate
+                            , scope: this
+                        }]
+                    }
+                }));
     }
     topBar.push('->');
     topBar.push({
@@ -327,10 +337,10 @@ GridClassKey.grid.Children = function(config) {
         , emptyText: _('gridclasskey.search...')
         , listeners: {
             'render': {
-                fn: function(cmp) {
+                fn: function (cmp) {
                     new Ext.KeyMap(cmp.getEl(), {
                         key: Ext.EventObject.ENTER
-                        , fn: function() {
+                        , fn: function () {
                             _this.search(cmp);
                             this.blur();
                             return true;
@@ -346,7 +356,7 @@ GridClassKey.grid.Children = function(config) {
         topBar.push({
             text: _('gridclasskey.advanced_search')
             , iconCls: 'icon-gridclasskey-filter'
-            , handler: function(btn, e) {
+            , handler: function (btn, e) {
                 var searchField = Ext.getCmp('gridclasskey-search-field');
                 searchField.setDisabled(true);
                 searchField.reset();
@@ -364,7 +374,7 @@ GridClassKey.grid.Children = function(config) {
             xtype: 'button'
             , text: _('gridclasskey.clear')
             , iconCls: 'icon-gridclasskey-filter-delete'
-            , handler: function(btn, e) {
+            , handler: function (btn, e) {
                 var searchField = Ext.getCmp('gridclasskey-search-field');
                 searchField.reset();
                 searchField.setDisabled(false);
@@ -400,7 +410,7 @@ GridClassKey.grid.Children = function(config) {
             , scrollOffset: 0
             , autoFill: true
             , showPreview: true
-            , getRowClass: function(record, index, rowParams, store) {
+            , getRowClass: function (record, index, rowParams, store) {
                 var clsName = 'gridclasskey-row';
                 if (record.get('published') === false) {
                     clsName += ' gridclasskey-unpublished';
@@ -431,13 +441,13 @@ GridClassKey.grid.Children = function(config) {
 };
 
 Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
-    search: function(tf, nv, ov) {
+    search: function (tf, nv, ov) {
         var s = this.getStore();
         s.baseParams.query = tf.getValue();
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
-    , _makeTemplates: function() {
+    , _makeTemplates: function () {
         /**
          * @link    http://modx.com/extras/package/ajaxmanager
          * @see     https://github.com/goldsky/GridClassKey/pull/53/files#r11042161
@@ -446,26 +456,26 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             compiled: true
         });
     }
-    , _renderPageTitle: function(v, md, rec) {
+    , _renderPageTitle: function (v, md, rec) {
         return this.tplPageTitle.apply(rec.data);
     }
-    , getMenu: function() {
+    , getMenu: function () {
         var deleteTitle = this.menu.record.deleted ? _('resource_undelete') : _('resource_delete');
         var publishTitle = this.menu.record.published ? _('unpublish') : _('publish');
         var menu = [
             {
                 text: _('edit')
-                , handler: function(btn, e) {
+                , handler: function (btn, e) {
                     this.updateResource(this.menu.record);
                 }
             }, {
                 text: _('view')
-                , handler: function(btn, e) {
+                , handler: function (btn, e) {
                     window.open(this.menu.record.preview_url);
                 }
             }, {
                 text: publishTitle
-                , handler: function(btn, e) {
+                , handler: function (btn, e) {
                     this.publishResource(this.menu.record);
                 }
             }, {
@@ -473,17 +483,17 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 , handler: this.duplicateResource
             }, '-', {
                 text: deleteTitle
-                , handler: function(btn, e) {
+                , handler: function (btn, e) {
                     this.removeResource(this.menu.record);
                 }
             }
         ];
         return menu;
     }
-    , updateResource: function(record) {
+    , updateResource: function (record) {
         MODx.loadPage(MODx.action['resource/update'], 'id=' + record.id);
     }
-    , removeResource: function(record) {
+    , removeResource: function (record) {
         var title = record.deleted ? _('resource_undelete') : _('resource_delete');
         var text = record.deleted ? _('resource_undelete_confirm') : _('resource_delete_confirm');
         var action = record.deleted ? (MODx.version_is22 < 0 ? 'resource/undelete' : 'undelete') : (MODx.version_is22 < 0 ? 'resource/delete' : 'delete');
@@ -503,7 +513,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , publishResource: function(record) {
+    , publishResource: function (record) {
         var action = record.published ? (MODx.version_is22 < 0 ? 'resource/unpublish' : 'unpublish') : (MODx.version_is22 < 0 ? 'resource/publish' : 'publish');
         MODx.Ajax.request({
             url: MODx.config.connectors_url + (MODx.version_is22 < 0 ? 'index.php' : 'resource/index.php')
@@ -516,7 +526,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , duplicateResource: function(item, e) {
+    , duplicateResource: function (item, e) {
         var r = {
             resource: this.menu.record.id
             , is_folder: this.menu.record.isfolder
@@ -534,12 +544,12 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
         w.setValues(r);
         w.show(e.target);
     }
-    , attachDragDropZone: function(gridPanel) {
+    , attachDragDropZone: function (gridPanel) {
         var _this = this;
         this.dropTarget = new Ext.dd.DropTarget(gridPanel.container, {
             ddGroup: 'gridclasskey-grid-children-dd'
             , copy: false
-            , notifyDrop: function(dd, e, data) {
+            , notifyDrop: function (dd, e, data) {
                 if (!_this.enableDragDrop || !data.selections || data.selections.length === 0) {
                     return false;
                 }
@@ -564,14 +574,14 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                     }
                 }
             }
-            , notifyOver: function(dd, e, data) {
+            , notifyOver: function (dd, e, data) {
                 return (_this.enableDragDrop && data.selections && data.selections.length > 0) ? this.dropAllowed : this.dropNotAllowed;
             }
-            , notifyEnter: function(dd, e, data) {
+            , notifyEnter: function (dd, e, data) {
                 return (_this.enableDragDrop && data.selections && data.selections.length > 0) ? this.dropAllowed : this.dropNotAllowed;
             }
         });
-        this.getStore().on('load', function(store) {
+        this.getStore().on('load', function (store) {
             var jsonData = store.reader.jsonData;
             if (jsonData.sortby === 'menuindex') {
                 _this.enableDragDrop = true;
@@ -589,7 +599,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , sortMenuIndex: function(targetId, movingIds) {
+    , sortMenuIndex: function (targetId, movingIds) {
         var sortdir, store = this.getStore();
         var sortInfo = store.getSortState();
         if (sortInfo) {
@@ -612,14 +622,60 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             }
         });
     }
-    , detachDragDropZone: function(gridPanel) {
+    , detachDragDropZone: function (gridPanel) {
 
     }
-    , beforeDestroy: function() {
+    , beforeDestroy: function () {
         if (this.rendered) {
             this.dropTarget.destroy();
         }
         GridClassKey.grid.Children.superclass.beforeDestroy.call(this);
+    }
+    , getSetting: function(key, dv) {
+        var val = dv || null;
+        if (this.config.record &&
+                this.config.record.properties &&
+                this.config.record.properties.gridclasskey &&
+                this.config.record.properties.gridclasskey[key]) {
+            val = this.config.record.properties.gridclasskey[key];
+        }
+        return val;
+    }
+    , quickCreate: function (item, e) {
+        var r = {
+            class_key: this.getSetting('child-class_key', 'modDocument')
+            , context_key: this.config.record.context_key || 'web'
+            , 'parent': this.config.record.id || 0
+            , 'template': parseInt(this.getSetting('child-template', MODx.config.default_template))
+            , 'richtext': parseInt(this.getSetting('child-richtext', MODx.config.richtext_default))
+            , 'hidemenu': parseInt(this.getSetting('child-hidemenu', MODx.config.hidemenu_default))
+            , 'searchable': parseInt(this.getSetting('child-searchable', MODx.config.search_default))
+            , 'cacheable': parseInt(this.getSetting('child-cacheable', MODx.config.cache_default))
+            , 'published': parseInt(this.getSetting('child-published', MODx.config.publish_default))
+            , 'content_type': parseInt(this.getSetting('child-content_type', MODx.config.default_content_type))
+        };
+        var w = MODx.load({
+            xtype: 'modx-window-quick-create-modResource'
+            , record: r
+            , listeners: {
+                'success': {
+                    fn: this.refresh
+                    , scope: this
+                }
+                , 'hide': {
+                    fn: function () {
+                        this.destroy();
+                    }}
+                , 'show': {
+                    fn: function () {
+                        this.center();
+                    }}
+            }
+        });
+        w.setValues(r);
+        w.show(e.target, function () {
+            Ext.isSafari ? w.setPosition(null, 30) : w.center();
+        }, this);
     }
 });
 Ext.reg('gridclasskey-grid-children', GridClassKey.grid.Children);

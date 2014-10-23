@@ -1,7 +1,7 @@
 GridClassKey.panel.Settings = function(config) {
     config = config || {};
 
-    Ext.applyIf(config, {
+    Ext.apply(config, {
         id: 'gridclasskey-panel-settings'
         , forceLayout: true
         , deferredRender: false
@@ -301,6 +301,24 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                         , scope: this
                                     }
                                 }
+                            }, {
+                                xtype: 'textfield'
+                                , anchor: '100%'
+                                , id: 'gridclasskey-property-grid-quickaddnewdocbtn-text'
+                                , name: 'gridclasskey-property-grid-quickaddnewdocbtn-text'
+                                , fieldLabel: _('gridclasskey.quickaddnewdocbtn_text')
+                                , description: _('gridclasskey.quickaddnewdocbtn_text_desc')
+                                , listeners: {
+                                    change: {
+                                        fn: function(cmp, newValue, oldValue) {
+                                            var btn = Ext.getCmp('modx-abtn-save');
+                                            if (btn) {
+                                                btn.enable();
+                                            }
+                                        }
+                                        , scope: this
+                                    }
+                                }
                             }
                         ]
                     }
@@ -537,7 +555,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , hideLabel: true
                                                 , name: 'gridclasskey-property-child-deleted'
                                                 , inputValue: 1
-                                                , checked: parseInt(config.record['gridclasskey-property-child-deleted']) || 0
+                                                , checked: parseInt(config.record['gridclasskey-property-child-deleted']) || false
                                             }
                                         ]
                                     }
