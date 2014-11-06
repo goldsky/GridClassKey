@@ -1,4 +1,4 @@
-GridClassKey 1.0.1-dev
+GridClassKey 1.0.1-rc3 (November 6, 2014)
 =================================================
 - [#112] Quick add resources as rows [$50] bounty placed by @neoneddy
 
