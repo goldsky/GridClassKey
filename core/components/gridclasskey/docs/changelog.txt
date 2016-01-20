@@ -1,3 +1,8 @@
+GridClassKey 1.0.1-dev
+=================================================
+- add icon class to system settings
+- fixed array's error on initial listing
+
 GridClassKey 1.0.1-rc3 (November 6, 2014)
 =================================================
 - [#112] Quick add resources as rows [$50] bounty placed by @neoneddy
@@ -10,7 +15,7 @@ GridClassKey 1.0.1-rc2 (September 21, 2014)
 
 GridClassKey 1.0.1-rc1 (August 30, 2014)
 =================================================
-- [#104] FR: field editor as json-params 
+- [#104] FR: field editor as json-params
 - refresh grid after row editing
 - [#103][#104] fix Inline Editing Not working MODx 2.3
 - avoid duplicate values on advanced search grid
@@ -55,14 +60,14 @@ GridClassKey 1.0.0-pl (April 21, 2014)
 
 GridClassKey 1.0.0-rc5 (April 17, 2014)
 =================================================
-- [#70] fix inline editing that breaks parsed TV 
+- [#70] fix inline editing that breaks parsed TV
 - [#67][#71] condition to avoid breaking JS because of compress_css and compress_js
 
 GridClassKey 1.0.0-rc4 (April 15, 2014)
 =================================================
 - [#55] Problem with drag-drop and menuindex direction on reverse order
 - [#65] Add snippet field
-- [#58] Setting to change amount of rows shown by default 
+- [#58] Setting to change amount of rows shown by default
 - [#59] Add typeahead to Add TV Field combo box
 - add "Reset" button on setting's grid
 - add Properties field for new child
