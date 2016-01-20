@@ -53,7 +53,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             ));
             $this->editAction = $editAction->get('id');
         }
-        
+
         $parent = $this->getProperty('parent');
         if (empty($parent)) {
             return $this->failure($this->modx->lexicon('gridclasskey.parent_missing_err'));
@@ -77,7 +77,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         if ($limit === 0) {
             $this->setProperty('limit', $this->modx->getOption('default_per_page'));
         }
-        
+
         return parent::initialize();
     }
 
@@ -97,7 +97,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $mainFields = str_replace('`', '', $mainFields);
         $mainFields = array_map('trim', @explode(',', $mainFields));
 
-        if ($this->parentProperties) {
+        if (!empty($this->parentProperties) && is_array($this->parentProperties)) {
             foreach ($this->parentProperties['fields'] as $field) {
                 $this->selectedFields = array_merge($this->selectedFields, (array) $field['name']);
             }
@@ -126,7 +126,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
             ));
         }
 
-        if ($this->parentProperties) {
+        if (!empty($this->parentProperties) && is_array($this->parentProperties)) {
             // backward compatibility
             $fixParentProperties = false;
             $this->selectedElementFields = array_diff($this->selectedFields, $this->selectedMainFields);
@@ -158,7 +158,7 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                     $this->_joinTV($c, $tvLoopIndex, $tv, $query);
                 }
             }
-            
+
             // backward compatibility
             if ($fixParentProperties) {
                 $parentObj = $this->modx->getObject('modResource', $parent);
