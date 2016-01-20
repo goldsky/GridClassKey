@@ -61,4 +61,22 @@ $settings['gridclasskey.unhide_children_in_tree_limit']->fromArray(array(
     'area' => 'manager',
         ), '', true, true);
 
+$settings['mgr_tree_icon_gridcontainer'] = $modx->newObject('modSystemSetting');
+$settings['mgr_tree_icon_gridcontainer']->fromArray(array(
+    'key' => 'mgr_tree_icon_gridcontainer',
+    'value' => 'icon-list',
+    'xtype' => 'textfield',
+    'namespace' => 'gridclasskey',
+    'area' => 'manager',
+        ), '', true, true);
+
+$settings['mgr_tree_icon_staticgridcontainer'] = $modx->newObject('modSystemSetting');
+$settings['mgr_tree_icon_staticgridcontainer']->fromArray(array(
+    'key' => 'mgr_tree_icon_staticgridcontainer',
+    'value' => 'icon-list-alt',
+    'xtype' => 'textfield',
+    'namespace' => 'gridclasskey',
+    'area' => 'manager',
+        ), '', true, true);
+
 return $settings;
