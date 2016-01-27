@@ -1,5 +1,6 @@
 GridClassKey 1.0.1-dev
 =================================================
+- [#122] revert publishedon
 - [#124] Fix font-style for check-boxes, MODX 2.3.x
 - add icon class to system settings
 - fixed array's error on initial listing
