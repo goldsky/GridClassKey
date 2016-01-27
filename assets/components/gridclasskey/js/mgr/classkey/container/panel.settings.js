@@ -408,6 +408,8 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                 , fieldLabel: _('gridclasskey.default_template')
                                 , description: _('gridclasskey.child_default_template_desc')
                                 , bodyStyle: 'margin: 5px 0'
+                                , value: config.record['gridclasskey-property-child-template'] || config.record.template
+                                , allowBlank: false
                             }, {
                                 xtype: 'modx-combo-class-derivatives'
                                 , fieldLabel: _('resource_type')
@@ -484,7 +486,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                              , name: 'gridclasskey-property-child-isfolder'
                                              , inputValue: 1
                                              , checked: parseInt(config.record['gridclasskey-property-child-isfolder']) || 0
-                                             
+
                                              },*/ {
                                                 xtype: 'checkbox'
                                                 , boxLabel: _('resource_searchable')
@@ -492,7 +494,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , hideLabel: true
                                                 , name: 'gridclasskey-property-child-searchable'
                                                 , inputValue: 1
-                                                , checked: parseInt(config.record['gridclasskey-property-child-searchable'])
+                                                , checked: parseInt(config.record['gridclasskey-property-child-searchable']) || 1
                                             }, {
                                                 xtype: 'checkbox'
                                                 , boxLabel: _('resource_richtext')
@@ -500,7 +502,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , hideLabel: true
                                                 , name: 'gridclasskey-property-child-richtext'
                                                 , inputValue: 1
-                                                , checked: parseInt(config.record['gridclasskey-property-child-richtext'])
+                                                , checked: parseInt(config.record['gridclasskey-property-child-richtext']) || 1
                                             }
                                         ]
                                     }, {
@@ -534,7 +536,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                                 , hideLabel: true
                                                 , name: 'gridclasskey-property-child-cacheable'
                                                 , inputValue: 1
-                                                , checked: parseInt(config.record['gridclasskey-property-child-cacheable'])
+                                                , checked: parseInt(config.record['gridclasskey-property-child-cacheable']) || 1
 
                                             }, /*{
                                              xtype: 'checkbox'
@@ -547,7 +549,7 @@ Ext.extend(GridClassKey.panel.Settings, MODx.Tabs, {
                                              && config.record['gridclasskey-property-child-syncsite'] !== null
                                              ? parseInt(config.record['gridclasskey-property-child-syncsite'])
                                              : true
-                                             
+
                                              },*/ {
                                                 xtype: 'checkbox'
                                                 , boxLabel: _('deleted')

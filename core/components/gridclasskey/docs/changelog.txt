@@ -1,5 +1,6 @@
 GridClassKey 1.0.1-dev
 =================================================
+- fill proper default settings for new container
 - [#131] exclude some booleans for output filter because ExtJs needs it
 - [#122] revert publishedon
 - [#124] Fix font-style for check-boxes, MODX 2.3.x

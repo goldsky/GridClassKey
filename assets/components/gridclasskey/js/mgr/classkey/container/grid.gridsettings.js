@@ -236,7 +236,7 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
                     'name': 'id',
                     'type': 'main',
                     'lexicon': 'id',
-                    'width': 50,
+                    'width': 75,
                     'fixed': true,
                     'sortable': true,
                     'hidden': false,
@@ -267,17 +267,15 @@ Ext.extend(GridClassKey.grid.GridSettings, MODx.grid.LocalGrid, {
     }
     , getDefaultData: function() {
         var data = [
-            [1, 'id', 'main', 'id', 50, true, true, false],
-            [2, 'pagetitle', 'main', 'pagetitle', 200, true, true, false, 'textfield'],
-            [3, 'longtitle', 'main', 'gridclasskey.longtitle', 200, false, true, false, 'textfield'],
-            [4, 'description', 'main', 'description', 200, false, false, false, 'textarea']
+            [1, 'id', 'main', 'id', 75, true, true, false],
+            [2, 'pagetitle', 'main', 'pagetitle', '', false, true, false, 'textfield']
         ];
         return data;
     }
     , resetData: function(fields) {
         if (fields.length) {
             this.loadData(fields);
-            
+
             var btn = Ext.getCmp('modx-abtn-save');
             if (btn) {
                 btn.enable();
