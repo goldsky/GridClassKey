@@ -147,3 +147,7 @@
 #gridclasskey-panel-settings .x-column:only-child {
     margin: 0;
 }
+
+#gridclasskey-grid-children .x-grid3-row-checker {
+	font-style: normal;
+}
