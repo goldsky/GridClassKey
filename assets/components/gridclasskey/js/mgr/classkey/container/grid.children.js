@@ -42,7 +42,7 @@ GridClassKey.grid.Children = function (config) {
                     header: _('id')
                     , dataIndex: 'id'
                     , sortable: true
-                    , width: 50
+                    , width: 75
                 }, {
                     header: _('pagetitle')
                     , dataIndex: 'pagetitle'
@@ -101,7 +101,7 @@ GridClassKey.grid.Children = function (config) {
             if (width > 0) {
                 rowField.width = width;
             } else {
-                rowField.width = 50;
+                rowField.width = 75;
             }
             if (fieldRecord.name !== 'id'
                     && fieldRecord.editor_type
@@ -198,17 +198,16 @@ GridClassKey.grid.Children = function (config) {
     var actionItems = [];
 
     if (MODx.perm['edit_document']) {
-        actionItems.push(
-                {
-                    iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
-                    , tooltip: _('edit')
-                    , altText: _('edit')
-                    , handler: function (grid, row, col) {
-                        var rec = this.store.getAt(row);
-                        MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
-                    },
-                    scope: this
-                }, {
+        actionItems.push({
+            iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
+            , tooltip: _('edit')
+            , altText: _('edit')
+            , handler: function (grid, row, col) {
+                var rec = this.store.getAt(row);
+                MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
+            },
+            scope: this
+        }, {
             iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
             , tooltip: _('view')
             , altText: _('view')
