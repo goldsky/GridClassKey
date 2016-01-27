@@ -275,6 +275,12 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         if (!empty($this->parentProperties)) {
             foreach ($this->parentProperties['fields'] as $field) {
+                // [#131] exclude some booleans for output filter because ExtJs needs it
+                if ($field['name'] === 'published' ||
+                        $field['name'] === 'deleted'
+                ) {
+                    continue;
+                }
                 if ($field['type'] === 'snippet') {
                     $scriptProperties = $resourceArray;
                     unset($scriptProperties[$field['name']]);
