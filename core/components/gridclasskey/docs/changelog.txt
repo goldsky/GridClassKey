@@ -1,4 +1,4 @@
-GridClassKey 1.0.1-dev
+GridClassKey 1.0.1-pl (January 28, 2016)
 =================================================
 - fill proper default settings for new container
 - [#131] exclude some booleans for output filter because ExtJs needs it
