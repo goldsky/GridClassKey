@@ -9,12 +9,6 @@ GridClassKey.grid.Children = function (config) {
             'name': 'pagetitle',
             'mapping': 'pagetitle'
         }, {
-            'name': 'longtitle',
-            'mapping': 'longtitle'
-        }, {
-            'name': 'description',
-            'mapping': 'description'
-        }, {
             'name': 'deleted',
             'mapping': 'deleted'
         }, {
@@ -51,22 +45,6 @@ GridClassKey.grid.Children = function (config) {
                     , renderer: {fn: this._renderPageTitle, scope: this}
                     , editor: {
                         xtype: 'textfield'
-                    }
-                }, {
-                    header: _('gridclasskey.longtitle')
-                    , dataIndex: 'longtitle'
-                    , sortable: true
-                    , width: 100
-                    , editor: {
-                        xtype: 'textfield'
-                    }
-                }, {
-                    header: _('description')
-                    , dataIndex: 'description'
-                    , sortable: false
-                    , width: 200
-                    , editor: {
-                        xtype: 'textarea'
                     }
                 }
             ]

@@ -1,5 +1,6 @@
 GridClassKey
 =================================================
+- simplify default fields
 - bugfix array loop at the first load
 
 GridClassKey 1.0.1-pl (January 28, 2016)
