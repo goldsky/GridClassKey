@@ -1,4 +1,4 @@
-GridClassKey
+GridClassKey 1.0.2-pl (September 5, 2016)
 =================================================
 - simplify default fields
 - bugfix array loop at the first load
