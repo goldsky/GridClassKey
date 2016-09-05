@@ -97,12 +97,13 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
         $mainFields = str_replace('`', '', $mainFields);
         $mainFields = array_map('trim', @explode(',', $mainFields));
 
-        if (!empty($this->parentProperties) && is_array($this->parentProperties)) {
+        if (!empty($this->parentProperties) && is_array($this->parentProperties) &&
+                !empty($this->parentProperties['fields']) && is_array($this->parentProperties['fields'])) {
             foreach ($this->parentProperties['fields'] as $field) {
                 $this->selectedFields = array_merge($this->selectedFields, (array) $field['name']);
             }
         } else {
-            $this->selectedFields = array('id', 'pagetitle', 'longtitle', 'description', 'deleted', 'published', 'hidemenu');
+            $this->selectedFields = array('id', 'pagetitle', 'deleted', 'published', 'hidemenu');
         }
 
         // whatever selected sort field is, add it to the array
