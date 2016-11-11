@@ -4,7 +4,8 @@ GridClassKey.combo.Template = function(config) {
     Ext.apply(config, {
         url: GridClassKey.config.connectorUrl
         , baseParams: {
-            action: 'mgr/classkey/elements/template/getList'
+            action: 'mgr/classkey/elements/template/getList',
+            combo: true
         }
     });
     GridClassKey.combo.Template.superclass.constructor.call(this, config);

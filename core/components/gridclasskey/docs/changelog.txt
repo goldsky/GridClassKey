@@ -1,6 +1,7 @@
 GridClassKey dev
 =================================================
 - added manager tree's icons
+- fixed empty template for child's settings
 
 GridClassKey 1.0.2-pl (September 5, 2016)
 =================================================

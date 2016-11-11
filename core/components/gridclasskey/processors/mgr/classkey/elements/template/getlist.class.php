@@ -28,18 +28,21 @@ require_once MODX_CORE_PATH . 'model/modx/processors/element/template/getlist.cl
 
 class GridTemplateGetListProcessor extends modTemplateGetListProcessor {
 
-    /**
-     * Can be used to insert a row after iteration
-     * @param array $list
-     * @return array
-     */
-    public function afterIteration(array $list) {
-        $list = array_merge(array(array(
-                'id' => null,
-                'templatename' => '',
+    public function beforeIteration(array $list) {
+        if ($this->getProperty('combo',false)) {
+            $empty = array(
+                'id' => 0,
+                'templatename' => $this->modx->lexicon('template_empty'),
                 'description' => '',
-                'category_name' => ''
-            )), $list);
+                'editor_type' => 0,
+                'icon' => '',
+                'template_type' => 0,
+                'content' => '',
+                'locked' => false,
+            );
+            $empty['category_name'] = '';
+            $list[] = $empty;
+        }
         return $list;
     }
 
