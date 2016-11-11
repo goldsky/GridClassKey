@@ -1,3 +1,7 @@
+GridClassKey dev
+=================================================
+- added manager tree's icons
+
 GridClassKey 1.0.2-pl (September 5, 2016)
 =================================================
 - [#136] container occasionally ignores limit at the first load

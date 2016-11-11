@@ -27,6 +27,10 @@ $_lang['setting_gridclasskey.mgr_css'] = 'Additional CSS file on manager loading
 $_lang['setting_gridclasskey.mgr_css_desc'] = 'This CSS file will only override (not replace) the default: {assets_url}components/gridclasskey/css/mgr.css';
 $_lang['setting_gridclasskey.unhide_children_in_tree_limit'] = 'Limit number of children to revert them to tree';
 $_lang['setting_gridclasskey.unhide_children_in_tree_limit_desc'] = 'Limit number of children to be shown again on the resource tree. Too many children will break the manager. Put 0 (zero) to disable limit.';
+$_lang['setting_mgr_tree_icon_gridcontainer'] = 'Grid Container icon';
+$_lang['setting_mgr_tree_icon_gridcontainer_desc'] = 'CSS icon for Grid Container';
+$_lang['setting_mgr_tree_icon_staticgridcontainer'] = 'Static Grid Container icon';
+$_lang['setting_mgr_tree_icon_staticgridcontainer_desc'] = 'CSS icon for Grid Container';
 
 $_lang['gridclasskey'] = 'Grid Container';
 $_lang['gridclasskey.static_container'] = 'Static Grid Container';
@@ -110,5 +114,5 @@ $_lang['gridclasskey.properties_desc'] = 'Custom properties in JSON format, usua
 $_lang['gridclasskey.default_per_page'] = 'Default Per Page';
 $_lang['gridclasskey.default_per_page_desc'] = 'If not empty, this will override the default number of results to show in grids throughout the manager';
 $_lang['gridclasskey.resourcegroups_children'] = 'Children\'s Resource Groups';
-$_lang['griclasskey.children_resource_access_message'] = 'Here you can select which Resource Groups the New Child Resource belongs to.';
+$_lang['gridclasskey.children_resource_access_message'] = 'Here you can select which Resource Groups the New Child Resource belongs to.';
 $_lang['gridclasskey.please_wait'] = 'Please wait...';
