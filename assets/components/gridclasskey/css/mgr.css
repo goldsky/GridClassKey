@@ -131,6 +131,16 @@
     background-repeat: no-repeat;
 }
 
+.icon-gridclasskey-node_tree {
+    background-image: url(../icons/node-tree.png) !important;
+    background-repeat: no-repeat;
+}
+
+.icon-gridclasskey-table {
+    background-image: url(../icons/table.png) !important;
+    background-repeat: no-repeat;
+}
+
 /* overrides modx-theme */
 #gridclasskey-panel-settings .x-column {
     margin: 0 5px;
@@ -150,4 +160,8 @@
 
 #gridclasskey-grid-children .x-grid3-row-checker {
 	font-style: normal;
+}
+
+#gridclasskey-panel-home-div {
+    overflow-y: scroll;
 }

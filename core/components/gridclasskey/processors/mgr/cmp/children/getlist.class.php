@@ -48,7 +48,7 @@ class ContainersGetListProccessor extends modObjectGetListProcessor {
             ));
             $this->editAction = $editAction->get('id');
         }
-        
+
         return parent::initialize();
     }
 
@@ -69,9 +69,10 @@ class ContainersGetListProccessor extends modObjectGetListProcessor {
             ));
         }
 
+        $c->leftJoin($this->classKey, 'Parent', 'Parent.id = '.$this->classKey.'.parent');
         $c->where(array(
-            'class_key:=' => 'GridContainer',
-            'OR:class_key:=' => 'StaticGridContainer',
+            'Parent.class_key:=' => 'GridContainer',
+            'OR:Parent.class_key:=' => 'StaticGridContainer',
         ));
 
         return $c;
@@ -86,13 +87,15 @@ class ContainersGetListProccessor extends modObjectGetListProcessor {
         $resourceArray = parent::prepareRow($object);
 
         foreach ($resourceArray as $field => $value) {
-            if (!in_array($field, array('id', 'pagetitle', 'published', 'deleted', 'hidemenu', 'isfolder', 'publishedon', 'context_key', 'properties'))) {
+            if (!in_array($field, array('id', 'parent', 'pagetitle', 'published', 'deleted', 'hidemenu', 'isfolder', 'publishedon', 'context_key', 'show_in_tree'))) {
                 unset($resourceArray[$field]);
                 continue;
             }
             // avoid null on returns
             $resourceArray[$field] = $resourceArray[$field] !== null ? $resourceArray[$field] : '';
         }
+
+        $resourceArray['parent_title'] = $object->getOne('Parent')->get('pagetitle') . " ({$resourceArray['parent']})";
 
         $settings = $object->getProperties('gridclasskey');
         if (is_array($settings) && !empty($settings)) {

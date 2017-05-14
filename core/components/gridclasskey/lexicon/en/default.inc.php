@@ -3,7 +3,7 @@
 /**
  * GridClassKey
  *
- * Copyright 2013 - 2016 by goldsky <goldsky@virtudraft.com>
+ * Copyright 2013 - 2017 by goldsky <goldsky@virtudraft.com>
  *
  * This file is part of GridClassKey, a custom class key for MODX
  * Revolution's Manager to hide child resources inside container's grid.
@@ -32,7 +32,8 @@ $_lang['setting_mgr_tree_icon_gridcontainer_desc'] = 'CSS icon for Grid Containe
 $_lang['setting_mgr_tree_icon_staticgridcontainer'] = 'Static Grid Container icon';
 $_lang['setting_mgr_tree_icon_staticgridcontainer_desc'] = 'CSS icon for Grid Container';
 
-$_lang['gridclasskey'] = 'Grid Container';
+$_lang['gridclasskey'] = 'GridClassKey';
+$_lang['gridclasskey.containers'] = 'Grid Containers';
 $_lang['gridclasskey.static_container'] = 'Static Grid Container';
 $_lang['gridclasskey.static_container_create_here'] = 'Create a Static Grid Container Here';
 $_lang['gridclasskey.management_desc'] = 'Managing the Grid Containers';
@@ -83,6 +84,7 @@ $_lang['gridclasskey.hidden'] = 'Hidden';
 $_lang['gridclasskey.go!'] = 'Go!';
 $_lang['gridclasskey.hide'] = 'Hide';
 $_lang['gridclasskey.unhide'] = 'Unhide';
+$_lang['gridclasskey.show'] = 'Show';
 $_lang['gridclasskey.selected'] = 'Selected';
 $_lang['gridclasskey.all'] = 'All';
 $_lang['gridclasskey.purge'] = 'Purge';
@@ -116,3 +118,5 @@ $_lang['gridclasskey.default_per_page_desc'] = 'If not empty, this will override
 $_lang['gridclasskey.resourcegroups_children'] = 'Children\'s Resource Groups';
 $_lang['gridclasskey.children_resource_access_message'] = 'Here you can select which Resource Groups the New Child Resource belongs to.';
 $_lang['gridclasskey.please_wait'] = 'Please wait...';
+$_lang['gridclasskey.hide_in_tree'] = 'Hide in resource tree';
+$_lang['gridclasskey.show_in_tree'] = 'Show in resource tree';

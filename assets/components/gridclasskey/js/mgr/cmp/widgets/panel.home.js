@@ -1,6 +1,6 @@
-GridClassKey.panel.Home = function(config) {
+GridClassKey.panel.Home = function (config) {
     config = config || {};
-    
+
     Ext.applyIf(config, {
         id: 'gridclasskey-panel-home'
         , border: false
@@ -12,18 +12,47 @@ GridClassKey.panel.Home = function(config) {
                 , border: false
                 , cls: 'modx-page-header'
             }, {
-                layout: 'form'
+                xtype: 'modx-tabs'
+                , defaults: {border: false, autoHeight: true}
+                , border: true
                 , items: [
                     {
-                        html: '<p>' + _('gridclasskey.management_desc') + '</p>'
-                        , bodyCssClass: 'panel-desc'
-                        , border: false
+                        title: _('gridclasskey.containers')
+                        , defaults: {autoHeight: true}
+                        , items: [
+                            {
+                                html: '<p>' + _('gridclasskey.management_desc') + '</p>'
+                                , bodyCssClass: 'panel-desc'
+                                , border: false
+                            }, {
+                                xtype: 'gridclasskey-grid-containers'
+                                , cls: 'main-wrapper'
+                                , preventRender: true
+                            }
+                        ]
                     }, {
-                        xtype: 'gridclasskey-grid-containers'
-                        , cls: 'main-wrapper'
-                        , preventRender: true
+                        title: _('gridclasskey.children')
+                        , defaults: {autoHeight: true}
+                        , items: [
+                            {
+                                html: '<p>' + _('gridclasskey.management_desc') + '</p>'
+                                , bodyCssClass: 'panel-desc'
+                                , border: false
+                            }, {
+                                xtype: 'gridclasskey-grid-childrencmp'
+                                , cls: 'main-wrapper'
+                                , preventRender: true
+                            }
+                        ]
                     }
                 ]
+                // only to redo the grid layout after the content is rendered
+                // to fix overflow components' panels, especially when scroll bar is shown up
+                , listeners: {
+                    'afterrender': function (tabPanel) {
+                        tabPanel.doLayout();
+                    }
+                }
             }
         ]
     });
