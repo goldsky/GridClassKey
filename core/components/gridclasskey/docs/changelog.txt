@@ -1,3 +1,7 @@
+GridClassKey 1.1.0-dev
+=================================================
+- [#140] added option to hide resources after failing since MODX 2.5.6
+
 GridClassKey 1.0.3-pl (November 14, 2016)
 =================================================
 - added manager tree's icons

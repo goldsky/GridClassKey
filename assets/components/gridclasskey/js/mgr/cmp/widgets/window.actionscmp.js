@@ -1,4 +1,4 @@
-GridClassKey.window.Actions = function(config) {
+GridClassKey.window.ActionsCMP = function(config) {
     config = config || {};
 
     Ext.apply(config, {
@@ -9,10 +9,6 @@ GridClassKey.window.Actions = function(config) {
         , blankValues: true
         , fields: [
             {
-                xtype: 'hidden'
-                , name: 'action-parent'
-                , value: config.record.parent
-            }, {
                 // to be used for selected range
                 xtype: 'hidden'
                 , name: 'action-selected-range'
@@ -157,15 +153,15 @@ GridClassKey.window.Actions = function(config) {
             },
             success: {
                 fn: function() {
-                    var grid = Ext.getCmp('gridclasskey-grid-children');
+                    var grid = Ext.getCmp('gridclasskey-grid-childrencmp');
                     grid.refresh();
                 }
             }
         }
     });
-    GridClassKey.window.Actions.superclass.constructor.call(this, config);
+    GridClassKey.window.ActionsCMP.superclass.constructor.call(this, config);
 };
-Ext.extend(GridClassKey.window.Actions, MODx.Window, {
+Ext.extend(GridClassKey.window.ActionsCMP, MODx.Window, {
     prepareActions: function() {
         var values = this.fp.getForm().getValues();
         if (values['action-delete'] === 'purge') {
@@ -210,7 +206,7 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
             return false;
         }
         if (values['action-range'] === 'selected') {
-            var grid = Ext.getCmp('gridclasskey-grid-children');
+            var grid = Ext.getCmp('gridclasskey-grid-childrencmp');
             var selected = grid.getSelectionModel().getSelections();
             if (selected.length === 0) {
                 var errWin = new Ext.Window({
@@ -252,11 +248,12 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
     , loopActions: function(values, limit, start) {
         limit = limit ? limit : 20;
         start = start ? start : 0;
+        console.info('limit, start', limit, start);
 
         var _this = this;
         _this.loadMask();
         var params = Ext.apply({}, {
-            action: 'mgr/classkey/children/batchactions',
+            action: 'mgr/cmp/children/batchactions',
             record: this.config.record,
             limit: limit,
             start: start
@@ -274,16 +271,8 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
                                 // recursive loop
                                 _this.loopActions(values, limit, response.nextStart);
                             } else {
-                                Ext.getCmp('gridclasskey-grid-children').refresh();
+                                Ext.getCmp('gridclasskey-grid-childrencmp').refresh();
                                 _this.hideMask();
-
-                                var t = Ext.getCmp('modx-resource-tree');
-                                if (t) {
-                                    var treeNode = t.getNodeById(response.context_key + '_' + response.parent);
-                                    if (typeof(treeNode) !== 'undefined') {
-                                        treeNode.reload();
-                                    }
-                                }
                             }
                         }
                     }
@@ -298,7 +287,7 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
     }
     , loadMask: function() {
         if (!this.loadConverterMask) {
-            var domHandler = Ext.getCmp('gridclasskey-grid-children').body.dom;
+            var domHandler = Ext.getCmp('gridclasskey-grid-childrencmp').body.dom;
             this.loadConverterMask = new Ext.LoadMask(domHandler, {
                 msg: _('gridclasskey.please_wait')
             });
@@ -312,4 +301,4 @@ Ext.extend(GridClassKey.window.Actions, MODx.Window, {
     }
 
 });
-Ext.reg('gridclasskey-window-actions', GridClassKey.window.Actions);
+Ext.reg('gridclasskey-window-actionscmp', GridClassKey.window.ActionsCMP);

@@ -25,8 +25,8 @@
  */
 require_once MODX_CORE_PATH . 'model/modx/processors/resource/update.class.php';
 
-class GCKClasskeyChildrenUpdateProcessor extends modResourceUpdateProcessor {
+class GCKCmpChildrenUpdateProcessor extends modResourceUpdateProcessor {
 
 }
 
-return 'GCKClasskeyChildrenUpdateProcessor';
+return 'GCKCmpChildrenUpdateProcessor';

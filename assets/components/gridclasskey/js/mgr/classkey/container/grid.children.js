@@ -1,37 +1,46 @@
 GridClassKey.grid.Children = function (config) {
     config = config || {};
 
-    var _this = this;
-    var defaultFields = [{
-            'name': 'id',
-            'mapping': 'id'
-        }, {
-            'name': 'pagetitle',
-            'mapping': 'pagetitle'
-        }, {
-            'name': 'deleted',
-            'mapping': 'deleted'
-        }, {
-            'name': 'published',
-            'mapping': 'published'
-        }, {
-            'name': 'hidemenu',
-            'mapping': 'hidemenu'
-        }, {
-            'name': 'context_key',
-            'mapping': 'context_key'
-        }, {
-            'name': 'publishedon_date',
-            'mapping': 'publishedon_date'
-        }, {
-            'name': 'action_edit',
-            'mapping': 'action_edit'
-        }, {
-            'name': 'preview_url',
-            'mapping': 'preview_url'
-        }]
-            , fields = []
-            , defaultColumns = [
+    var _this = this,
+            actionItems = [],
+            defaultFields = [
+                {
+                    'name': 'id',
+                    'mapping': 'id'
+                }, {
+                    'name': 'parent',
+                    'mapping': 'parent'
+                }, {
+                    'name': 'pagetitle',
+                    'mapping': 'pagetitle'
+                }, {
+                    'name': 'deleted',
+                    'mapping': 'deleted'
+                }, {
+                    'name': 'published',
+                    'mapping': 'published'
+                }, {
+                    'name': 'hidemenu',
+                    'mapping': 'hidemenu'
+                }, {
+                    'name': 'show_in_tree',
+                    'mapping': 'show_in_tree'
+                }, {
+                    'name': 'context_key',
+                    'mapping': 'context_key'
+                }, {
+                    'name': 'publishedon_date',
+                    'mapping': 'publishedon_date'
+                }, {
+                    'name': 'action_edit',
+                    'mapping': 'action_edit'
+                }, {
+                    'name': 'preview_url',
+                    'mapping': 'preview_url'
+                }
+            ],
+            fields = [],
+            defaultColumns = [
                 {
                     header: _('id')
                     , dataIndex: 'id'
@@ -47,11 +56,12 @@ GridClassKey.grid.Children = function (config) {
                         xtype: 'textfield'
                     }
                 }
-            ]
-            , checkBoxSelMod = new Ext.grid.CheckboxSelectionModel({
+            ],
+            checkBoxSelMod = new Ext.grid.CheckboxSelectionModel({
                 checkOnly: true
-            })
-            , columns = [checkBoxSelMod];
+            }),
+            columns = [checkBoxSelMod],
+            toolTipIdx = 0;
 
     if (config.record.properties
             && config.record.properties.gridclasskey
@@ -155,6 +165,14 @@ GridClassKey.grid.Children = function (config) {
             });
         }
         fields.push({
+            name: 'parent'
+            , mapping: 'parent'
+        });
+        fields.push({
+            name: 'show_in_tree'
+            , mapping: 'show_in_tree'
+        });
+        fields.push({
             name: 'has_children'
             , mapping: 'has_children'
         });
@@ -173,9 +191,27 @@ GridClassKey.grid.Children = function (config) {
         });
     }
 
-    var actionItems = [];
+    actionItems.push({
+        handler: function (grid, row, col) {
+            var rec = _this.store.getAt(row);
+            rec.data['show_in_tree'] = Number(!rec.data['show_in_tree']);
+            _this.showInTree(rec.data);
+        },
+        getClass: function (v, meta, rec) {
+            if (rec.get('show_in_tree')) {
+                this.items[0].tooltip = _('gridclasskey.hide_in_tree');
+                this.items[0].altText = _('gridclasskey.hide_in_tree');
+                return 'icon-gridclasskey-table icon-gridclasskey-actioncolumn-img';
+            } else {
+                this.items[0].tooltip = _('gridclasskey.show_in_tree');
+                this.items[0].altText = _('gridclasskey.show_in_tree');
+                return 'icon-gridclasskey-node_tree icon-gridclasskey-actioncolumn-img';
+            }
+        }
+    });
 
     if (MODx.perm['edit_document']) {
+        ++toolTipIdx;
         actionItems.push({
             iconCls: 'icon-gridclasskey-edit icon-gridclasskey-actioncolumn-img'
             , tooltip: _('edit')
@@ -185,19 +221,23 @@ GridClassKey.grid.Children = function (config) {
                 MODx.loadPage(MODx.action['resource/update'], 'id=' + rec.get('id'));
             },
             scope: this
-        }, {
-            iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
-            , tooltip: _('view')
-            , altText: _('view')
-            , handler: function (grid, row, col) {
-                var rec = this.store.getAt(row);
-                window.open(rec.get('preview_url'));
-            },
-            scope: this
         });
     }
 
+    ++toolTipIdx;
+    actionItems.push({
+        iconCls: 'icon-gridclasskey-view icon-gridclasskey-actioncolumn-img'
+        , tooltip: _('view')
+        , altText: _('view')
+        , handler: function (grid, row, col) {
+            var rec = this.store.getAt(row);
+            window.open(rec.get('preview_url'));
+        },
+        scope: this
+    });
+
     if (MODx.perm['publish_document'] && MODx.perm['unpublish_document']) {
+        ++toolTipIdx;
         actionItems.push({
             handler: function (grid, row, col) {
                 var rec = _this.store.getAt(row);
@@ -205,12 +245,12 @@ GridClassKey.grid.Children = function (config) {
             },
             getClass: function (v, meta, rec) {
                 if (rec.get('published')) {
-                    this.items[2].tooltip = _('resource_unpublish');
-                    this.items[2].altText = _('resource_unpublish');
+                    this.items[toolTipIdx].tooltip = _('resource_unpublish');
+                    this.items[toolTipIdx].altText = _('resource_unpublish');
                     return 'icon-gridclasskey-mute icon-gridclasskey-actioncolumn-img';
                 } else {
-                    this.items[2].tooltip = _('resource_publish');
-                    this.items[2].altText = _('resource_publish');
+                    this.items[toolTipIdx].tooltip = _('resource_publish');
+                    this.items[toolTipIdx].altText = _('resource_publish');
                     return 'icon-gridclasskey-publish icon-gridclasskey-actioncolumn-img';
                 }
             }
@@ -218,6 +258,7 @@ GridClassKey.grid.Children = function (config) {
     }
 
     if (MODx.perm['delete_document'] && MODx.perm['undelete_document']) {
+        ++toolTipIdx;
         actionItems.push({
             handler: function (grid, row, col) {
                 var rec = _this.store.getAt(row);
@@ -225,12 +266,12 @@ GridClassKey.grid.Children = function (config) {
             },
             getClass: function (v, meta, rec) {
                 if (rec.get('deleted')) {
-                    this.items[3].tooltip = _('resource_undelete');
-                    this.items[3].altText = _('resource_undelete');
+                    this.items[toolTipIdx].tooltip = _('resource_undelete');
+                    this.items[toolTipIdx].altText = _('resource_undelete');
                     return 'icon-gridclasskey-recycle icon-gridclasskey-actioncolumn-img';
                 } else {
-                    this.items[3].tooltip = _('resource_delete');
-                    this.items[3].altText = _('resource_delete');
+                    this.items[toolTipIdx].tooltip = _('resource_delete');
+                    this.items[toolTipIdx].altText = _('resource_delete');
                     return 'icon-gridclasskey-delete icon-gridclasskey-actioncolumn-img';
                 }
                 return;
@@ -247,7 +288,7 @@ GridClassKey.grid.Children = function (config) {
             , sortable: false
             , editable: false
             , fixed: true
-            , width: 107
+            , width: 130
             , items: actionItems
         });
     }
@@ -298,12 +339,12 @@ GridClassKey.grid.Children = function (config) {
                     }
                     , menu: {
                         items: [{
-                            text: config.record['gridclasskey-property-grid-quickaddnewdocbtn-text'] || _('gridclasskey.document_new_quick')
-                            , id: 'gridclasskey-property-grid-quickaddnewdocbtn'
-                            , iconCls: 'icon-gridclasskey-document-new'
-                            , handler: this.quickCreate
-                            , scope: this
-                        }]
+                                text: config.record['gridclasskey-property-grid-quickaddnewdocbtn-text'] || _('gridclasskey.document_new_quick')
+                                , id: 'gridclasskey-property-grid-quickaddnewdocbtn'
+                                , iconCls: 'icon-gridclasskey-document-new'
+                                , handler: this.quickCreate
+                                , scope: this
+                            }]
                     }
                 }));
     }
@@ -486,6 +527,10 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 'success': {
                     fn: this.refresh,
                     scope: this
+                },
+                failure: {
+                    fn: function(){},
+                    scope: this
                 }
             }
         });
@@ -499,7 +544,11 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 , id: record.id
             }
             , listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {fn: this.refresh, scope: this},
+                failure: {
+                    fn: function(){},
+                    scope: this
+                }
             }
         });
     }
@@ -514,7 +563,11 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
             , resource: this.menu.record.id
             , hasChildren: this.menu.record.has_children
             , listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {fn: this.refresh, scope: this},
+                failure: {
+                    fn: function(){},
+                    scope: this
+                }
             }
         });
         w.config.hasChildren = this.menu.record.has_children;
@@ -595,7 +648,11 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
                 , sortdir: sortdir
             }
             , listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {fn: this.refresh, scope: this},
+                failure: {
+                    fn: function(){},
+                    scope: this
+                }
             }
         });
     }
@@ -608,7 +665,7 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
         }
         GridClassKey.grid.Children.superclass.beforeDestroy.call(this);
     }
-    , getSetting: function(key, dv) {
+    , getSetting: function (key, dv) {
         var val = dv || null;
         if (this.config.record &&
                 this.config.record.properties &&
@@ -653,6 +710,32 @@ Ext.extend(GridClassKey.grid.Children, MODx.grid.Grid, {
         w.show(e.target, function () {
             Ext.isSafari ? w.setPosition(null, 30) : w.center();
         }, this);
+    }
+    , showInTree: function (record) {
+        record['action'] = 'mgr/cmp/children/update';
+        MODx.Ajax.request({
+            url: GridClassKey.config.connectorUrl
+            , params: record
+            , listeners: {
+                'success': {
+                    fn: function (response) {
+                        this.refresh();
+                        var t = Ext.getCmp('modx-resource-tree');
+                        if (t) {
+                            var treeNode = t.getNodeById(record.context_key + '_' + record.parent);
+                            if (typeof(treeNode) !== 'undefined') {
+                                treeNode.reload();
+                            }
+                        }
+                    },
+                    scope: this
+                },
+                'failure': {
+                    fn: function (response) {},
+                    scope: this
+                }
+            }
+        });
     }
 });
 Ext.reg('gridclasskey-grid-children', GridClassKey.grid.Children);

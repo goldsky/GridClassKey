@@ -250,11 +250,14 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
 
         foreach ($resourceArray as $field => $value) {
             if (!in_array($field, $this->selectedFields) &&
+                    $field !== 'id' &&
+                    $field !== 'parent' &&
                     $field !== 'published' &&
                     $field !== 'deleted' &&
                     $field !== 'hidemenu' &&
                     $field !== 'context_key' &&
-                    $field !== 'isfolder'
+                    $field !== 'isfolder' &&
+                    $field !== 'show_in_tree'
             ) {
                 unset($resourceArray[$field]);
                 continue;

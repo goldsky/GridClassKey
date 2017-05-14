@@ -56,8 +56,28 @@ switch ($modx->event->name) {
                 $properties = $resource->get('properties');
                 if ($properties['gridclasskey']) {
                     $resource->set('hide_children_in_tree', 0);
+                    unset($properties['gridclasskey']);
+                    $resource->set('properties', $properties);
                     $resource->save();
+
+                    $children = $resource->getMany('Children');
+                    if ($children) {
+                        foreach ($children as $child) {
+                            $child->set('show_in_tree', 1);
+                            $child->save();
+                        }
+                    }
                 }
+            }
+        } else if ($mode === modSystemEvent::MODE_NEW) {
+            $parent = $resource->getOne('Parent');
+            if (!$parent) {
+                return;
+            }
+            $properties = $parent->get('properties');
+            if ($properties['gridclasskey']) {
+                $resource->set('show_in_tree', 0);
+                $resource->save();
             }
         }
         break;

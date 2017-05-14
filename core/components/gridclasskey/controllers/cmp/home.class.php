@@ -49,6 +49,8 @@ class GridClassKeyCmpHomeManagerController extends GridClassKeyManagerController
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/grid.gridsettings.js' . $withVersion);
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/classkey/container/grid.children.js' . $withVersion);
 
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/window.actionscmp.js' . $withVersion);
+        $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/grid.children.js' . $withVersion);
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/window.setting.js' . $withVersion);
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/grid.containers.js' . $withVersion);
         $this->addLastJavascript($this->gridclasskey->config['jsUrl'] . 'mgr/cmp/widgets/panel.home.js' . $withVersion);
@@ -60,6 +62,8 @@ class GridClassKeyCmpHomeManagerController extends GridClassKeyManagerController
         MODx.perm["undelete_document"] = ' . ($this->modx->hasPermission('undelete_document') ? 1 : 0) . ';
         MODx.perm["publish_document"] = ' . ($this->modx->hasPermission('publish_document') ? 1 : 0) . ';
         MODx.perm["unpublish_document"] = ' . ($this->modx->hasPermission('unpublish_document') ? 1 : 0) . ';
+        MODx.perm["gridclasskey.batch_actions"] = ' . ($this->modx->hasPermission('gridclasskey.batch_actions') ? 1 : 0) . ';
+        MODx.perm["gridclasskey.advanced_search"] = ' . ($this->modx->hasPermission('gridclasskey.advanced_search') ? 1 : 0) . ';
         Ext.onReady(function() {
             MODx.load({xtype: "gridclasskey-page-home"});
         });
