@@ -1,4 +1,4 @@
-GridClassKey 1.1.0-dev
+GridClassKey 1.1.0-pl
 =================================================
 - [#140] added option to hide resources after failing since MODX 2.5.6
 
