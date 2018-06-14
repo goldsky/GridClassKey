@@ -293,7 +293,8 @@ class GridContainerGetListProcessor extends modResourceGetListProcessor {
                     $resourceArray[$field['name']] = $this->modx->runSnippet($field['name'], $scriptProperties);
                 }
                 if (!empty($field['output_filter'])) {
-                    $resourceArray[$field['name']] = $this->_outputFilter($resourceArray[$field['name']], $field['output_filter']);
+                    // [#141] inline editor is NOT compatible with cell's output filter
+//                    $resourceArray[$field['name']] = $this->_outputFilter($resourceArray[$field['name']], $field['output_filter']);
                     if (isset($resourceArray[$field['name'] . '_output']) && !empty($resourceArray[$field['name'] . '_output'])) {
                         $resourceArray[$field['name'] . '_output'] = $this->_outputFilter($resourceArray[$field['name'] . '_output'], $field['output_filter']);
                     }

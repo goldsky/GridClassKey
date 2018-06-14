@@ -1,3 +1,8 @@
+GridClassKey (dev)
+=================================================
+- [#141] inline editor is NOT compatible with cell's output filter
+
+
 GridClassKey 1.1.0-pl (May 14, 2017)
 =================================================
 - [#140] added option to hide resources after failing since MODX 2.5.6
